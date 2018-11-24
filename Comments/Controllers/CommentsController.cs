@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Comments.Models;
-using System.Net;
-
 using Microsoft.EntityFrameworkCore;
-
-
+using System.Net;
+using SharedModels;
 
 namespace CommentsService.Controllers
 {
@@ -44,70 +39,40 @@ namespace CommentsService.Controllers
 
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{commentId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCommentById(int commentId)
         {
             if (commentId <= 0)
-            {
                 return BadRequest();
-            }
 
-            var product = await db.Comments.SingleOrDefaultAsync(c => c.CommentId == commentId);
+            var comment = await db.Comments.SingleOrDefaultAsync(c => c.CommentId == commentId);
 
-
-            if (product != null)
-            {
-                return Ok(product);
-            }
+            if (comment != null)
+                return Ok(comment);
 
             return NotFound();
         }
 
         [HttpGet]
-        [Route("user/{UserId:int}")]
+        [Route("user/{userId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCommentsByUserId(int userId)
         {
             if (userId <= 0)
-            {
                 return BadRequest();
-            }
 
             var comments = await db.Comments.Where(c => c.UserId == userId).ToListAsync();
 
-
             if (comments != null)
-            {
                 return Ok(comments);
-            }
 
             return NotFound();
         }
 
-        [HttpGet]
-        [Route("dish/{dishId:int}")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetCommentsByDishId(int dishId)
-        {
-            if (dishId <= 0)
-            {
-                return BadRequest();
-            }
 
-            var comments = await db.Comments.Where(c => c.DishId == dishId).ToListAsync();
-
-
-            if (comments.Count != 0)
-            {
-                return Ok(comments);
-            }
-
-            return NotFound();
-        }
 
         [Route("")]
         [HttpPost]
@@ -121,15 +86,15 @@ namespace CommentsService.Controllers
                 UserId = comment.UserId,
                 DishId = comment.DishId,
             };
-            db.Comments.Add(item);
 
+            db.Comments.Add(item);
             await db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCommentById), new { commentId = item.CommentId }, null);
         }
 
-        /
-        [Route("{id:int}")]
+        
+        [Route("{commentId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteComment(int commentId)
@@ -137,12 +102,9 @@ namespace CommentsService.Controllers
             var comment = db.Comments.SingleOrDefault(c => c.CommentId == commentId);
 
             if (comment == null)
-            {
                 return NotFound();
-            }
 
             db.Comments.Remove(comment);
-
             await db.SaveChangesAsync();
 
             return NoContent();
@@ -158,18 +120,64 @@ namespace CommentsService.Controllers
                 .SingleOrDefaultAsync(c => c.CommentId== commentToUpdate.CommentId);
 
             if (comment == null)
-            {
-                return NotFound(new { Message = $"Product with id {commentToUpdate.CommentId} not found." });
-            }
-
+                return NotFound(new { Message = $"Comment with id {commentToUpdate.CommentId} not found." });
 
             comment = commentToUpdate;
-            db.Comments.Update(comment);
 
+            db.Comments.Update(comment);
             await db.SaveChangesAsync();
 
-
             return CreatedAtAction(nameof(GetCommentById), new { commentId = commentToUpdate.CommentId }, null);
+        }
+
+
+        /*[HttpGet]
+        [Route("items")]
+        [ProducesResponseType(typeof(PaginatedModel<Comment>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<Comment>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        {
+            var totalItems = await db.Comments
+                .LongCountAsync();
+
+            var itemsOnPage = await  db.Comments
+                .OrderBy(c => c.CommentId)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var model = new PaginatedModel<Comment>(pageIndex, pageSize, totalItems, itemsOnPage);
+
+            return Ok(model);
+        } */
+
+
+        [HttpGet]
+        [Route("dish/{dishId:int}")]
+        [ProducesResponseType(typeof(PaginatedModel<Comment>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetCommentsByDishId(int dishId, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        {
+            if (dishId <= 0)
+                return BadRequest();
+
+            var comments = await db.Comments.Where(c => c.DishId == dishId).ToListAsync();
+
+            var totalItems =  comments.Count();
+
+            if (totalItems != 0)
+            {
+                var itemsOnPage = comments
+                .OrderByDescending(c => c.CommentId)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToList();
+
+                var model = new PaginatedModel<Comment>(pageIndex, pageSize, totalItems, itemsOnPage);
+
+                return Ok(model);
+            }
+                
+            return NotFound();
         }
 
     }
