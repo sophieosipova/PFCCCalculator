@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 
-namespace Products.Models
+namespace ProductsService.Models
 {
     public class ProductsContext : DbContext
     {
             public DbSet<Product> Products { get; set; }
+            public DbSet<ProductsCategory> ProductsCategories { get; set; }
             public ProductsContext(DbContextOptions<ProductsContext> options)
                 : base(options)
             {

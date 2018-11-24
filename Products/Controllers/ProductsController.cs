@@ -2,90 +2,200 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Products.Models;
+using ProductsService.Models;
+using System.Net;
+using System.Threading.Tasks;
+using SharedModels;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Products.Controllers
+
+namespace ProductsService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
-            ProductsContext db;
-            public ProductsController(ProductsContext context)
-            {
-                this.db = context;
-                if (!db.Products.Any())
-                {
-                    db.Products.Add(new Product { ProductName = "Яблоко", Protein = 0, Fat = 0, Carbohydrates = 12, Calories = 60 });
-                    db.Products.Add(new Product { ProductName = "Сыр", Protein = 15, Fat = 30, Carbohydrates = 1, Calories = 280 });
-                    db.Products.Add(new Product {  ProductName = "Батон", Protein = 1, Fat = 2, Carbohydrates = 50, Calories = 290 });
-                    db.SaveChanges();
-                }
-            }
+        private readonly ProductsContext db;
 
-             // GET api/products
-            [HttpGet]
-            public ActionResult<List<Product>> Products()
+        public ProductsController(ProductsContext context)
+        {
+            this.db = context;
+            if (!db.ProductsCategories.Any())
             {
-                return db.Products.ToList();
-            }
-
-            // GET api/products/id
-            [HttpGet("{id}")]
-            public IActionResult Products(int id)
-            {
-                Product product = db.Products.FirstOrDefault(x => x.ProductId == id);
-                if (product == null)
-                    return NotFound();
-                return new ObjectResult(product);
-            }
-
-            // POST api/products
-            [HttpPost]
-            public IActionResult Post([FromBody]Product product)
-            {
-                if (product == null)
-                {
-                    return BadRequest();
-                }
-
-                db.Products.Add(product);
+                db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Овощи" });
+                db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Фрукты" });
+                db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Молочные продукты" });
+                db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Выпечка" });
                 db.SaveChanges();
+            } 
+            if (!db.Products.Any())
+            {
+                db.Products.Add(new Product { ProductName = "Яблоко",ProductsCategoryId =2, Protein = 0, Fat = 0, Carbohydrates = 12, Calories = 60 });
+                db.Products.Add(new Product { ProductName = "Сыр", ProductsCategoryId = 3, Protein = 15, Fat = 30, Carbohydrates = 1, Calories = 280 });
+                db.Products.Add(new Product { ProductName = "Батон", ProductsCategoryId = 4, Protein = 1, Fat = 2, Carbohydrates = 50, Calories = 290 });
+                db.SaveChanges();
+            }
+        }
+
+        // GET api/products
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(List<Product>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult>  GetProducts ()
+        {
+            return Ok( await db.Products.ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("productscategories")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(List<ProductsCategory>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProductsCategories()
+        {
+            return Ok(await db.ProductsCategories.ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("{categories/productCategoryId:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProductsByCategoryId(int productCategoryId)
+        {
+            if (productCategoryId <= 0)
+            {
+                return BadRequest();
+            }
+
+            var product = await db.Products.Where(p => p.ProductsCategoryId == productCategoryId).ToListAsync();
+
+
+            if (product != null)
+            {
                 return Ok(product);
             }
 
-            // PUT api/products/
-            [HttpPut]
-            public IActionResult Put([FromBody]Product product)
-            {
-                if (product == null)
-                {
-                    return BadRequest();
-                }
-                if (!db.Products.Any(x => x.ProductId == product.ProductId))
-                {
-                    return NotFound();
-                }
+            return NotFound();
+        }
 
-                db.Update(product);
-                db.SaveChanges();
+        [HttpGet]
+        [Route("{productId:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProductById(int productId)
+        {
+            if (productId <= 0)
+            {
+                return BadRequest();
+            }
+
+            var product = await db.Products.SingleOrDefaultAsync(ci => ci.ProductId == productId);
+
+
+            if (product != null)
+            {
                 return Ok(product);
             }
 
-            // DELETE api/products/id
-            [HttpDelete("{id}")]
-            public IActionResult Delete(int id)
+            return NotFound();
+        }
+
+        
+        [Route("")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateProduct([FromBody]Product product)
+        {
+            var item = new Product
             {
-                Product product = db.Products.FirstOrDefault(x => x.ProductId == id);
-                if (product == null)
-                {
-                    return NotFound();
-                }
-                db.Products.Remove(product);
-                db.SaveChanges();
-                return Ok(product);
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                Protein = product.Protein,
+                Fat = product.Fat,
+                Carbohydrates = product.Carbohydrates,
+                Calories = product.Calories
+            };
+            db.Products.Add(item);
+
+            await db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetProductById), new { productId  = item.ProductId }, null);
+        }
+
+        //DELETE api/v1/[controller]/id
+        [Route("{productId:int}")]
+        [HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            var product = db.Products.SingleOrDefault(x => x.ProductId == productId);
+
+            if (product == null)
+            {
+                return NotFound();
             }
+
+            db.Products.Remove(product);
+
+            await db.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate)
+        {
+            var product = await db.Products
+                .SingleOrDefaultAsync(i => i.ProductId == productToUpdate.ProductId);
+
+            if (product == null)
+            {
+                return NotFound(new { Message = $"Product with id {productToUpdate.ProductId} not found." });
+            }
+
+       
+            product = productToUpdate;
+            db.Products.Update(product);
+
+             await db.SaveChangesAsync();
+
+
+            return CreatedAtAction(nameof(GetProductById), new { productID = productToUpdate.ProductId}, null);
+        }
+
+        [HttpGet]
+        [Route("items")]
+        [ProducesResponseType(typeof(PaginatedModel<Product>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        {
+
+            var totalItems = await db.Products
+                .LongCountAsync();
+
+            var itemsOnPage = await db.Products
+                .OrderBy(c => c.ProductName)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
+
+           
+
+            var model = new PaginatedModel<Product>(pageIndex, pageSize, totalItems, itemsOnPage);
+
+            return Ok(model);
+        }
+
+      
+
+
+
     }
+
+    
 }
+        
+
+
+    
