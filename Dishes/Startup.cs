@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Dishes.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dishes
 {
@@ -25,6 +27,8 @@ namespace Dishes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string con = "Server=(localdb)\\mssqllocaldb;Database=DBDishes;Trusted_Connection=True;MultipleActiveResultSets=true";
+            services.AddDbContext<DishesContext>(options => options.UseSqlServer(con));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
