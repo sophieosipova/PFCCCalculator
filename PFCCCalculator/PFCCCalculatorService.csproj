@@ -10,6 +10,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ProductsService">
+      <HintPath>..\Products\bin\Debug\netcoreapp2.1\ProductsService.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
