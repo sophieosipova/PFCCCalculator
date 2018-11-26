@@ -31,8 +31,9 @@ namespace PFCCCalculator
 
            // var dbService = new PFCCCalculatorService.Services.ProductsService(new System.Net.Http.HttpClient());
             services.AddHttpClient<IProductsService, PFCCCalculatorService.Services.ProductsService>();
+            services.AddHttpClient<ICommentsService, PFCCCalculatorService.Services.CommentsService>();
 
-          //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
+            //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
 
             //services.AddSingleton<IProductsService>(dbService);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
