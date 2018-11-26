@@ -4,7 +4,7 @@ using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Comments.Models
+namespace CommentsService.Models
 {
     [Table(Name = "tblComments")]
     public class Comment

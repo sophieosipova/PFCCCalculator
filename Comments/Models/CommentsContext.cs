@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Comments.Models
+namespace CommentsService.Models
 {
 
     public class CommentsContext : DbContext
