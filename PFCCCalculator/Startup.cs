@@ -32,7 +32,7 @@ namespace PFCCCalculator
            // var dbService = new PFCCCalculatorService.Services.ProductsService(new System.Net.Http.HttpClient());
             services.AddHttpClient<IProductsService, PFCCCalculatorService.Services.ProductsService>();
             services.AddHttpClient<ICommentsService, PFCCCalculatorService.Services.CommentsService>();
-
+            services.AddHttpClient<IDishesService, PFCCCalculatorService.Services.DishesService>();
             //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
 
             //services.AddSingleton<IProductsService>(dbService);
