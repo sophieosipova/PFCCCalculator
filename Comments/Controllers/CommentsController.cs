@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Comments.Models;
+using CommentsService.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using SharedModels;
@@ -74,7 +74,7 @@ namespace CommentsService.Controllers
 
 
 
-        [Route("")]
+        [Route("user/{userId:int}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateComment ([FromBody]Comment comment)
@@ -94,10 +94,10 @@ namespace CommentsService.Controllers
         }
 
         
-        [Route("{commentId:int}")]
+        [Route("user/{userId:int}/{commentId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteComment(int commentId)
+        public async Task<IActionResult> DeleteComment(int userId,int commentId)
         {
             var comment = db.Comments.SingleOrDefault(c => c.CommentId == commentId);
 
@@ -110,7 +110,7 @@ namespace CommentsService.Controllers
             return NoContent();
         }
 
-        [Route("")]
+        [Route("user/{userId:int}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -179,6 +179,8 @@ namespace CommentsService.Controllers
                 
             return NotFound();
         }
+
+
 
     }
 }
