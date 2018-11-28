@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dishes.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PFCCCalculatorService.Services;
 
 namespace PFCCCalculatorService.Controllers
@@ -44,9 +45,21 @@ namespace PFCCCalculatorService.Controllers
             var dish = await dishesService.GetDishById(dishId);
 
             if (dish != null)
-                return Ok(dish);
+                return Ok(JsonConvert.SerializeObject(dish));
 
             return NotFound();
+        }
+
+
+      
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route("user/{userId}/")]
+        public async Task<IActionResult> CreateDish(int UserId, Dish dish)
+        {
+          //  Dish dish = new Dish();
+            await dishesService.CreateDish( UserId, dish);
+            return Ok();//CreatedAtAction(nameof(GetDishById), null, null);
         }
 
     }

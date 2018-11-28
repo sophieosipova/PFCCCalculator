@@ -25,17 +25,16 @@ namespace PFCCCalculatorService.Services
          Task<Product> GetProductById(int productId);
 
           
-           // Task<IActionResult> CreateProduct([FromBody]Product product);
-
-
-        // Task<IActionResult> DeleteProduct(int productId);
+           Task CreateProduct(int userId, Product product);
+           Task  DeleteProduct(int userId, int productId);
+           Task UpdateProduct(int userId, Product productToUpdate);
 
         /*      [ProducesResponseType((int)HttpStatusCode.NotFound)]
            [ProducesResponseType((int)HttpStatusCode.Created)]
            Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate);*/
 
 
-           Task<PaginatedModel<Product>> Items(int pageSize = 10, int pageIndex = 0);
+        Task<PaginatedModel<Product>> Items(int pageSize = 10, int pageIndex = 0);
 
     }
 

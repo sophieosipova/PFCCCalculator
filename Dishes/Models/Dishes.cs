@@ -15,13 +15,11 @@ namespace Dishes.Models
         }
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int DishId { get; set; }
+        public int UserId { get; set; }
         public string DishName { get; set; }
         public string DishImage { get; set; }
         public string Recipe { get; set; }
-        public int? Fat { get; set; }
-        public int? Protein { get; set; }
-        public int? Carbohydrates { get; set; }
-        public int? Calories { get; set; }
+        public double TotalWeight { get; set; }
 
         public ICollection<Ingredient> Ingredients { get; set; }
     }

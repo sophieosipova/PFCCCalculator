@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PFCCCalculatorService.Services;
 using ProductsService.Models;
 using SharedModels;
@@ -15,10 +16,12 @@ namespace PFCCCalculatorService.Controllers
     public class ProductsController: ControllerBase
     {
         private readonly IProductsService productsService;
+        private readonly ILogger <ProductsController>  logger;
 
-        public ProductsController(IProductsService p)
+        public ProductsController(IProductsService p, ILogger<ProductsController> logger)
         {
             this.productsService = p;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -27,6 +30,7 @@ namespace PFCCCalculatorService.Controllers
         public async Task<IActionResult> GetProducts()
         {
             //p  = await productsService.GetProducts()
+            logger.LogWarning(this.Request.ToString()+"HELLLOOOOOO");
             return Ok(await productsService.GetProducts());
         }
 

@@ -36,14 +36,48 @@ namespace PFCCCalculatorService.Services
             var uri = $"{remoteServiceBaseUrl}/api/dishes/{dishId}";
 
 
-            var dish = JsonConvert.DeserializeObject<Dish>
-                (await httpClient.GetStringAsync(uri));
+            var t = await httpClient.GetAsync(uri);
+         //   var i = await httpClient.GetStringAsync(uri);
+         //   httpClient.
+       //     var k = t.Content.;
+            try
+            {
+                var i = await httpClient.GetStringAsync(uri);
+                var dish = JsonConvert.DeserializeObject<Dish>
+                 (await httpClient.GetStringAsync(uri));
 
-            return dish;
+                return dish; 
 
+            }
+            catch 
+            {
+                return null;
+            }
         }
-        
 
+        public async Task  CreateDish(int userId, Dish dish)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
+
+            var dishContent= new StringContent(JsonConvert.SerializeObject(dish), System.Text.Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(uri,dishContent);
+            var r = response.StatusCode;
+
+            var t = response.Content;
+
+            // Task<IActionResult> actionResult =  new Task<IActionResult> ();
+        }
+
+        public async Task DeleteDish(int userId,int DishId)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}/{DishId}";
+
+
+            var response = await httpClient.DeleteAsync(uri);
+
+
+            // Task<IActionResult> actionResult =  new Task<IActionResult> ();
+        }
 
 
     }

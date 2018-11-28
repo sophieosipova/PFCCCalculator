@@ -67,7 +67,26 @@ namespace PFCCCalculatorService.Services
             return product;
         }
 
+        public async Task CreateProduct(int userId, Product product)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
 
+            var productContent = new StringContent(JsonConvert.SerializeObject(product), System.Text.Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(uri, productContent);
+        }
+
+        public async Task DeleteProduct(int userId, int productId)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}/{productId}";
+
+            var response = await httpClient.DeleteAsync(uri);
+        }
+        public async Task UpdateProduct(int userId, Product productToUpdate)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
+            var productContent = new StringContent(JsonConvert.SerializeObject(productToUpdate), System.Text.Encoding.UTF8, "application/json");
+            var response = await httpClient.PutAsync(uri, productContent);
+        }
         public async void Dispose()
 
         {

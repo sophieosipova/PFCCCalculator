@@ -30,14 +30,17 @@ namespace DishesService.Controllers
                     Recipe = "Обжарить каждый ломтики хлеба с одной стороны," +
                     " перевернуть, положить сыр, накрыть сверху обжаренной " +
                      "стороной ломтика хлеба. Обжарить бутерброд с двух сторон",
-                    Calories = 290,
-                    Carbohydrates = 50,
-                    Fat = 30,
-                    Protein = 20
+                    TotalWeight = 120
                 });
 
-                db.Ingredients.Add(new Ingredient {DishId = 1, ProductId = 2, Count = 2, Measure = "кусок"});
-                db.Ingredients.Add(new Ingredient { DishId = 1, ProductId = 3, Count = 2, Measure = "ломтика" });
+                db.Ingredients.Add(new Ingredient { DishId = 1, ProductName = "Батон", ProductId = 2, Count = 80 }
+               );
+                db.Ingredients.Add(new Ingredient {
+                    DishId = 1,
+                    ProductName = "Сыр",
+                    ProductId = 3,
+                  Count = 40
+                });
 
                 db.SaveChanges();
             }
@@ -49,11 +52,6 @@ namespace DishesService.Controllers
         [ProducesResponseType(typeof(List<Dish>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDishes()
         {
-            /*var d = await db.Dishes.Select
-                  (a => new {a.DishId,a.DishName,a.DishImage, a.Calories, a.Protein,a.Fat,a.Carbohydrates})
-                  .ToListAsync();*/
-            //var i = db.Ingredients.Where(i => i.DishId )
-
             List<Dish> dishes = await db.Dishes.ToListAsync();
             foreach (Dish dish in dishes)
             {
@@ -64,6 +62,7 @@ namespace DishesService.Controllers
 
             return Ok(dishes);
         }
+
 
         [HttpGet]
         [Route("{dishId:int}")]
@@ -88,7 +87,7 @@ namespace DishesService.Controllers
 
 
 
-        [Route("")]
+        [Route("user/{userId:int}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateDish([FromBody]Dish dish)
@@ -99,11 +98,6 @@ namespace DishesService.Controllers
                 DishName = dish.DishName,
                 DishImage = dish.DishImage,
                 Recipe = dish.Recipe,
-                Protein = dish.Protein,
-                Fat = dish.Fat,
-                Carbohydrates = dish.Carbohydrates,
-                Calories = dish.Calories,
-               // Ingredients = dish.Ingredients
             };
             db.Dishes.Add(item);
 
@@ -113,42 +107,24 @@ namespace DishesService.Controllers
             {
                 var iItem = new Ingredient
                 {
+                    
                     IngredientId = ingredient.IngredientId,
-                    DishId = ingredient.DishId,
+                    DishId = dish.DishId,
                     ProductId = ingredient.ProductId,
-                    Measure = ingredient.Measure,
-                    Count = ingredient.Count
+                    ProductName = ingredient.ProductName,
+                    Count = ingredient.Count,
                 };
                 db.Ingredients.Add(iItem);
             }
             await db.SaveChangesAsync();
 
             
-            return CreatedAtAction(nameof(GetDishById), new { dishId = item.DishId }, null);
+            return CreatedAtAction(nameof(GetDishById), new { dishId = item.DishId }, item);
         }
 
-      /*  [Route("{dishId:int}/ingredients")]
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateIngredient(int dishId,[FromBody] Ingredient ingredient)
-        {
-            var item = new Ingredient
-            {
-                IngredientId = ingredient.IngredientId,
-                DishId = ingredient.DishId,
-                ProductId = ingredient.ProductId,
-                Measure = ingredient.Measure,
-                Count = ingredient.Count
-            };
-            db.Ingredients.Add(item);
-
-            await db.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetIngredientById), new { ingredientId = item.IngredientId }, null);
-        }*/
 
         //DELETE api/v1/[controller]/id
-        [Route("{dishId:int}")]
+        [Route("user/{userId:int}/{dishId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteDish(int dishId)
@@ -169,7 +145,7 @@ namespace DishesService.Controllers
             return NoContent();
         }
 
-        [Route("")]
+        [Route("user/{userId:int}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -201,46 +177,5 @@ namespace DishesService.Controllers
             return CreatedAtAction(nameof(GetDishById), new { productID = dishToUpdate.DishId }, null);
         }
 
-    /*    [HttpGet]
-        [Route("{dishId:int}/ingredients/")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<Ingredient>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetIngredientsByDishId(int dishId)
-        {
-            if (dishId <= 0)
-                return BadRequest();
-
-            var dish = await db.Dishes.SingleOrDefaultAsync(d => d.DishId == dishId);
-
-            if (dish != null)
-                return Ok(await db.Ingredients.Where(i => i.DishId == dishId)
-                    .OrderBy(c=> c.IngredientId).ToListAsync());
-
-            return NotFound();
-        }*/
-
- /*       [HttpGet]
-        [Route("{dishId:int}/ingredients/{ingredientId:int}")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Ingredient), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetIngredientById(int dishId, int ingredientId)
-        {
-            if (dishId <= 0)
-                return BadRequest();
-
-            var dish = await db.Dishes.SingleOrDefaultAsync(d => d.DishId == dishId);
-
-            if (dish != null)
-            {
-                var ingredient = dish.Ingredients.Single(i => i.IngredientId == ingredientId);
-
-                if (ingredient != null)
-                    return Ok(ingredient);          
-            }
-
-            return NotFound();
-        }
-
-    */
     }
 }

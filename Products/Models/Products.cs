@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ProductsService.Models
 {
     [Table(Name = "tblProducts")]
-    public partial class Product
+    public class Product
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int ProductId { get; set; }
@@ -18,6 +18,9 @@ namespace ProductsService.Models
         public int Protein { get; set; }
         public int Carbohydrates { get; set; }
         public int Calories { get; set; }
+        public int UserId { get; set; }
     }
+
+
 
 }

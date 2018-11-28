@@ -43,11 +43,20 @@ namespace ProductsService.Controllers
         [ProducesResponseType(typeof(List<Product>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult>  GetProducts ()
         {
-            return Ok( await db.Products.ToListAsync());
+            return Ok( await db.Products.Where(p => p.UserId == 0).ToListAsync());
         }
 
         [HttpGet]
-        [Route("productscategories")]
+        [Route("users/{userId:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(List<Product>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetUsersProducts(int userId)
+        {
+            return Ok(await db.Products.Where(p => p.UserId == userId).ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("categories")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<ProductsCategory>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductsCategories()
@@ -56,7 +65,7 @@ namespace ProductsService.Controllers
         }
 
         [HttpGet]
-        [Route("{categories/productCategoryId:int}")]
+        [Route("categories/{productCategoryId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductsByCategoryId(int productCategoryId)
@@ -100,13 +109,14 @@ namespace ProductsService.Controllers
         }
 
         
-        [Route("")]
+        [Route("user/{userId:int}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateProduct([FromBody]Product product)
+        public async Task<IActionResult> CreateProduct(int userId,[FromBody]Product product)
         {
             var item = new Product
             {
+                UserId = userId,
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Protein = product.Protein,
@@ -122,10 +132,10 @@ namespace ProductsService.Controllers
         }
 
         //DELETE api/v1/[controller]/id
-        [Route("{productId:int}")]
+        [Route("user /{userId:int}/{productId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteProduct(int productId)
+        public async Task<IActionResult> DeleteProduct(int userId,int productId)
         {
             var product = db.Products.SingleOrDefault(x => x.ProductId == productId);
 
@@ -142,6 +152,7 @@ namespace ProductsService.Controllers
         }
 
         [HttpPut]
+        [Route("user /{userId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate)
@@ -167,7 +178,7 @@ namespace ProductsService.Controllers
         [HttpGet]
         [Route("items")]
         [ProducesResponseType(typeof(PaginatedModel<Product>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+       // [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
         {
 

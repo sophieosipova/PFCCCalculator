@@ -10,15 +10,9 @@ namespace ProductsService.Models
     [Table(Name = "tblProductsCategories")]
     public partial class ProductsCategory
     {
-        public ProductsCategory()
-        {
-     //       Products = new HashSet<Product>();
-        }
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
-       // [Key]
         public int ProductsCategoryId { get; set; }
         public string ProductsCategoryName { get; set; }
 
-      //  public ICollection<Product> Products { get; set; }
     }
 }

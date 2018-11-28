@@ -44,5 +44,15 @@ namespace PFCCCalculatorService.Services
 
             return comments;
         }
+
+        public async Task DeleteComment(int userId, int commentId)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}/{commentId}";
+
+
+            var response = await httpClient.DeleteAsync(uri);
+
+            // Task<IActionResult> actionResult =  new Task<IActionResult> ();
+        }
     }
 }
