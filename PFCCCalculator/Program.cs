@@ -20,6 +20,6 @@ namespace PFCCCalculator
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-               .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Debug);
+               .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Debug));
     }
 }
