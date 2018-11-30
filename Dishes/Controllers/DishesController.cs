@@ -63,6 +63,27 @@ namespace DishesService.Controllers
             return Ok(dishes);
         }
 
+        [HttpGet]
+        [Route("withproduct/{productId:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(List<Dish>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetDishesByProduct(int productId)
+        {
+            List<Dish> dishes  = await db.Ingredients.Where(i => i.ProductId == productId).Join(db.Dishes,
+                i => i.DishId, d => d.DishId, (i, d) => d).ToListAsync();
+            //.Select(x => x.DishId).ToListAsync();
+
+            if (dishes.Count == 0)
+                return NotFound();
+            foreach (Dish dish in dishes)
+            {
+                List<Ingredient> ings = await db.Ingredients.Where(i => i.DishId == dish.DishId).ToListAsync();
+                dish.Ingredients = ings;
+
+            }
+
+            return Ok(dishes);
+        }
 
         [HttpGet]
         [Route("{dishId:int}")]
