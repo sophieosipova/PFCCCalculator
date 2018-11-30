@@ -25,45 +25,100 @@ namespace PFCCCalculatorService.Services
         public async Task<List<Dish>> GetDishes()
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes";
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
 
-            var dishes = JsonConvert.DeserializeObject<List<Dish>>(await httpClient.GetStringAsync(uri));
-            return dishes;
+            try
+            {    
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var dishes = JsonConvert.DeserializeObject<List<Dish>>(responseBody);
+
+                return dishes;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
-  
+        public async Task<List<Dish>> GetDishesWithProduct(int productId)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/dishes/withproduct/{productId}";
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+            try
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var dishes = JsonConvert.DeserializeObject<List<Dish>>(responseBody);
+
+                return dishes;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
+
+        }
+
         public async Task<Dish> GetDishById(int dishId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/{dishId}";
 
-
-            var t = await httpClient.GetAsync(uri);
-         //   var i = await httpClient.GetStringAsync(uri);
-         //   httpClient.
-       //     var k = t.Content.;
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
             try
             {
-                var i = await httpClient.GetStringAsync(uri);
-                var dish = JsonConvert.DeserializeObject<Dish>
-                 (await httpClient.GetStringAsync(uri));
+                response.EnsureSuccessStatusCode();           
+                string responseBody = await response.Content.ReadAsStringAsync();               
+                var dish = JsonConvert.DeserializeObject<Dish>(responseBody);
 
                 return dish; 
-
             }
-            catch 
+            catch (HttpRequestException e)
             {
-                return null;
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;                  
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
         public async Task  CreateDish(int userId, Dish dish)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
 
-            var dishContent= new StringContent(JsonConvert.SerializeObject(dish), System.Text.Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(uri,dishContent);
-            var r = response.StatusCode;
-
-            var t = response.Content;
+            try
+            {
+                var dishContent = new StringContent(JsonConvert.SerializeObject(dish), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(uri, dishContent);
+            }
+            catch (HttpRequestException e)
+            {
+                //return null;
+                throw e;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw e;
+            }
 
             // Task<IActionResult> actionResult =  new Task<IActionResult> ();
         }
@@ -73,8 +128,15 @@ namespace PFCCCalculatorService.Services
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}/{DishId}";
 
 
-            var response = await httpClient.DeleteAsync(uri);
-
+            try
+            {
+                var response = await httpClient.DeleteAsync(uri);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
 
             // Task<IActionResult> actionResult =  new Task<IActionResult> ();
         }
