@@ -18,18 +18,34 @@ namespace PFCCCalculatorService.Services
 
         public CommentsService(HttpClient httpClient)
         {
-
             this.httpClient = new HttpClient();
-
-            // this.remoteServiceBaseUrl = remoteServiceBaseUrl;
         }
 
         public async Task<List<Comment>> GetCommentsByUserId(int userId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}";
 
-            var comments = JsonConvert.DeserializeObject<List<Comment>>(await httpClient.GetStringAsync(uri));
-            return comments;
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+            try
+            {
+               response.EnsureSuccessStatusCode();
+               string responseBody = await response.Content.ReadAsStringAsync();
+               var comments = JsonConvert.DeserializeObject<List<Comment>>(responseBody);
+
+               return comments;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
 
@@ -37,22 +53,43 @@ namespace PFCCCalculatorService.Services
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/dish/{dishId}?pageSize={pageSize}&pageIndex={pageIndex}";
 
-            string responseString = await httpClient.GetStringAsync(uri);
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
 
-            var comments = JsonConvert.DeserializeObject<PaginatedModel<Comment>>
-                (responseString);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var comments = JsonConvert.DeserializeObject<PaginatedModel<Comment>>(responseBody);
 
-            return comments;
+                return comments;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
         public async Task DeleteComment(int userId, int commentId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}/{commentId}";
 
+            try
+            {
+                var response = await httpClient.DeleteAsync(uri);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
 
-            var response = await httpClient.DeleteAsync(uri);
-
-            // Task<IActionResult> actionResult =  new Task<IActionResult> ();
         }
     }
 }
