@@ -1,5 +1,5 @@
-﻿using Dishes.Models;
-using ProductsService.Models;
+﻿
+using PFCCCalculatorService.Models;
 using SharedModels;
 using System;
 using System.Collections.Generic;
@@ -44,7 +44,9 @@ namespace PFCCCalculatorService.Calculator
                 TotalWeight = dish.TotalWeight
             };
 
-            double sc = pFCCRecipe.TotalWeight / 100;
+           
+           // double totalWeight = pFCCIngredients.Sum(i => i.Count);
+            double sc = 100 / pFCCRecipe.TotalWeight;
             double  totalFat = pFCCIngredients.Sum(i => i.Fat) * sc;
             double totalProtein = pFCCIngredients.Sum(i => i.Protein) * sc;
             double totalCarbohydrates = pFCCIngredients.Sum(i => i.Carbohydrates) * sc;
