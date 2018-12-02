@@ -11,10 +11,10 @@ namespace PFCCCalculatorService.Services
     public interface IGatewayService
     {
         Task<PFCCRecipe> GetRecipeWithPFCC(int RecipeId);
-        Task DeleteDish(int userId,int dishId);
-        Task CreateProduct(int userId, Product product);
-        Task DeleteProduct(int userId, int productId);
-        Task UpdateProduct(int userId,Product productToUpdate);
+        Task<bool> DeleteDish(int userId,int dishId);
+        Task<bool> CreateProduct(int userId, Product product);
+        Task<bool> DeleteProduct(int userId, int productId);
+        Task<bool> UpdateProduct(int userId,Product productToUpdate);
 
     }
 }

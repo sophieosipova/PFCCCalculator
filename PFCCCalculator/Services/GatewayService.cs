@@ -7,6 +7,7 @@ using SharedModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace PFCCCalculatorService.Services
@@ -30,59 +31,91 @@ namespace PFCCCalculatorService.Services
             {
                 Dish dish = await dishesService.GetDishById(RecipeId);
 
+                if (dish == null)
+                    return null;
+
                 Product[] products = new Product[dish.Ingredients.Count];
                 List<PFCCIngredient> ingredientsList = new List<PFCCIngredient>();
                 foreach (Ingredient ingredient in dish.Ingredients)
                 {
                     Product product = await productsService.GetProductById(ingredient.ProductId);
+
+                    if (product == null)
+                        return null;
                     ingredientsList.Add(PFCCCalculations.CalculateIngredient(ingredient, product));
                 }
 
                 return PFCCCalculations.PFCCRecipeCalculator(dish, ingredientsList);
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                throw e;
             }
         }
 
-        public async Task DeleteDish(int userId, int dishId)
+        public async Task<bool> DeleteDish(int userId, int dishId)
         {
             await dishesService.DeleteDish(userId, dishId);
 
             try
             {
                 PaginatedModel<Comment> model = await commentsService.GetCommentsByDishId(dishId);
+
+                if (model == null)
+                    return false;
                 int n = Convert.ToInt32(model.Count / model.PageSize + 1);
 
                 for (int i = 0; i < n; i++)
                 {
                     foreach (Comment comment in model.Data)
                     {
-                        await commentsService.DeleteComment(userId, comment.CommentId);
+                        if (!await commentsService.DeleteComment(userId, comment.CommentId))
+                            return false;
                     }
                 }
             }
-            catch
+            catch (HttpRequestException e)
             {
+                throw e;
+            }
 
+            return true;
+        }
+        public async Task<bool> CreateProduct(int userId, Product product)
+        {
+            try
+            {
+                return await productsService.CreateProduct(userId, product);
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
             }
         }
-        public async Task CreateProduct(int userId, Product product)
+        public async Task<bool> DeleteProduct(int userId, int productId)
         {
-             await productsService.CreateProduct(userId, product);
-        }
-        public async Task DeleteProduct(int userId, int productId)
-        {
-            await productsService.DeleteProduct(userId, productId);
-            await dishesService.
-        }
-        public async Task UpdateProduct(int userId, Product productToUpdate)
-        {
-          //  await productsService.GetProductById(productToUpdate.ProductId);
+            try
+            {
+                if (await dishesService.GetDishesWithProduct(productId) == null)
+                    return await productsService.DeleteProduct(userId, productId);
+            }
+            catch(HttpRequestException e)
+            {
+                throw e;
+            }
 
-            await productsService.UpdateProduct(userId, productToUpdate);
-           // await dishesService.
+            return false;
+        }
+        public async Task<bool> UpdateProduct(int userId, Product productToUpdate)
+        {
+            try
+            {
+               return await productsService.UpdateProduct(userId, productToUpdate);
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
         }
 
     }
