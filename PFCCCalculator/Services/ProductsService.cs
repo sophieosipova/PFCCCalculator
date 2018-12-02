@@ -6,10 +6,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ProductsService.Models;
+
 using Microsoft.EntityFrameworkCore;
 using SharedModels;
 using Newtonsoft.Json.Linq;
+using PFCCCalculatorService.Models;
 
 namespace PFCCCalculatorService.Services
 {

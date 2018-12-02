@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Dishes.Models;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PFCCCalculatorService.Services;
-using ProductsService.Models;
+
 using SharedModels;
 using PFCCCalculator;
 using PFCCCalculatorService.Calculator;

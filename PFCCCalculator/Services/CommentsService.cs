@@ -4,8 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using CommentsService.Models;
+
 using Newtonsoft.Json;
+using PFCCCalculatorService.Models;
 using SharedModels;
 
 namespace PFCCCalculatorService.Services

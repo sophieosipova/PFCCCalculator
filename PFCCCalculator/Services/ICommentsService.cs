@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CommentsService.Models;
+
 using Microsoft.AspNetCore.Mvc;
+using PFCCCalculatorService.Models;
 using SharedModels;
 
 namespace PFCCCalculatorService.Services

@@ -5,8 +5,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PFCCCalculatorService.Models;
 using PFCCCalculatorService.Services;
-using ProductsService.Models;
+
 using SharedModels;
 
 namespace PFCCCalculatorService.Controllers

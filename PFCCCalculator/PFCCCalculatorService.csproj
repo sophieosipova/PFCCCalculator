@@ -14,17 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dishes\DishesService.csproj" />
     <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="CommentsService">
-      <HintPath>..\Comments\bin\Debug\netcoreapp2.1\CommentsService.dll</HintPath>
-    </Reference>
-    <Reference Include="ProductsService">
-      <HintPath>..\Products\bin\Debug\netcoreapp2.1\ProductsService.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
