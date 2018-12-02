@@ -16,7 +16,7 @@ namespace PFCCCalculatorService.Services
 
         //Task<IActionResult> CreateComment(Comment comment);
 
-          Task DeleteComment(int userId,int commentId);
+          Task<bool> DeleteComment(int userId,int commentId);
 
         // Task<IActionResult> UpdateComment(Comment commentToUpdate);
 

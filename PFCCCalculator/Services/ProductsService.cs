@@ -31,18 +31,54 @@ namespace PFCCCalculatorService.Services
         {
             var uri = $"{remoteServiceBaseUrl}/api/products";
 
-            var products = JsonConvert.DeserializeObject<List<Product>>(await httpClient.GetStringAsync(uri));
-            return products;
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var products = JsonConvert.DeserializeObject<List<Product>>(responseBody);
+
+                return products;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
         public async Task<List<ProductsCategory>> GetProductsCategories()
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/categories";
 
-            var categories = JsonConvert.DeserializeObject<List<ProductsCategory>>
-                (await httpClient.GetStringAsync(uri));
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
 
-            return categories;
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var categories = JsonConvert.DeserializeObject<List<ProductsCategory>>(responseBody);
+
+                return categories;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
 
@@ -50,49 +86,115 @@ namespace PFCCCalculatorService.Services
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/categories/{productCategoryId}";
 
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
 
-            var products = JsonConvert.DeserializeObject<List<Product>>
-                (await httpClient.GetStringAsync(uri));
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var products = JsonConvert.DeserializeObject<List<Product>>(responseBody);
 
-            return products;
+                return products;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
         public async Task<Product> GetProductById (int productId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/{productId}";
 
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
 
-            var product = JsonConvert.DeserializeObject<Product>
-                (await httpClient.GetStringAsync(uri));
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var product = JsonConvert.DeserializeObject<Product>(responseBody);
 
-            return product;
+                return product;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return null;
         }
 
-        public async Task CreateProduct(int userId, Product product)
+        public async Task<bool> CreateProduct(int userId, Product product)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
+            
+            try
+            {
+                var productContent = new StringContent(JsonConvert.SerializeObject(product), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(uri, productContent);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
-            var productContent = new StringContent(JsonConvert.SerializeObject(product), System.Text.Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(uri, productContent);
+            return true;
         }
 
-        public async Task DeleteProduct(int userId, int productId)
+        public async Task<bool> DeleteProduct(int userId, int productId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}/{productId}";
 
-            var response = await httpClient.DeleteAsync(uri);
+            try
+            {
+                var response = await httpClient.DeleteAsync(uri);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    return false;
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
+            return true;
+
         }
-        public async Task UpdateProduct(int userId, Product productToUpdate)
+        public async Task<bool> UpdateProduct(int userId, Product productToUpdate)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
-            var productContent = new StringContent(JsonConvert.SerializeObject(productToUpdate), System.Text.Encoding.UTF8, "application/json");
-            var response = await httpClient.PutAsync(uri, productContent);
+            try
+            {
+                var productContent = new StringContent(JsonConvert.SerializeObject(productToUpdate), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PutAsync(uri, productContent);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    return false;
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return true;
         }
-        public async void Dispose()
+        public  void Dispose()
 
         {
-
-            //await channel.ShutdownAsync();
-
+             httpClient.Dispose();
         }
 
         /*   Task<List<ProductsCategory>> GetProductsCategories();

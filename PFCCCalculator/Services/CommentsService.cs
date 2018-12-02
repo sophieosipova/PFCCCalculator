@@ -76,13 +76,16 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task DeleteComment(int userId, int commentId)
+        public async Task <bool> DeleteComment(int userId, int commentId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}/{commentId}";
 
             try
             {
                 var response = await httpClient.DeleteAsync(uri);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    return false;
+
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException e)
@@ -90,6 +93,7 @@ namespace PFCCCalculatorService.Services
                 throw e;
             }
 
+            return true;
         }
     }
 }
