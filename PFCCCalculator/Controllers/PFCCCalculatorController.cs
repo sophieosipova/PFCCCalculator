@@ -32,18 +32,28 @@ namespace PFCCCalculatorService.Controllers
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
          public async Task<IActionResult> GetRecipeWithPFCC(int RecipeId)
         {
-          /*  Dish dish =  JsonConvert.DeserializeObject<Dish>(dishesService.GetDishById(RecipeId).ToString());
+            /*  Dish dish =  JsonConvert.DeserializeObject<Dish>(dishesService.GetDishById(RecipeId).ToString());
 
-            Product[] products = new Product[dish.Ingredients.Count];
-            List < PFCCIngredient >  ingredientsList = new List<PFCCIngredient>();
-            foreach (Ingredient ingredient in dish.Ingredients)
+              Product[] products = new Product[dish.Ingredients.Count];
+              List < PFCCIngredient >  ingredientsList = new List<PFCCIngredient>();
+              foreach (Ingredient ingredient in dish.Ingredients)
+              {
+                  Product product = JsonConvert.DeserializeObject<Product>
+                      (productsService.GetProductById(ingredient.ProductId).ToString());
+                  ingredientsList.Add(PFCCCalculations.CalculateIngredient(ingredient, product));
+              } */
+            try
             {
-                Product product = JsonConvert.DeserializeObject<Product>
-                    (productsService.GetProductById(ingredient.ProductId).ToString());
-                ingredientsList.Add(PFCCCalculations.CalculateIngredient(ingredient, product));
-            } */
+                PFCCRecipe recipe = await gatewayService.GetRecipeWithPFCC(RecipeId);
+                if (recipe == null)
+                    return NotFound();
 
-            return Ok(await gatewayService.GetRecipeWithPFCC(RecipeId));
+                return Ok(recipe);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e);
+            }
 
         }
 
@@ -54,9 +64,18 @@ namespace PFCCCalculatorService.Controllers
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteRecipe(int userId, int recipeId)
         {
-            await gatewayService.DeleteDish(userId, recipeId);
-            return NoContent();
+            try
+            {
+                if (!await gatewayService.DeleteDish(userId, recipeId))
+                    return NotFound();
+               
+            }
+            catch (Exception e)
+            {
+                return Conflict(e);
+            }
 
+            return NoContent();
         }
     }
 }
