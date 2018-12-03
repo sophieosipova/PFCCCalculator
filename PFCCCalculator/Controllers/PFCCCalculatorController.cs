@@ -52,7 +52,7 @@ namespace PFCCCalculatorService.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e);
+                return Conflict(e.Message);
             }
 
         }
@@ -72,7 +72,7 @@ namespace PFCCCalculatorService.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e);
+                return Conflict(e.Message);
             }
 
             return NoContent();

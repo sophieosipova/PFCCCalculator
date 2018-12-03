@@ -14,7 +14,7 @@ namespace PFCCCalculatorService.Services
         Task<List<Dish>> GetDishesWithProduct(int productId);
         Task<Dish> GetDishById(int dishId);
 
-        Task<bool> CreateDish(int userId, Dish dish);
+        Task<Dish> CreateDish(int userId, Dish dish);
         Task <bool> DeleteDish(int userId, int dishId);
         //  Task<IActionResult> UpdateDish(Dish dishToUpdate);
     }

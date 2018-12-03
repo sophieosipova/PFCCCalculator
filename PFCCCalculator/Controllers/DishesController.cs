@@ -58,9 +58,9 @@ namespace PFCCCalculatorService.Controllers
         [Route("user/{userId}/")]
         public async Task<IActionResult> CreateDish(int UserId, Dish dish)
         {
-          //  Dish dish = new Dish();
-            await dishesService.CreateDish( UserId, dish);
-            return Ok();//CreatedAtAction(nameof(GetDishById), null, null);
+            //  Dish dish = new Dish();
+            return  Created("",await dishesService.CreateDish(UserId, dish) );
+        //   return  CreatedAtAction(nameof(GetDishById), id, null);
         }
 
     }

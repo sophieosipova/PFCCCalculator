@@ -136,7 +136,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task<bool> CreateProduct(int userId, Product product)
+        public async Task<Product> CreateProduct(int userId, Product product)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
             
@@ -145,13 +145,15 @@ namespace PFCCCalculatorService.Services
                 var productContent = new StringContent(JsonConvert.SerializeObject(product), System.Text.Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(uri, productContent);
                 response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Product>(responseBody);
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            return true;
+            
         }
 
         public async Task<bool> DeleteProduct(int userId, int productId)

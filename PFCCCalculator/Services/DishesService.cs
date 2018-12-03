@@ -102,7 +102,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task <bool> CreateDish(int userId, Dish dish)
+        public async Task <Dish> CreateDish(int userId, Dish dish)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
 
@@ -110,7 +110,9 @@ namespace PFCCCalculatorService.Services
             {
                 var dishContent = new StringContent(JsonConvert.SerializeObject(dish), System.Text.Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(uri, dishContent);
-                
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return  JsonConvert.DeserializeObject<Dish>(responseBody);
             }
             catch (HttpRequestException e)
             {
@@ -118,7 +120,7 @@ namespace PFCCCalculatorService.Services
                 throw e;
             }
 
-            return true;
+            
 
             // Task<IActionResult> actionResult =  new Task<IActionResult> ();
         }

@@ -8,6 +8,7 @@ using SharedModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -82,7 +83,7 @@ namespace PFCCCalculatorService.Services
 
             return true;
         }
-        public async Task<bool> CreateProduct(int userId, Product product)
+     /*   public async Task<Dish> CreateProduct(int userId, Product product)
         {
             try
             {
@@ -92,20 +93,22 @@ namespace PFCCCalculatorService.Services
             {
                 throw e;
             }
-        }
-        public async Task<bool> DeleteProduct(int userId, int productId)
+        }*/
+        public async Task<HttpStatusCode> DeleteProduct(int userId, int productId)
         {
             try
             {
                 if (await dishesService.GetDishesWithProduct(productId) == null)
-                    return await productsService.DeleteProduct(userId, productId);
+                    if (await productsService.DeleteProduct(userId, productId))
+                        return HttpStatusCode.NoContent;
+                    else return HttpStatusCode.NotFound;
             }
             catch(HttpRequestException e)
             {
                 throw e;
             }
 
-            return false;
+            return HttpStatusCode.Conflict;
         }
         public async Task<bool> UpdateProduct(int userId, Product productToUpdate)
         {
