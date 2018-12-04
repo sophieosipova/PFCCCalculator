@@ -6,6 +6,7 @@ using CommentsService.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using SharedModels;
+using CommentsService.Database;
 
 namespace CommentsService.Controllers
 {
@@ -14,18 +15,11 @@ namespace CommentsService.Controllers
     public class CommentsController : ControllerBase
     {
 
-        private readonly CommentsContext db;
+        private readonly ICommentsRepository commentsRepository;
 
-        public CommentsController(CommentsContext context)
+        public CommentsController(ICommentsRepository commentsRepository)
         {
-            this.db = context;
-            if (!db.Comments.Any())
-            {
-                db.Comments.Add(new Comment{ UserId = 1, CommentText = "WOW!",DishId = 1 });
-                db.Comments.Add(new Comment { UserId = 2, CommentText = "Вкусно!", DishId = 1 });
-               
-                db.SaveChanges();
-            }
+            this.commentsRepository = commentsRepository;
         }
 
        
@@ -34,7 +28,12 @@ namespace CommentsService.Controllers
         [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetComments()
         {
-            return Ok(await db.Comments.ToListAsync());
+            var comments = await commentsRepository.GetComments();
+
+            if (comments == null)
+                return NotFound();
+
+            return Ok(comments);
         }
 
 
@@ -47,7 +46,7 @@ namespace CommentsService.Controllers
             if (commentId <= 0)
                 return BadRequest();
 
-            var comment = await db.Comments.SingleOrDefaultAsync(c => c.CommentId == commentId);
+            var comment = await commentsRepository.GetCommentById(commentId);
 
             if (comment != null)
                 return Ok(comment);
@@ -64,7 +63,7 @@ namespace CommentsService.Controllers
             if (userId <= 0)
                 return BadRequest();
 
-            var comments = await db.Comments.Where(c => c.UserId == userId).ToListAsync();
+            var comments = await commentsRepository.GetCommentsByUserId(userId);
 
             if (comments != null)
                 return Ok(comments);
@@ -77,20 +76,14 @@ namespace CommentsService.Controllers
         [Route("user/{userId:int}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateComment ([FromBody]Comment comment)
+        public async Task<IActionResult> CreateComment (int userId, Comment comment)
         {
-            var item = new Comment
-            {
-                CommentId = comment.CommentId,
-                CommentText = comment.CommentText,
-                UserId = comment.UserId,
-                DishId = comment.DishId,
-            };
+            var c = await commentsRepository.CreateComment(userId, comment);
 
-            db.Comments.Add(item);
-            await db.SaveChangesAsync();
+            if (c == null)
+                return null;
 
-            return CreatedAtAction(nameof(GetCommentById), new { commentId = item.CommentId }, null);
+            return Created("", c);
         }
 
         
@@ -99,35 +92,27 @@ namespace CommentsService.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteComment(int userId,int commentId)
         {
-            var comment = db.Comments.SingleOrDefault(c => c.CommentId == commentId);
+            if (userId < 0)
+                return BadRequest();
 
-            if (comment == null)
-                return NotFound();
+            if (await commentsRepository.DeleteComment(userId, commentId))
+                return NoContent();
 
-            db.Comments.Remove(comment);
-            await db.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
 
         [Route("user/{userId:int}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> UpdateComment([FromBody]Comment commentToUpdate)
+        public async Task<IActionResult> UpdateComment(int userId, [FromBody]Comment commentToUpdate)
         {
-            var comment = await db.Comments
-                .SingleOrDefaultAsync(c => c.CommentId== commentToUpdate.CommentId);
+            var comment = await commentsRepository.UpdateComment(userId, commentToUpdate);
 
             if (comment == null)
-                return NotFound(new { Message = $"Comment with id {commentToUpdate.CommentId} not found." });
+                return NotFound();
 
-            comment = commentToUpdate;
-
-            db.Comments.Update(comment);
-            await db.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetCommentById), new { commentId = commentToUpdate.CommentId }, null);
+            return Created("", comment);
         }
 
 
@@ -160,23 +145,11 @@ namespace CommentsService.Controllers
             if (dishId <= 0)
                 return BadRequest();
 
-            var comments = await db.Comments.Where(c => c.DishId == dishId).ToListAsync();
+            var comments = await commentsRepository.GetCommentsByDishId(dishId, pageSize, pageIndex);
+              
+            if (comments != null)
+                return Ok(comments);
 
-            var totalItems =  comments.Count();
-
-            if (totalItems != 0)
-            {
-                var itemsOnPage = comments
-                .OrderByDescending(c => c.CommentId)
-                .Skip(pageSize * pageIndex)
-                .Take(pageSize)
-                .ToList();
-
-                var model = new PaginatedModel<Comment>(pageIndex, pageSize, totalItems, itemsOnPage);
-
-                return Ok(model);
-            }
-                
             return NotFound();
         }
 

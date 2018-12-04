@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
 using CommentsService.Models;
-
+using CommentsService.Database;
 
 namespace Comments
 {
@@ -27,8 +27,12 @@ namespace Comments
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string con = "Server=(localdb)\\mssqllocaldb;Database=DBComments;Trusted_Connection=True;MultipleActiveResultSets=true";
-            services.AddDbContext<CommentsContext>(options => options.UseSqlServer(con));
+            // string con = "Server=(localdb)\\mssqllocaldb;Database=DBComments;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //  services.AddDbContext<CommentsContext>(options => options.UseSqlServer(con));
+
+            services.AddDbContext<CommentsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CommentsDatabase")));
+
+            services.AddScoped<ICommentsRepository, CommentsRepository>(); 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
         }
