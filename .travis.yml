@@ -1,0 +1,17 @@
+language: csharp
+
+mono: none
+
+dotnet: 2.1.402
+
+branches:
+
+  only:
+
+    - develop
+
+script:
+
+  - dotnet restore
+
+  - dotnet test ./Tests -c Release -f netcoreapp2.1
