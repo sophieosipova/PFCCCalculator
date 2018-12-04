@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ProductsService.Models
 {
-    [Table(Name = "tblProducts")]
+    //[Table(Name = "tblProducts")]
     public class Product : IEquatable<Product>
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+       // [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int ProductId { get; set; }
         public int ProductsCategoryId { get; set; }
         public string ProductName { get; set; }
