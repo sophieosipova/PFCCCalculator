@@ -32,7 +32,7 @@ namespace Tests.ProductsServiceTests
         }
 
             [Fact]
-            public async void CreateNullRecipeTest()
+            public async void CreateNullProductsTest()
             {
             // Arrange
              int userTestId = 1;
