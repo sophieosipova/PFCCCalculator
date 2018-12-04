@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CommentsService.Database
 {
-    public interface ICommentsRepository
+    public interface ICommentsRepository 
     {
-        Task<List<Comment>> GetComments();
+    //    Task<List<Comment>> GetComments();
         Task<Comment> GetCommentById(int commentId);
         Task<List<Comment>> GetCommentsByUserId(int userId);
         Task<Comment> CreateComment(int userId,Comment comment);

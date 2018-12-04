@@ -25,7 +25,7 @@ namespace CommentsService.Database
         }
 
 
-        public async Task<List<Comment>> GetComments()
+   /*     public async Task<List<Comment>> GetComments()
         {
             try
             {
@@ -38,7 +38,7 @@ namespace CommentsService.Database
             {
                 return null;
             }
-        }
+        }*/
 
 
         public async Task<Comment> GetCommentById(int commentId)

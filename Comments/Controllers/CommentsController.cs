@@ -23,7 +23,7 @@ namespace CommentsService.Controllers
         }
 
        
-        [HttpGet]
+      /*  [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetComments()
@@ -34,7 +34,7 @@ namespace CommentsService.Controllers
                 return NotFound();
 
             return Ok(comments);
-        }
+        } */
 
 
         [HttpGet]
