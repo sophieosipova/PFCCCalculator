@@ -1,10 +1,8 @@
-﻿
-using PFCCCalculatorService.Models;
+﻿using PFCCCalculatorService.Models;
 using SharedModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace PFCCCalculatorService.Calculator
 {

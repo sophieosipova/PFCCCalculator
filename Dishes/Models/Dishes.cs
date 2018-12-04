@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data.Linq.Mapping;
+//using System.Data.Linq.Mapping;
 
 namespace Dishes.Models
 {
@@ -10,7 +10,7 @@ namespace Dishes.Models
         {
             Ingredients = new HashSet<Ingredient>();
         }
-        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+      //  [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int DishId { get; set; }
         public int UserId { get; set; }
         public string DishName { get; set; }

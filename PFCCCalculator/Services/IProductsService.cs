@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-//using ProductsService.Models;
+﻿
+
 using SharedModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-
 using PFCCCalculatorService.Models;
 
 namespace PFCCCalculatorService.Services

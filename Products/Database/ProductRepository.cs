@@ -1,15 +1,9 @@
 ﻿using ProductsService.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using ProductsService.Models;
-using System.Net;
-using System.Threading.Tasks;
 using SharedModels;
 
 
