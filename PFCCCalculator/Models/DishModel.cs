@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PFCCCalculatorService.Models
 {
-    public class Dish
+    public class DishModel
     {
         public int DishId { get; set; }
         public int UserId { get; set; }
@@ -14,10 +14,10 @@ namespace PFCCCalculatorService.Models
         public string Recipe { get; set; }
         public double TotalWeight { get; set; }
 
-        public ICollection<Ingredient> Ingredients { get; set; }
+        public ICollection<IngredientModel> Ingredients { get; set; }
     }
 
-    public class Ingredient
+    public class IngredientModel
     {
         public int IngredientId { get; set; }
         public int DishId { get; set; }

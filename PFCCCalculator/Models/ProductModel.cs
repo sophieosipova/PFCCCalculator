@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PFCCCalculatorService.Models
 {
-    public class Product
+    public class ProductModel
     {
         public int ProductId { get; set; }
         public int ProductsCategoryId { get; set; }
@@ -17,7 +17,7 @@ namespace PFCCCalculatorService.Models
         public int UserId { get; set; }
     }
 
-    public  class ProductsCategory
+    public  class ProductsCategoryModel
     {
         public int ProductsCategoryId { get; set; }
         public string ProductsCategoryName { get; set; }

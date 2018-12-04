@@ -11,7 +11,7 @@ namespace PFCCCalculatorService.Calculator
     public static  class PFCCCalculations
     {
 
-        public static PFCCIngredient CalculateIngredient (Ingredient ingredient, Product product)
+        public static PFCCIngredient CalculateIngredient (IngredientModel ingredient, ProductModel product)
         {
             double sc = ingredient.Count / 100.0;
             PFCCIngredient pFCCIngredient = new PFCCIngredient
@@ -32,7 +32,7 @@ namespace PFCCCalculatorService.Calculator
 
         }
 
-        public static PFCCRecipe PFCCRecipeCalculator (Dish dish, List<PFCCIngredient> pFCCIngredients)
+        public static PFCCRecipe PFCCRecipeCalculator (DishModel dish, List<PFCCIngredient> pFCCIngredients)
         {
             PFCCRecipe pFCCRecipe = new PFCCRecipe
             {

@@ -35,6 +35,7 @@ namespace SharedModels
                 Protein == other.Protein &&
                 Carbohydrates == other.Carbohydrates &&
                 Calories == other.Calories &&
+                TotalWeight == other.TotalWeight &&
                 ingredientsEquals;
         }
 

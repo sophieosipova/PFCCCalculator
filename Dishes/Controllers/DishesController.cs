@@ -119,18 +119,22 @@ namespace DishesService.Controllers
                 DishName = dish.DishName,
                 DishImage = dish.DishImage,
                 Recipe = dish.Recipe,
+                TotalWeight = dish.TotalWeight,
+                UserId = dish.UserId
             };
             db.Dishes.Add(item);
+            
+            db.SaveChanges();
 
-            await db.SaveChangesAsync();
+          //  item = db.Dishes.Find(item);
+            int dishId = db.Dishes.Last().DishId;
 
             foreach (Ingredient ingredient in dish.Ingredients)
             {
                 var iItem = new Ingredient
                 {
-                    
                     IngredientId = ingredient.IngredientId,
-                    DishId = dish.DishId,
+                    DishId = dishId,
                     ProductId = ingredient.ProductId,
                     ProductName = ingredient.ProductName,
                     Count = ingredient.Count,
@@ -140,7 +144,7 @@ namespace DishesService.Controllers
             await db.SaveChangesAsync();
 
             
-            return CreatedAtAction(nameof(GetDishById), new { dishId = item.DishId }, item);
+            return CreatedAtAction(nameof(GetDishById), new { dishId = dishId}, item);
         }
 
 
@@ -197,6 +201,7 @@ namespace DishesService.Controllers
 
             return CreatedAtAction(nameof(GetDishById), new { productID = dishToUpdate.DishId }, null);
         }
-
     }
+
+    
 }

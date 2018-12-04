@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PFCCCalculatorService.Models
 {
-    public class Comment
+    public class CommentModel
     {
             public int CommentId { get; set; }
             public string CommentText { get; set; }
