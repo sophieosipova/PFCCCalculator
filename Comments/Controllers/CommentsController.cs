@@ -78,7 +78,7 @@ namespace CommentsService.Controllers
             var c = await commentsRepository.CreateComment(userId, comment);
 
             if (c == null)
-                return null;
+                return Conflict();
 
             return Created("", c);
         }
