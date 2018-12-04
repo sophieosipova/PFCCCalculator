@@ -27,7 +27,7 @@ namespace PFCCCalculatorService.Controllers
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<Product>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<ProductModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProducts()
         {
             //p  = await productsService.GetProducts()
@@ -38,7 +38,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpGet]
         [Route("categories")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<ProductsCategory>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<ProductsCategoryModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductsCategories()
         {
             return Ok(await productsService.GetProductsCategories());
@@ -47,7 +47,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpGet]
         [Route("categories/{productCategoryId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProductModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductsByCategoryId(int productCategoryId)
         {
             if (productCategoryId <= 0)
@@ -64,7 +64,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpGet]
         [Route("{productId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProductModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductById(int productId)
         {
             if (productId <= 0)
@@ -80,8 +80,8 @@ namespace PFCCCalculatorService.Controllers
 
         [HttpGet]
         [Route("items")]
-        [ProducesResponseType(typeof(PaginatedModel<Product>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PaginatedModel<ProductModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ProductModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
         {
 

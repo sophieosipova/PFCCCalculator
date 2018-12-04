@@ -25,7 +25,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpGet]
         [Route("user/{userId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<CommentModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCommentsByUserId(int userId)
         {
             if (userId <= 0)
@@ -42,7 +42,7 @@ namespace PFCCCalculatorService.Controllers
 
         [HttpGet]
         [Route("dish/{dishId:int}")]
-        [ProducesResponseType(typeof(PaginatedModel<Comment>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PaginatedModel<CommentModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCommentsByDishId(int dishId, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
         {
             if (dishId <= 0)

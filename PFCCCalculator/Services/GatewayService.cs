@@ -31,16 +31,16 @@ namespace PFCCCalculatorService.Services
         {
             try
             {
-                Dish dish = await dishesService.GetDishById(RecipeId);
+                DishModel dish = await dishesService.GetDishById(RecipeId);
 
                 if (dish == null)
                     return null;
 
-                Product[] products = new Product[dish.Ingredients.Count];
+                ProductModel[] products = new ProductModel[dish.Ingredients.Count];
                 List<PFCCIngredient> ingredientsList = new List<PFCCIngredient>();
-                foreach (Ingredient ingredient in dish.Ingredients)
+                foreach (IngredientModel ingredient in dish.Ingredients)
                 {
-                    Product product = await productsService.GetProductById(ingredient.ProductId);
+                    ProductModel product = await productsService.GetProductById(ingredient.ProductId);
 
                     if (product == null)
                         return null;
@@ -61,7 +61,7 @@ namespace PFCCCalculatorService.Services
 
             try
             {
-                PaginatedModel<Comment> model = await commentsService.GetCommentsByDishId(dishId);
+                PaginatedModel<CommentModel> model = await commentsService.GetCommentsByDishId(dishId);
 
                 if (model == null)
                     return false;
@@ -69,7 +69,7 @@ namespace PFCCCalculatorService.Services
 
                 for (int i = 0; i < n; i++)
                 {
-                    foreach (Comment comment in model.Data)
+                    foreach (CommentModel comment in model.Data)
                     {
                         if (!await commentsService.DeleteComment(userId, comment.CommentId))
                             return false;
@@ -110,7 +110,7 @@ namespace PFCCCalculatorService.Services
 
             return HttpStatusCode.Conflict;
         }
-        public async Task<bool> UpdateProduct(int userId, Product productToUpdate)
+        public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
         {
             try
             {

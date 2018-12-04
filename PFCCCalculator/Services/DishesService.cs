@@ -23,7 +23,7 @@ namespace PFCCCalculatorService.Services
             // this.remoteServiceBaseUrl = remoteServiceBaseUrl;
         }
 
-        public async Task<List<Dish>> GetDishes()
+        public async Task<List<DishModel>> GetDishes()
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes";
             HttpResponseMessage response = await httpClient.GetAsync(uri);
@@ -32,7 +32,7 @@ namespace PFCCCalculatorService.Services
             {    
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                var dishes = JsonConvert.DeserializeObject<List<Dish>>(responseBody);
+                var dishes = JsonConvert.DeserializeObject<List<DishModel>>(responseBody);
 
                 return dishes;
             }
@@ -49,7 +49,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task<List<Dish>> GetDishesWithProduct(int productId)
+        public async Task<List<DishModel>> GetDishesWithProduct(int productId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/withproduct/{productId}";
             HttpResponseMessage response = await httpClient.GetAsync(uri);
@@ -58,7 +58,7 @@ namespace PFCCCalculatorService.Services
             {
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                var dishes = JsonConvert.DeserializeObject<List<Dish>>(responseBody);
+                var dishes = JsonConvert.DeserializeObject<List<DishModel>>(responseBody);
 
                 return dishes;
             }
@@ -76,7 +76,7 @@ namespace PFCCCalculatorService.Services
 
         }
 
-        public async Task<Dish> GetDishById(int dishId)
+        public async Task<DishModel> GetDishById(int dishId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/{dishId}";
 
@@ -85,7 +85,7 @@ namespace PFCCCalculatorService.Services
             {
                 response.EnsureSuccessStatusCode();           
                 string responseBody = await response.Content.ReadAsStringAsync();               
-                var dish = JsonConvert.DeserializeObject<Dish>(responseBody);
+                var dish = JsonConvert.DeserializeObject<DishModel>(responseBody);
 
                 return dish; 
             }
@@ -102,7 +102,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task <Dish> CreateDish(int userId, Dish dish)
+        public async Task <DishModel> CreateDish(int userId, DishModel dish)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
 
@@ -112,7 +112,7 @@ namespace PFCCCalculatorService.Services
                 var response = await httpClient.PostAsync(uri, dishContent);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                return  JsonConvert.DeserializeObject<Dish>(responseBody);
+                return  JsonConvert.DeserializeObject<DishModel>(responseBody);
             }
             catch (HttpRequestException e)
             {

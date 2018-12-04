@@ -13,7 +13,7 @@ namespace PFCCCalculatorService.Services
     {
 
 
-        Task<List<Comment>> GetCommentsByUserId(int userId);
+        Task<List<CommentModel>> GetCommentsByUserId(int userId);
 
         //Task<IActionResult> CreateComment(Comment comment);
 
@@ -21,7 +21,7 @@ namespace PFCCCalculatorService.Services
 
         // Task<IActionResult> UpdateComment(Comment commentToUpdate);
 
-        Task<PaginatedModel<Comment>> GetCommentsByDishId(int dishId, int pageSize = 10, int pageIndex = 0);
+        Task<PaginatedModel<CommentModel>> GetCommentsByDishId(int dishId, int pageSize = 10, int pageIndex = 0);
       
     }
 }

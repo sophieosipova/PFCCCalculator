@@ -22,7 +22,7 @@ namespace PFCCCalculatorService.Services
             this.httpClient = new HttpClient();
         }
 
-        public async Task<List<Comment>> GetCommentsByUserId(int userId)
+        public async Task<List<CommentModel>> GetCommentsByUserId(int userId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}";
 
@@ -32,7 +32,7 @@ namespace PFCCCalculatorService.Services
             {
                response.EnsureSuccessStatusCode();
                string responseBody = await response.Content.ReadAsStringAsync();
-               var comments = JsonConvert.DeserializeObject<List<Comment>>(responseBody);
+               var comments = JsonConvert.DeserializeObject<List<CommentModel>>(responseBody);
 
                return comments;
             }
@@ -50,7 +50,7 @@ namespace PFCCCalculatorService.Services
         }
 
 
-        public async  Task<PaginatedModel<Comment>> GetCommentsByDishId(int dishId, int pageSize = 10, int pageIndex = 0)
+        public async  Task<PaginatedModel<CommentModel>> GetCommentsByDishId(int dishId, int pageSize = 10, int pageIndex = 0)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/dish/{dishId}?pageSize={pageSize}&pageIndex={pageIndex}";
 
@@ -60,7 +60,7 @@ namespace PFCCCalculatorService.Services
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                var comments = JsonConvert.DeserializeObject<PaginatedModel<Comment>>(responseBody);
+                var comments = JsonConvert.DeserializeObject<PaginatedModel<CommentModel>>(responseBody);
 
                 return comments;
             }

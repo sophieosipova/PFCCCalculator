@@ -28,7 +28,7 @@ namespace PFCCCalculatorService.Controllers
         // GET api/products
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<Dish>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<DishModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDishes()
         {         
             return Ok(await dishesService.GetDishes());
@@ -37,7 +37,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpGet]
         [Route("{dishId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Dish), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(DishModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDishById(int dishId)
         {
             if (dishId <= 0)
@@ -56,7 +56,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}/")]
-        public async Task<IActionResult> CreateDish(int UserId, Dish dish)
+        public async Task<IActionResult> CreateDish(int UserId, DishModel dish)
         {
             //  Dish dish = new Dish();
             return  Created("",await dishesService.CreateDish(UserId, dish) );

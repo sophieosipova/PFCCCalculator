@@ -28,7 +28,7 @@ namespace PFCCCalculatorService.Services
         }
 
 
-        public async Task<List<Product> > GetProducts()
+        public async Task<List<ProductModel> > GetProducts()
         {
             var uri = $"{remoteServiceBaseUrl}/api/products";
 
@@ -38,7 +38,7 @@ namespace PFCCCalculatorService.Services
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                var products = JsonConvert.DeserializeObject<List<Product>>(responseBody);
+                var products = JsonConvert.DeserializeObject<List<ProductModel>>(responseBody);
 
                 return products;
             }
@@ -55,7 +55,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task<List<ProductsCategory>> GetProductsCategories()
+        public async Task<List<ProductsCategoryModel>> GetProductsCategories()
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/categories";
 
@@ -65,7 +65,7 @@ namespace PFCCCalculatorService.Services
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                var categories = JsonConvert.DeserializeObject<List<ProductsCategory>>(responseBody);
+                var categories = JsonConvert.DeserializeObject<List<ProductsCategoryModel>>(responseBody);
 
                 return categories;
             }
@@ -83,7 +83,7 @@ namespace PFCCCalculatorService.Services
         }
 
 
-        public async Task<List<Product>> GetProductsByCategoryId(int productCategoryId)
+        public async Task<List<ProductModel>> GetProductsByCategoryId(int productCategoryId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/categories/{productCategoryId}";
 
@@ -93,7 +93,7 @@ namespace PFCCCalculatorService.Services
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                var products = JsonConvert.DeserializeObject<List<Product>>(responseBody);
+                var products = JsonConvert.DeserializeObject<List<ProductModel>>(responseBody);
 
                 return products;
             }
@@ -109,7 +109,7 @@ namespace PFCCCalculatorService.Services
 
             return null;
         }
-        public async Task<Product> GetProductById (int productId)
+        public async Task<ProductModel> GetProductById (int productId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/{productId}";
 
@@ -119,7 +119,7 @@ namespace PFCCCalculatorService.Services
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                var product = JsonConvert.DeserializeObject<Product>(responseBody);
+                var product = JsonConvert.DeserializeObject<ProductModel>(responseBody);
 
                 return product;
             }
@@ -136,7 +136,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task<Product> CreateProduct(int userId, Product product)
+        public async Task<ProductModel> CreateProduct(int userId, ProductModel product)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
             
@@ -146,7 +146,7 @@ namespace PFCCCalculatorService.Services
                 var response = await httpClient.PostAsync(uri, productContent);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Product>(responseBody);
+                return JsonConvert.DeserializeObject<ProductModel>(responseBody);
             }
             catch (Exception e)
             {
@@ -175,7 +175,7 @@ namespace PFCCCalculatorService.Services
             return true;
 
         }
-        public async Task<bool> UpdateProduct(int userId, Product productToUpdate)
+        public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
             try
@@ -217,7 +217,7 @@ namespace PFCCCalculatorService.Services
            Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate);
            */
 
-        public async Task<PaginatedModel<Product>> Items(int pageSize = 10, int pageIndex = 0)
+        public async Task<PaginatedModel<ProductModel>> Items(int pageSize = 10, int pageIndex = 0)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/items?pageSize={pageSize}&pageIndex={pageIndex}";
 
@@ -225,7 +225,7 @@ namespace PFCCCalculatorService.Services
           //  var brands = JArray.Parse(responseString);
 
 
-            var product = JsonConvert.DeserializeObject<PaginatedModel<Product>>
+            var product = JsonConvert.DeserializeObject<PaginatedModel<ProductModel>>
                 (responseString);
             //   var products = 
 

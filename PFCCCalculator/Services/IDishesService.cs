@@ -10,11 +10,11 @@ namespace PFCCCalculatorService.Services
 {
      public interface IDishesService
     {
-        Task<List<Dish>> GetDishes();
-        Task<List<Dish>> GetDishesWithProduct(int productId);
-        Task<Dish> GetDishById(int dishId);
+        Task<List<DishModel>> GetDishes();
+        Task<List<DishModel>> GetDishesWithProduct(int productId);
+        Task<DishModel> GetDishById(int dishId);
 
-        Task<Dish> CreateDish(int userId, Dish dish);
+        Task<DishModel> CreateDish(int userId, DishModel dish);
         Task <bool> DeleteDish(int userId, int dishId);
         //  Task<IActionResult> UpdateDish(Dish dishToUpdate);
     }

@@ -17,25 +17,25 @@ namespace PFCCCalculatorService.Services
     public interface IProductsService : IDisposable
 
     {
-         Task<List<Product>> GetProducts();
+         Task<List<ProductModel>> GetProducts();
 
-         Task<List<ProductsCategory>> GetProductsCategories();
+         Task<List<ProductsCategoryModel>> GetProductsCategories();
 
-         Task<List<Product>> GetProductsByCategoryId(int productCategoryId);
+         Task<List<ProductModel>> GetProductsByCategoryId(int productCategoryId);
     
-         Task<Product> GetProductById(int productId);
+         Task<ProductModel> GetProductById(int productId);
 
           
-           Task<Product> CreateProduct(int userId, Product product);
+           Task<ProductModel> CreateProduct(int userId, ProductModel product);
            Task<bool> DeleteProduct(int userId, int productId);
-           Task<bool> UpdateProduct(int userId, Product productToUpdate);
+           Task<bool> UpdateProduct(int userId, ProductModel productToUpdate);
 
         /*      [ProducesResponseType((int)HttpStatusCode.NotFound)]
            [ProducesResponseType((int)HttpStatusCode.Created)]
            Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate);*/
 
 
-        Task<PaginatedModel<Product>> Items(int pageSize = 10, int pageIndex = 0);
+        Task<PaginatedModel<ProductModel>> Items(int pageSize = 10, int pageIndex = 0);
 
     }
 
