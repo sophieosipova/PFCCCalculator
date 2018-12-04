@@ -120,7 +120,6 @@ namespace ProductsService.Database
                 db.Products.Add(item);
                 db.SaveChanges();
                 return await db.Products.LastAsync();
-
             }
             catch
             {
