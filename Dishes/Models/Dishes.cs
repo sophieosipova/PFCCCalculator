@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Data.Linq.Mapping;
 
 namespace Dishes.Models
 {
-    [Table(Name = "tblDishes")]
+    //[Table(Name = "tblDishes")]
     public class Dish
     {
         public Dish()

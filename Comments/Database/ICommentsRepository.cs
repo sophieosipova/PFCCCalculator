@@ -11,7 +11,7 @@ namespace CommentsService.Database
     {
     //    Task<List<Comment>> GetComments();
         Task<Comment> GetCommentById(int commentId);
-        Task<List<Comment>> GetCommentsByUserId(int userId);
+    //    Task<List<Comment>> GetCommentsByUserId(int userId);
         Task<Comment> CreateComment(int userId,Comment comment);
         Task<bool> DeleteComment(int userId, int commentId);
         Task<Comment> UpdateComment(int userId, Comment commentToUpdate);

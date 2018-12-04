@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CommentsService.Models
 {
-    [Table(Name = "tblComments")]
+   // [Table(Name = "tblComments")]
     public class Comment : IEquatable<Comment>
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+       // [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int CommentId { get; set; }
         public string CommentText{ get; set; }
         public int UserId { get; set; }

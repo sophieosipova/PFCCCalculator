@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
-using ProductsService.Controllers;
 using Moq;
-using PFCCCalculatorService.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using SharedModels;
-using ProductsService.Database;
-using ProductsService.Models;
 using CommentsService.Database;
 using CommentsService.Models;
 
@@ -136,7 +128,7 @@ namespace Tests.CommentsServiceTests
 
 
         [Fact]
-        public async void GetBadRequestCommentsByUserIdTest()
+        public async void GetBadRequestCommentsByDishIdTest()
         {
             // Arrange
             int dishTestID = -1;

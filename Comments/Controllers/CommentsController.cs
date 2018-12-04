@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CommentsService.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 using SharedModels;
 using CommentsService.Database;
@@ -54,7 +51,7 @@ namespace CommentsService.Controllers
             return NotFound();
         }
 
-        [HttpGet]
+  /*      [HttpGet]
         [Route("user/{userId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
@@ -69,7 +66,7 @@ namespace CommentsService.Controllers
                 return Ok(comments);
 
             return NotFound();
-        }
+        }*/
 
 
 

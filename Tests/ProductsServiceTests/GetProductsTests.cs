@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
-using ProductsService.Controllers;
 using Moq;
-using PFCCCalculatorService.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using SharedModels;
 using ProductsService.Database;
 using ProductsService.Models;
 

@@ -1,8 +1,6 @@
 ﻿using CommentsService.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,7 +52,7 @@ namespace CommentsService.Database
         }
 
 
-        public async Task<List<Comment>> GetCommentsByUserId(int userId)
+      /*  public async Task<List<Comment>> GetCommentsByUserId(int userId)
         {
             try
             { 
@@ -68,7 +66,7 @@ namespace CommentsService.Database
             {
                 return null;
             }
-        }
+        } */
 
         public async Task<Comment> CreateComment(int userId, Comment comment)
         {

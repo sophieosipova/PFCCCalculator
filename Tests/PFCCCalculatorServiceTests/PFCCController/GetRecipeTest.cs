@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using PFCCCalculatorService.Services;
-using Smart.Mock;
 using Moq;
 using PFCCCalculatorService.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using SharedModels;
 
 namespace Tests

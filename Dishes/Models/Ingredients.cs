@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.Linq.Mapping;
+﻿using System.Data.Linq.Mapping;
 
 namespace Dishes.Models
 {
-    [Table(Name = "tblIngredients")]
+   // [Table(Name = "tblIngredients")]
     public class Ingredient
     {
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
