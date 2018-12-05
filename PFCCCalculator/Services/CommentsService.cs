@@ -16,7 +16,7 @@ namespace PFCCCalculatorService.Services
         private readonly HttpClient httpClient;
         private readonly string remoteServiceBaseUrl = "http://localhost:49449";
 
-        public CommentsService(HttpClient httpClient)
+        public CommentsService(/*HttpClient httpClient*/ string url)
         {
             this.httpClient = new HttpClient();
         }

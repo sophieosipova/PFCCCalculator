@@ -14,7 +14,7 @@ namespace PFCCCalculatorService.Services
         private readonly HttpClient httpClient;
         private readonly string remoteServiceBaseUrl = "http://localhost:58029";
 
-        public DishesService(HttpClient httpClient)
+        public DishesService(/*HttpClient httpClient*/ string url)
         {
 
             this.httpClient = new HttpClient();

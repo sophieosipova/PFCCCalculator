@@ -94,7 +94,6 @@ namespace Tests
             {
                 PFCCIngredients = pFCCIngredients,
                 DishId = 1,
-                DishImage = "",
                 DishName = "Яблоко",
                 Recipe = "Яблоко порезать на дольки",
                 TotalWeight = 120

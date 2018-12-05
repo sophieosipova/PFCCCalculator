@@ -21,7 +21,7 @@ namespace PFCCCalculatorService.Controllers
         }
 
         [HttpGet]
-        [Route("{RecipeId:int}")]
+        [Route("recipe/{RecipeId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
          public async Task<IActionResult> GetRecipeWithPFCC(int RecipeId)
@@ -53,7 +53,7 @@ namespace PFCCCalculatorService.Controllers
 
 
         [HttpDelete]
-        [Route("user/{userId:int}/{recipeId:int}")]
+        [Route("user/{userId:int}/recipe/{recipeId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteRecipe(int userId, int recipeId)
@@ -63,6 +63,31 @@ namespace PFCCCalculatorService.Controllers
                 if (!await gatewayService.DeleteDish(userId, recipeId))
                     return NotFound();
                
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
+
+            return NoContent();
+        }
+
+
+        [HttpDelete]
+        [Route("user/{userId:int}/product/{productId:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteProduct(int userId, int productId)
+        {
+            if (productId < 0)
+                return BadRequest();
+            try
+            {
+                var result = await gatewayService.DeleteProduct(userId, productId);
+                if (result == HttpStatusCode.Conflict)
+                    return Conflict("Не возможно удалить");
+                if (result == HttpStatusCode.NotFound)
+                    return NotFound();
             }
             catch (Exception e)
             {

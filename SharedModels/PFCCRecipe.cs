@@ -10,7 +10,6 @@ namespace SharedModels
     {
         public int DishId { get; set; }
         public string DishName { get; set; }
-        public string DishImage { get; set; }
         public string Recipe { get; set; }
         public double Fat { get; set; }
         public double Protein { get; set; }
@@ -29,7 +28,6 @@ namespace SharedModels
             return other != null &&
                 DishId == other.DishId &&
                 DishName == other.DishName &&
-                DishImage == other.DishImage &&
                 Recipe == other.Recipe &&
                 Fat == other.Fat &&
                 Protein == other.Protein &&

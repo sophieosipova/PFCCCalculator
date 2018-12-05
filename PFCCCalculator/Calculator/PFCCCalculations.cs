@@ -36,7 +36,6 @@ namespace PFCCCalculatorService.Calculator
             {
                 PFCCIngredients = pFCCIngredients,
                 DishId =dish.DishId,
-                DishImage = dish.DishImage,
                 DishName = dish.DishName,
                 Recipe = dish.Recipe,
                 TotalWeight = dish.TotalWeight

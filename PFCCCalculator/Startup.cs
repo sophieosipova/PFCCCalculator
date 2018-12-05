@@ -23,10 +23,15 @@ namespace PFCCCalculator
         {
             //services.AddTransient<IProductsService, PFCCCalculatorService.Services.ProductsService>();
 
-           // var dbService = new PFCCCalculatorService.Services.ProductsService(new System.Net.Http.HttpClient());
-            services.AddHttpClient<IProductsService, PFCCCalculatorService.Services.ProductsService>();
-            services.AddHttpClient<ICommentsService, PFCCCalculatorService.Services.CommentsService>();
-            services.AddHttpClient<IDishesService, PFCCCalculatorService.Services.DishesService>();
+            // var dbService = new PFCCCalculatorService.Services.ProductsService(new System.Net.Http.HttpClient());
+            //     services.AddHttpClient<IProductsService, PFCCCalculatorService.Services.ProductsService>();
+            //     services.AddHttpClient<ICommentsService, PFCCCalculatorService.Services.CommentsService>();
+            //     services.AddHttpClient<IDishesService, PFCCCalculatorService.Services.DishesService>();
+
+            services.AddSingleton<IProductsService>(new PFCCCalculatorService.Services.ProductsService());
+             services.AddSingleton<ICommentsService>(new PFCCCalculatorService.Services.CommentsService (""));
+              services.AddSingleton<IDishesService>(new PFCCCalculatorService.Services.DishesService(""));
+
             services.AddSingleton<IGatewayService, GatewayService>();
             //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
 

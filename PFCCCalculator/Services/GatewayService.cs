@@ -108,7 +108,7 @@ namespace PFCCCalculatorService.Services
 
             return HttpStatusCode.Conflict;
         }
-        public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
+     /*   public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace PFCCCalculatorService.Services
             {
                 throw e;
             }
-        }
+        }*/
 
     }
 }
