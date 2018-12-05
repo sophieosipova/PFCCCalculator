@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,18 @@ namespace PFCCCalculatorService.Controllers
             this.dishesService = dishesService;
         }
 
-
         // GET api/products
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<DishModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDishes()
-        {         
-            return Ok(await dishesService.GetDishes());
+        {
+            var dishes = await dishesService.GetDishes();
+
+            if (dishes == null)
+                return NotFound();
+
+            return Ok(dishes);
         }
 
         [HttpGet]
@@ -39,24 +44,59 @@ namespace PFCCCalculatorService.Controllers
             if (dishId <= 0)
                 return BadRequest();
 
-            var dish = await dishesService.GetDishById(dishId);
+            try
+            {
 
-            if (dish != null)
-                return Ok(JsonConvert.SerializeObject(dish));
+                var dish = await dishesService.GetDishById(dishId);
+
+                if (dish != null)
+                    return Ok(JsonConvert.SerializeObject(dish));
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
 
             return NotFound();
         }
-
-
       
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}/")]
         public async Task<IActionResult> CreateDish(int UserId, DishModel dish)
         {
-            //  Dish dish = new Dish();
-            return  Created("",await dishesService.CreateDish(UserId, dish) );
-        //   return  CreatedAtAction(nameof(GetDishById), id, null);
+            try
+            {
+                var created = await dishesService.CreateDish(UserId, dish);
+                if (created != null)
+                    return Created("", created);
+                return Conflict("Не удалось создать");
+
+            }
+            catch(Exception e)
+            {
+                return Conflict(e.Message);
+            }
+        }
+
+
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route("user/{userId}/")]
+        public async Task<IActionResult> UpdateDish(int UserId, DishModel dish)
+        {
+            try
+            {
+                var created = await dishesService.UpdateDish(UserId, dish);
+                if (created != null)
+                    return Created("", created);
+                return Conflict("Не удалось обновить");
+
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
         }
 
     }

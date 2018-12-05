@@ -13,6 +13,6 @@ namespace PFCCCalculatorService.Services
 
         Task<DishModel> CreateDish(int userId, DishModel dish);
         Task <bool> DeleteDish(int userId, int dishId);
-        //  Task<IActionResult> UpdateDish(Dish dishToUpdate);
+        Task<DishModel> UpdateDish(int userId, DishModel dishToUpdate);
     }
 }

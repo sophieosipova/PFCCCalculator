@@ -95,5 +95,24 @@ namespace PFCCCalculatorService.Services
 
             return true;
         }
+
+        public async  Task<CommentModel> CreateComment(int userId, CommentModel comment)
+         {
+            var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}/";
+
+            try
+            {
+                var commentContent = new StringContent(JsonConvert.SerializeObject(comment), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(uri, commentContent);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<CommentModel>(responseBody);
+            }
+            catch (HttpRequestException e)
+            {
+                //return null;
+                throw e;
+            }
+        }
     }
 }

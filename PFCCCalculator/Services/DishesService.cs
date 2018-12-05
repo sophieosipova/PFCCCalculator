@@ -115,13 +115,26 @@ namespace PFCCCalculatorService.Services
             }
             catch (HttpRequestException e)
             {
-                //return null;
                 throw e;
             }
+        }
 
-            
+        public async Task<DishModel> UpdateDish(int userId, DishModel dish)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
 
-            // Task<IActionResult> actionResult =  new Task<IActionResult> ();
+            try
+            {
+                var dishContent = new StringContent(JsonConvert.SerializeObject(dish), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PutAsync(uri, dishContent);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<DishModel>(responseBody);
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
         }
 
         public async Task<bool> DeleteDish(int userId,int DishId)

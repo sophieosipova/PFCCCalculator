@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace PFCCCalculatorService.Controllers
             this.logger = logger;
         }
 
-        [HttpGet]
+     /*   [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<ProductModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProducts()
@@ -31,7 +32,7 @@ namespace PFCCCalculatorService.Controllers
             //p  = await productsService.GetProducts()
             logger.LogWarning(this.Request.ToString()+"HELLLOOOOOO");
             return Ok(await productsService.GetProducts());
-        }
+        }*/
 
         [HttpGet]
         [Route("categories")]
@@ -39,7 +40,19 @@ namespace PFCCCalculatorService.Controllers
         [ProducesResponseType(typeof(List<ProductsCategoryModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductsCategories()
         {
-            return Ok(await productsService.GetProductsCategories());
+            try
+            {
+                var product = await productsService.GetProductsCategories();
+
+                if (product != null)
+                    return Ok(product);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
+
+            return NotFound();
         }
 
         [HttpGet]
@@ -51,10 +64,17 @@ namespace PFCCCalculatorService.Controllers
             if (productCategoryId <= 0)
                 return BadRequest();
 
-            var product = await productsService.GetProductsByCategoryId(productCategoryId);
+            try
+            {
+                var product = await productsService.GetProductsByCategoryId(productCategoryId);
 
-            if (product != null)
-                return Ok(product);
+                if (product != null)
+                    return Ok(product);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
 
             return NotFound();
         }
@@ -67,25 +87,39 @@ namespace PFCCCalculatorService.Controllers
         {
             if (productId <= 0)
                 return BadRequest();
+            try
+            {
+                var product =  await productsService.GetProductById(productId);
 
-            var product = await productsService.GetProductById(productId);
-
-            if (product != null)
-                return Ok(product);
+                if (product != null)
+                    return Ok(product);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
 
             return NotFound();
         }
 
         [HttpGet]
-        [Route("items")]
         [ProducesResponseType(typeof(PaginatedModel<ProductModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<ProductModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> GetProducts([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
         {
+            try
+            {
+                var model = await productsService.Items(pageSize, pageIndex);
+                if (model != null)
+                    return Ok(model);
 
-            var model = await productsService.Items(pageSize, pageIndex);
-
-            return Ok(model);
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
+            
         }
     }
 }

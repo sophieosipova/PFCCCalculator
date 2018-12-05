@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace PFCCCalculatorService.Controllers
             this.commentsService = commentsService;
         }
 
-        [HttpGet]
+     /*   [HttpGet]
         [Route("user/{userId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<CommentModel>), (int)HttpStatusCode.OK)]
@@ -34,8 +35,26 @@ namespace PFCCCalculatorService.Controllers
                 return Ok(comments);
 
             return NotFound();
-        }
+        }*/
 
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route("user/{userId}/")]
+        public async Task<IActionResult> CreateComment(int userId, CommentModel comment)
+        {
+            try
+            {
+                var created = await commentsService.CreateComment(userId, comment);
+                if (created != null)
+                    return Created("", created);
+                return Conflict("Не удалось создать");
+
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
+        }
 
         [HttpGet]
         [Route("dish/{dishId:int}")]
@@ -44,11 +63,17 @@ namespace PFCCCalculatorService.Controllers
         {
             if (dishId <= 0)
                 return BadRequest();
+            try
+            {
+                var model = await commentsService.GetCommentsByDishId(dishId, pageSize, pageIndex);
 
-            var model= await commentsService.GetCommentsByDishId(dishId, pageSize, pageIndex);
-
-            if (model != null)
-                return Ok(model);
+                if (model != null)
+                    return Ok(model);
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
 
             return NotFound();
         }
