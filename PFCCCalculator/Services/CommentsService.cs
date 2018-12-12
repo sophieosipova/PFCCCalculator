@@ -98,7 +98,7 @@ namespace PFCCCalculatorService.Services
 
         public async  Task<CommentModel> CreateComment(int userId, CommentModel comment)
          {
-            var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}/";
+            var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}";
 
             try
             {

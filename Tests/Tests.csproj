@@ -30,10 +30,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PFCCCalculatorServiceTests\DishesController\" />
-    <Folder Include="PFCCCalculatorServiceTests\_ProductsController\" />
-    <Folder Include="PFCCCalculatorServiceTests\CommentsController\" />
-  </ItemGroup>
-
 </Project>

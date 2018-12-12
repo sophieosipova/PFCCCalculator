@@ -57,12 +57,7 @@ namespace PFCCCalculator
             app.UseMvc();
 
 
-         //   loggerFactory.AddProvider(new ConsoleLoggerProvider(
-
-           //     (text, logLevel) => logLevel >= LogLevel.Information, true));
-
             loggerFactory.AddDebug();
-
             loggerFactory.AddConsole();
         }
     }

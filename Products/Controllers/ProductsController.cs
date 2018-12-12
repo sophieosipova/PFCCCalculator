@@ -115,7 +115,7 @@ namespace ProductsService.Controllers
         }
 
         //DELETE api/v1/[controller]/id
-        [Route("user /{userId:int}/{productId:int}")]
+        [Route("user/{userId:int}/{productId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteProduct(int userId,int productId)

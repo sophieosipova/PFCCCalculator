@@ -6,6 +6,12 @@ using Moq;
 using PFCCCalculatorService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels;
+using System.Net.Http;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using PFCCCalculator;
+using Microsoft.Extensions.Logging;
 
 namespace Tests
 {
@@ -19,7 +25,8 @@ namespace Tests
             var mockRepo = new Mock<IGatewayService>();
             mockRepo.Setup(c => c.GetRecipeWithPFCC(testId))
                 .ReturnsAsync(GetTestRecipe);
-            var controller = new PFCCCalculatorController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<PFCCCalculatorController>>();
+            var controller = new PFCCCalculatorController(mockRepo.Object,mockLogger.Object);
 
 
             // Act
@@ -42,7 +49,8 @@ namespace Tests
             var mockRepo = new Mock<IGatewayService>();
             mockRepo.Setup(c => c.GetRecipeWithPFCC(testId))
                 .ReturnsAsync(GetNullTestRecipe);
-            var controller = new PFCCCalculatorController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<PFCCCalculatorController>>();
+            var controller = new PFCCCalculatorController(mockRepo.Object,mockLogger.Object);
 
 
             // Act
@@ -61,7 +69,8 @@ namespace Tests
             var mockRepo = new Mock<IGatewayService>();
             mockRepo.Setup(c => c.GetRecipeWithPFCC(testId))
                 .ReturnsAsync(GetTestException);
-            var controller = new PFCCCalculatorController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<PFCCCalculatorController>>();
+            var controller = new PFCCCalculatorController(mockRepo.Object,mockLogger.Object);
 
 
             // Act
@@ -80,7 +89,7 @@ namespace Tests
             {
                 IngredientId = 1,
                 ProductId = 1,
-                ProductName = "Запечёное яблоко",
+                ProductName = "Тест1",
                 Count = 120,
                 DishId = 1,
                 Protein = 1.2,
@@ -94,8 +103,8 @@ namespace Tests
             {
                 PFCCIngredients = pFCCIngredients,
                 DishId = 1,
-                DishName = "Яблоко",
-                Recipe = "Яблоко порезать на дольки",
+                DishName = "Тест ингредиент",
+                Recipe = "Тест рецепт",
                 TotalWeight = 120
             };
 

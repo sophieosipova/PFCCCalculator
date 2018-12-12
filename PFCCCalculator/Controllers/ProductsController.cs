@@ -24,31 +24,26 @@ namespace PFCCCalculatorService.Controllers
             this.logger = logger;
         }
 
-     /*   [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(List<ProductModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProducts()
-        {
-            //p  = await productsService.GetProducts()
-            logger.LogWarning(this.Request.ToString()+"HELLLOOOOOO");
-            return Ok(await productsService.GetProducts());
-        }*/
-
         [HttpGet]
         [Route("categories")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<ProductsCategoryModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProductsCategories()
         {
+            
             try
             {
                 var product = await productsService.GetProductsCategories();
-
                 if (product != null)
+                {
+                    logger.LogInformation("GET ---", product.ToString());
                     return Ok(product);
+                }
+                logger.LogInformation("GET --- Not found");
             }
             catch (Exception e)
             {
+                logger.LogInformation("GET ---", e.Message);
                 return Conflict(e.Message);
             }
 
@@ -67,19 +62,24 @@ namespace PFCCCalculatorService.Controllers
             try
             {
                 var product = await productsService.GetProductsByCategoryId(productCategoryId);
-
+               
                 if (product != null)
+                {
+                    logger.LogInformation("GET ---", product.ToString());
                     return Ok(product);
+                }
+                logger.LogInformation("GET --- Not Found");
             }
             catch (Exception e)
             {
+                logger.LogInformation("GET ---", e.Message);
                 return Conflict(e.Message);
             }
 
             return NotFound();
         }
 
-        [HttpGet]
+  /*      [HttpGet]
         [Route("{productId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProductModel), (int)HttpStatusCode.OK)]
@@ -100,7 +100,7 @@ namespace PFCCCalculatorService.Controllers
             }
 
             return NotFound();
-        }
+        } */
 
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedModel<ProductModel>), (int)HttpStatusCode.OK)]
@@ -110,13 +110,18 @@ namespace PFCCCalculatorService.Controllers
             try
             {
                 var model = await productsService.Items(pageSize, pageIndex);
-                if (model != null)
-                    return Ok(model);
 
+                if (model != null)
+                {
+                    logger.LogInformation("GET ---", model.ToString());
+                    return Ok(model);
+                }
+                logger.LogInformation("GET --- Not Found");
                 return NotFound();
             }
             catch (Exception e)
             {
+                logger.LogInformation("GET ---", e.Message);
                 return Conflict(e.Message);
             }
             

@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PFCCCalculatorService.Services;
 
 using SharedModels;
@@ -14,10 +15,12 @@ namespace PFCCCalculatorService.Controllers
     public class PFCCCalculatorController : ControllerBase
     {
         private readonly IGatewayService gatewayService;
+        private readonly ILogger<PFCCCalculatorController> logger;
 
-        public PFCCCalculatorController (IGatewayService gatewayService)
+        public PFCCCalculatorController (IGatewayService gatewayService, ILogger<PFCCCalculatorController> logger)
         {
             this.gatewayService = gatewayService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -26,26 +29,18 @@ namespace PFCCCalculatorService.Controllers
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
          public async Task<IActionResult> GetRecipeWithPFCC(int RecipeId)
         {
-            /*  Dish dish =  JsonConvert.DeserializeObject<Dish>(dishesService.GetDishById(RecipeId).ToString());
-
-              Product[] products = new Product[dish.Ingredients.Count];
-              List < PFCCIngredient >  ingredientsList = new List<PFCCIngredient>();
-              foreach (Ingredient ingredient in dish.Ingredients)
-              {
-                  Product product = JsonConvert.DeserializeObject<Product>
-                      (productsService.GetProductById(ingredient.ProductId).ToString());
-                  ingredientsList.Add(PFCCCalculations.CalculateIngredient(ingredient, product));
-              } */
             try
             {
                 PFCCRecipe recipe = await gatewayService.GetRecipeWithPFCC(RecipeId);
+                
                 if (recipe == null)
                     return NotFound();
-
+                logger.LogInformation("GET ---", recipe.ToString());
                 return Ok(recipe);
             }
             catch (Exception e)
             {
+                logger.LogInformation("GET ---", e.Message);
                 return Conflict(e.Message);
             }
 
@@ -61,14 +56,19 @@ namespace PFCCCalculatorService.Controllers
             try
             {
                 if (!await gatewayService.DeleteDish(userId, recipeId))
+                {
+                    logger.LogInformation("DELETE --- fail");
                     return NotFound();
+                }
                
             }
             catch (Exception e)
             {
-                return Conflict(e.Message);
+                logger.LogInformation("DELETE ---", e.Message);
+                return Conflict(e.Message);             
             }
 
+            logger.LogInformation("DELETE --- Success");
             return NoContent();
         }
 
@@ -80,20 +80,31 @@ namespace PFCCCalculatorService.Controllers
         public async Task<IActionResult> DeleteProduct(int userId, int productId)
         {
             if (productId < 0)
+            {
+                logger.LogInformation("DELETE --- fail");
                 return BadRequest();
+            }
             try
             {
                 var result = await gatewayService.DeleteProduct(userId, productId);
                 if (result == HttpStatusCode.Conflict)
-                    return Conflict("Не возможно удалить");
+                {
+                    logger.LogInformation("DELETE --- fail");
+                    return Conflict("Невозможно удалить");                  
+                }
                 if (result == HttpStatusCode.NotFound)
+                {
+                    logger.LogInformation("DELETE --- fail");
                     return NotFound();
+                }
             }
             catch (Exception e)
             {
+                logger.LogInformation("DELETE ---", e.Message);
                 return Conflict(e.Message);
             }
 
+            logger.LogInformation("DELETE --- Success");
             return NoContent();
         }
     }

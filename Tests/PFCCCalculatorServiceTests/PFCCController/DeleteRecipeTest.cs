@@ -6,6 +6,7 @@ using SharedModels;
 using Xunit;
 using PFCCCalculatorService.Services;
 using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace Tests
 {
@@ -20,7 +21,8 @@ namespace Tests
             var mockRepo = new Mock<IGatewayService>();
             mockRepo.Setup(c => c.DeleteDish(userId,dishId))
                 .ReturnsAsync(ReturnCantDelete);
-            var controller = new PFCCCalculatorController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<PFCCCalculatorController>>();
+            var controller = new PFCCCalculatorController(mockRepo.Object, mockLogger.Object);
 
 
             // Act
@@ -41,7 +43,8 @@ namespace Tests
             var mockRepo = new Mock<IGatewayService>();
             mockRepo.Setup(c => c.DeleteDish(userId, dishId))
                 .ReturnsAsync(ReturnDeleted);
-            var controller = new PFCCCalculatorController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<PFCCCalculatorController>>();
+            var controller = new PFCCCalculatorController(mockRepo.Object, mockLogger.Object);
 
 
             // Act
@@ -62,7 +65,8 @@ namespace Tests
             var mockRepo = new Mock<IGatewayService>();
             mockRepo.Setup(c => c.DeleteDish(userId, dishId))
                 .ReturnsAsync(ServerError);
-            var controller = new PFCCCalculatorController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<PFCCCalculatorController>>();
+            var controller = new PFCCCalculatorController(mockRepo.Object, mockLogger.Object);
 
 
             // Act

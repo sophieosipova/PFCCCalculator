@@ -22,6 +22,7 @@ namespace ProductsService.Database
                 db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Фрукты" });
                 db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Молочные продукты" });
                 db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Выпечка" });
+                db.ProductsCategories.Add(new ProductsCategory { ProductsCategoryName = "Бакалея" });
                 db.SaveChanges();
             }
             if (!db.Products.Any())
@@ -29,6 +30,10 @@ namespace ProductsService.Database
                 db.Products.Add(new Product { ProductName = "Яблоко", ProductsCategoryId = 2, Protein = 0, Fat = 0, Carbohydrates = 12, Calories = 60 });
                 db.Products.Add(new Product { ProductName = "Сыр", ProductsCategoryId = 3, Protein = 15, Fat = 30, Carbohydrates = 1, Calories = 280 });
                 db.Products.Add(new Product { ProductName = "Батон", ProductsCategoryId = 4, Protein = 1, Fat = 2, Carbohydrates = 50, Calories = 290 });
+
+                db.Products.Add(new Product { ProductName = "Сахар", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 57, Calories = 350 });
+                db.Products.Add(new Product { ProductName = "Корица", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 37, Calories = 187 });
+                db.Products.Add(new Product { ProductName = "Соль", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 37, Calories = 187 });
                 db.SaveChanges();
             }
         }

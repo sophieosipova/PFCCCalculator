@@ -55,14 +55,15 @@ namespace PFCCCalculatorService.Services
 
         public async Task<bool> DeleteDish(int userId, int dishId)
         {
-            await dishesService.DeleteDish(userId, dishId);
-
+            
             try
             {
+                await dishesService.DeleteDish(userId, dishId);
+
                 PaginatedModel<CommentModel> model = await commentsService.GetCommentsByDishId(dishId);
 
                 if (model == null)
-                    return false;
+                    return true;
                 int n = Convert.ToInt32(model.Count / model.PageSize + 1);
 
                 for (int i = 0; i < n; i++)
@@ -98,8 +99,11 @@ namespace PFCCCalculatorService.Services
             {
                 if (await dishesService.GetDishesWithProduct(productId) == null)
                     if (await productsService.DeleteProduct(userId, productId))
+                    {
                         return HttpStatusCode.NoContent;
-                    else return HttpStatusCode.NotFound;
+                    }
+                    else
+                            return HttpStatusCode.NotFound;
             }
             catch(HttpRequestException e)
             {

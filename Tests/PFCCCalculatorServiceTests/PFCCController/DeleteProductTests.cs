@@ -1,22 +1,12 @@
 ﻿using Moq;
-using PFCCCalculatorService.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using SharedModels;
 using Xunit;
 using PFCCCalculatorService.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Xunit;
-using Microsoft.AspNetCore.Hosting;
-using System.Threading.Tasks;
-
-
 using System.Net;
 using System.Net.Http;
 using PFCCCalculator;
 using Microsoft.Extensions.DependencyInjection;
-using ProductsService.Models;
 using System.Collections.Generic;
 using PFCCCalculatorService.Models;
 using System;
@@ -64,7 +54,9 @@ namespace Tests.PFCCCalculatorServiceTests.PFCCController
             // Assert
 
             Assert.Equal(HttpStatusCode.Conflict, result.StatusCode);
-            Assert.Equal("Не возможно удалить", await result.Content.ReadAsStringAsync());
+            Assert.Equal("Невозможно удалить", await result.Content.ReadAsStringAsync());
+            ProductsServiceMock.Reset();
+            DishesServiceMock.Reset();
         }
 
         [Fact]
@@ -85,25 +77,11 @@ namespace Tests.PFCCCalculatorServiceTests.PFCCController
 
             Assert.Equal(HttpStatusCode.Conflict, result.StatusCode);
             Assert.Equal("Test", await result.Content.ReadAsStringAsync());
+            ProductsServiceMock.Reset();
+            DishesServiceMock.Reset();
         }
 
-        [Fact]
-        public async void OkDeleteProductTest()
-        {
-            // Arrange
-            int productId = 1;
-            int userId = 1;
-
-            ProductsServiceMock.Setup(c => c.DeleteProduct(userId, productId))
-                .ReturnsAsync(ReturnDeleted);
-            DishesServiceMock.Setup(c => c.GetDishesWithProduct(productId))
-                .ReturnsAsync(GetNullTestDishes);
-            // Act 
-            var result = await Client.DeleteAsync("api/pfcccalculator/user/0/product/1");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
-        }
+   
 
         [Fact]
         public async void NotFoundDeleteProductTest()
@@ -121,6 +99,8 @@ namespace Tests.PFCCCalculatorServiceTests.PFCCController
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            ProductsServiceMock.Reset();
+            DishesServiceMock.Reset();
         }
 
         private bool ReturnCantDelete()

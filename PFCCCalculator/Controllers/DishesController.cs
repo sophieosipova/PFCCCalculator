@@ -22,7 +22,7 @@ namespace PFCCCalculatorService.Controllers
         }
 
         // GET api/products
-        [HttpGet]
+ /*       [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<DishModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDishes()
@@ -33,9 +33,9 @@ namespace PFCCCalculatorService.Controllers
                 return NotFound();
 
             return Ok(dishes);
-        }
+        } */
 
-        [HttpGet]
+/*        [HttpGet]
         [Route("{dishId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(DishModel), (int)HttpStatusCode.OK)]
@@ -58,7 +58,7 @@ namespace PFCCCalculatorService.Controllers
             }
 
             return NotFound();
-        }
+        } */
       
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -80,7 +80,7 @@ namespace PFCCCalculatorService.Controllers
         }
 
 
-        [HttpPut]
+   /*     [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}/")]
         public async Task<IActionResult> UpdateDish(int UserId, DishModel dish)
@@ -97,7 +97,7 @@ namespace PFCCCalculatorService.Controllers
             {
                 return Conflict(e.Message);
             }
-        }
+        } */
 
     }
 }
