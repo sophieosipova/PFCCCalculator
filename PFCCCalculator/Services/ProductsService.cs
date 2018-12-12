@@ -170,24 +170,23 @@ namespace PFCCCalculatorService.Services
             return true;
 
         }
-        public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
+        public async Task<ProductModel> UpdateProduct(int userId, ProductModel productToUpdate)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
             try
             {
                 var productContent = new StringContent(JsonConvert.SerializeObject(productToUpdate), System.Text.Encoding.UTF8, "application/json");
                 var response = await httpClient.PutAsync(uri, productContent);
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    return false;
-
+   
                 response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ProductModel>(responseBody);
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            return true;
         }
         public  void Dispose()
 

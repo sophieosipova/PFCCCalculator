@@ -80,7 +80,7 @@ namespace PFCCCalculatorService.Controllers
         }
 
 
-   /*     [HttpPut]
+        [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}/")]
         public async Task<IActionResult> UpdateDish(int UserId, DishModel dish)
@@ -97,7 +97,7 @@ namespace PFCCCalculatorService.Controllers
             {
                 return Conflict(e.Message);
             }
-        } */
+        } 
 
     }
 }

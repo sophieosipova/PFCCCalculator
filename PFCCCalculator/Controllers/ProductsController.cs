@@ -79,28 +79,68 @@ namespace PFCCCalculatorService.Controllers
             return NotFound();
         }
 
-  /*      [HttpGet]
-        [Route("{productId:int}")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(ProductModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProductById(int productId)
+        /*      [HttpGet]
+              [Route("{productId:int}")]
+              [ProducesResponseType((int)HttpStatusCode.NotFound)]
+              [ProducesResponseType(typeof(ProductModel), (int)HttpStatusCode.OK)]
+              public async Task<IActionResult> GetProductById(int productId)
+              {
+                  if (productId <= 0)
+                      return BadRequest();
+                  try
+                  {
+                      var product =  await productsService.GetProductById(productId);
+
+                      if (product != null)
+                          return Ok(product);
+                  }
+                  catch (Exception e)
+                  {
+                      return Conflict(e.Message);
+                  }
+
+                  return NotFound();
+              } */
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route("user/{userId}/")]
+        public async Task<IActionResult> CreateProduct(int userId, ProductModel product)
         {
-            if (productId <= 0)
-                return BadRequest();
             try
             {
-                var product =  await productsService.GetProductById(productId);
+                var created = await productsService.CreateProduct(userId, product);
+                if (created != null)
+                    return Created("", created);
+                return Conflict("Не удалось создать");
 
-                if (product != null)
-                    return Ok(product);
             }
             catch (Exception e)
             {
                 return Conflict(e.Message);
             }
+        }
 
-            return NotFound();
-        } */
+
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route("user/{userId}/")]
+        public async Task<IActionResult> UpdateDish(int UserId, ProductModel product)
+        {
+            try
+            {
+                var created = await productsService.UpdateProduct(UserId, product);
+                if (created != null)
+                    return Created("", created);
+                return Conflict("Не удалось обновить");
+
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
+        }
+
 
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedModel<ProductModel>), (int)HttpStatusCode.OK)]
