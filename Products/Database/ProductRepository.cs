@@ -160,7 +160,13 @@ namespace ProductsService.Database
 
             try
             {
-                product = productToUpdate;
+               // product = productToUpdate;
+                product.ProductName = productToUpdate.ProductName;
+                product.Fat = productToUpdate.Fat;
+                product.ProductsCategoryId = productToUpdate.ProductsCategoryId;
+                product.Protein = productToUpdate.Protein;
+                product.Carbohydrates = productToUpdate.Carbohydrates;
+                product.Calories = productToUpdate.Calories;
                 db.Products.Update(product);
 
                 await db.SaveChangesAsync();
@@ -174,19 +180,22 @@ namespace ProductsService.Database
         }
 
 
-        public async Task<PaginatedModel<Product>> Items(int pageSize = 10, int pageIndex = 0)
+        public async Task<PaginatedModel<Product>> Items(int pageSize = 0, int pageIndex = 0)
         {
 
             try
             {
-                var totalItems = await db.Products
-                    .LongCountAsync();
+                int take = pageSize > 0 ? pageSize : db.Products.Count();
 
-                var itemsOnPage = await db.Products
-                    .OrderBy(c => c.ProductName)
-                    .Skip(pageSize * pageIndex)
-                    .Take(pageSize)
-                    .ToListAsync();
+                    var totalItems = await db.Products
+                        .LongCountAsync();
+
+                    var itemsOnPage = await db.Products
+                        .OrderBy(c => c.ProductName)
+                        .Skip(pageSize * pageIndex)
+                        .Take(take)
+                        .ToListAsync();
+
 
 
                 var model = new PaginatedModel<Product>(pageIndex, pageSize, totalItems, itemsOnPage);

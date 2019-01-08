@@ -35,6 +35,14 @@ namespace PFCCCalculator
             services.AddSingleton<IGatewayService, GatewayService>();
             //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                builder => builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
             //services.AddSingleton<IProductsService>(dbService);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
            
@@ -53,7 +61,7 @@ namespace PFCCCalculator
             }
 
             app.UseHttpsRedirection();
-         
+            app.UseCors("CorsPolicy");
             app.UseMvc();
 
 

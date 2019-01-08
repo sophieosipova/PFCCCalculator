@@ -46,6 +46,30 @@ namespace PFCCCalculatorService.Controllers
 
         }
 
+        [HttpGet]
+        [Route("recipe")]
+        [ProducesResponseType(typeof(PaginatedModel<PFCCRecipe>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetRecipesWithPFCC([FromQuery]int pageSize = 0, [FromQuery]int pageIndex = 0)
+        {
+            try
+            {
+                PaginatedModel<PFCCRecipe> recipe = await gatewayService.GetRecipesWithPFCC();
+
+                if (recipe == null)
+                    return NotFound();
+                logger.LogInformation("GET ---", recipe.ToString());
+                return Ok(recipe);
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation("GET ---", e.Message);
+                return Conflict(e.Message);
+            }
+
+        }
+
+
+
 
         [HttpDelete]
         [Route("user/{userId:int}/recipe/{recipeId:int}")]

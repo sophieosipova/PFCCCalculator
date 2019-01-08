@@ -121,7 +121,9 @@ namespace CommentsService.Database
                 if (comment == null)
                     return null;
 
-                comment = commentToUpdate;
+                comment.CommentText = commentToUpdate.CommentText;
+                comment.DishId = commentToUpdate.DishId;
+                comment.UserId = commentToUpdate.UserId;
 
                 db.Comments.Update(comment);
                 await db.SaveChangesAsync();

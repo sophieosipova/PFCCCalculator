@@ -53,6 +53,42 @@ namespace PFCCCalculatorService.Services
             }
         }
 
+
+        public async Task<PaginatedModel<PFCCRecipe>> GetRecipesWithPFCC(int pageSize = 10, int pageIndex = 0)
+        {
+            try
+            {
+                PaginatedModel <DishModel> dishes = await dishesService.Items(pageSize,pageIndex);
+
+                if (dishes == null)
+                    return null;
+
+                // PaginatedModel<PFCCRecipe> pFCCdishes = new PaginatedModel<PFCCRecipe>(pageIndex,pageSize,dishes.Count)
+                List<PFCCRecipe> recipes = new List<PFCCRecipe>();
+                foreach (DishModel dish in dishes.Data)
+                {
+                    ProductModel[] products = new ProductModel[dish.Ingredients.Count];
+                    List<PFCCIngredient> ingredientsList = new List<PFCCIngredient>();
+                    foreach (IngredientModel ingredient in dish.Ingredients)
+                    {
+                        ProductModel product = await productsService.GetProductById(ingredient.ProductId);
+
+                        if (product == null)
+                            return null;
+                        ingredientsList.Add(PFCCCalculations.CalculateIngredient(ingredient, product));
+                    }
+
+                    recipes.Add(PFCCCalculations.PFCCRecipeCalculator(dish, ingredientsList));
+                }
+
+                return new PaginatedModel<PFCCRecipe>(pageIndex, pageSize, dishes.Count, recipes);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public async Task<bool> DeleteDish(int userId, int dishId)
         {
             

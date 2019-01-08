@@ -127,7 +127,7 @@ namespace ProductsService.Controllers
         }
 
         [HttpPut]
-        [Route("user /{userId:int}")]
+        [Route("user/{userId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> UpdateProduct(int userId, [FromBody]Product productToUpdate)

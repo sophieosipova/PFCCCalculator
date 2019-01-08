@@ -6,6 +6,7 @@ using Dishes.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using DishesService.Database;
+using SharedModels;
 
 namespace DishesService.Controllers
 {
@@ -33,7 +34,22 @@ namespace DishesService.Controllers
 
             return Ok(dishes);
         }
-        
+
+
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginatedModel<Dish>), (int)HttpStatusCode.OK)]
+        [Route("items")]
+        public async Task<IActionResult> Items([FromQuery]int pageSize, [FromQuery]int pageIndex)
+        {
+            var model = await dishesRepository.Items(pageSize, pageIndex);
+
+            if (model == null)
+                return NotFound();
+
+            return Ok(model);
+        }
+
+
 
         [HttpGet]
         [Route("withproduct/{productId:int}")]

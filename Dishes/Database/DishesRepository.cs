@@ -1,5 +1,6 @@
 ﻿using Dishes.Models;
 using Microsoft.EntityFrameworkCore;
+using SharedModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,37 @@ namespace DishesService.Database
  
         }
 
+        public async Task<PaginatedModel<Dish>> Items(int pageSize = 0, int pageIndex = 0)
+        {
+
+            try
+            {
+                int take = pageSize > 0 ? pageSize : db.Dishes.Count();
+
+                var totalItems = await db.Dishes
+                    .LongCountAsync();
+
+                var itemsOnPage = await db.Dishes
+                    .OrderBy(c => c.DishName)
+                    .Skip(pageSize * pageIndex)
+                    .Take(take)
+                    .ToListAsync();
+
+                foreach (Dish dish in itemsOnPage)
+                {
+                    List<Ingredient> ings = await db.Ingredients.Where(i => i.DishId == dish.DishId).ToListAsync();
+                    dish.Ingredients = ings;
+                }
+
+                var model = new PaginatedModel<Dish>(pageIndex, pageSize, totalItems, itemsOnPage);
+
+                return model;
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public async Task<List<Dish>> GetDishesByProduct(int productId)
         {
             try
@@ -194,20 +226,27 @@ namespace DishesService.Database
                 if (dish == null)
                     return null;
 
-                dish = dishToUpdate;
-
                 List<Ingredient> ingredients = await db.Ingredients.Where(i => i.DishId == dish.DishId).ToListAsync();
-
 
                 foreach (Ingredient ingredient in dishToUpdate.Ingredients)
                 {
-                    int i = ingredients.IndexOf(ingredient);
-                    if (i != -1)
-                        db.Ingredients.Update(ingredient);
+                    Ingredient old = ingredients.Where(i => i.IngredientId == ingredient.IngredientId).First();
+                    if (old != null)
+                    {
+                        old.ProductId = ingredient.ProductId;
+                        old.ProductName = ingredient.ProductName;
+                        old.Count = ingredient.Count;
+                        old.DishId = ingredient.DishId;
+                        db.Ingredients.Update(old);
+                    }
                     else
                         db.Ingredients.Add(ingredient);
                 }
 
+                dish.DishName = dishToUpdate.DishName;
+                dish.Recipe = dishToUpdate.Recipe;
+                dish.TotalWeight = dishToUpdate.TotalWeight;
+                dish.UserId = dishToUpdate.UserId;
                 db.Dishes.Update(dish);
                 await db.SaveChangesAsync();
 

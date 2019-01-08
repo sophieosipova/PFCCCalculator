@@ -126,7 +126,7 @@ namespace PFCCCalculatorService.Services
             catch (Exception e)
             {
                 throw e;
-            }
+            } 
 
             return null;
         }
@@ -211,7 +211,7 @@ namespace PFCCCalculatorService.Services
            Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate);
            */
 
-        public async Task<PaginatedModel<ProductModel>> Items(int pageSize = 10, int pageIndex = 0)
+        public async Task<PaginatedModel<ProductModel>> Items(int pageSize = 0, int pageIndex = 0)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/items?pageSize={pageSize}&pageIndex={pageIndex}";
 

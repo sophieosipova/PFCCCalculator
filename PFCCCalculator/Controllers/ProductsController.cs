@@ -104,7 +104,7 @@ namespace PFCCCalculatorService.Controllers
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        [Route("user/{userId}/")]
+        [Route("user/{userId}")]
         public async Task<IActionResult> CreateProduct(int userId, ProductModel product)
         {
             try
@@ -124,7 +124,7 @@ namespace PFCCCalculatorService.Controllers
 
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        [Route("user/{userId}/")]
+        [Route("user/{userId}")]
         public async Task<IActionResult> UpdateDish(int UserId, ProductModel product)
         {
             try
@@ -142,14 +142,20 @@ namespace PFCCCalculatorService.Controllers
         }
 
 
+
+
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedModel<ProductModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IEnumerable<ProductModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProducts([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        [ProducesResponseType(typeof(List<ProductModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProducts([FromQuery]int pageSize = 0, [FromQuery]int pageIndex = 0)
         {
             try
             {
-                var model = await productsService.Items(pageSize, pageIndex);
+                if (pageSize == 0)
+                    return Ok(await productsService.GetProducts());
+
+                PaginatedModel<ProductModel>   model = await productsService.Items(pageSize, pageIndex);
+            
 
                 if (model != null)
                 {
@@ -163,6 +169,28 @@ namespace PFCCCalculatorService.Controllers
             {
                 logger.LogInformation("GET ---", e.Message);
                 return Conflict(e.Message);
+            }
+            
+        }
+
+        // GET api/products
+        [HttpGet]
+        [Route("all")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(List<ProductModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProducts()
+        {
+            try
+            {
+                var products = await productsService.GetProducts();
+
+                if (products == null)
+                    return NotFound();
+                return Ok(products);
+            }
+            catch
+            {
+                return NotFound();
             }
             
         }

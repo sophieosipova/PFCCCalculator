@@ -1,4 +1,5 @@
 ﻿using Dishes.Models;
+using SharedModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace DishesService.Database
         Task<Dish> CreateDish(int userId, Dish dish);
         Task<bool> DeleteDish(int userId, int dishId);
         Task<Dish> UpdateDish(int userId, Dish dishToUpdate);
+
+        Task<PaginatedModel<Dish>> Items(int pageSize = 0, int pageIndex = 0);
     }
 }

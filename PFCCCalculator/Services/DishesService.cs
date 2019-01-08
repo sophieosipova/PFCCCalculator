@@ -2,6 +2,7 @@
 
 using Newtonsoft.Json;
 using PFCCCalculatorService.Models;
+using SharedModels;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -46,6 +47,21 @@ namespace PFCCCalculatorService.Services
             }
 
             return null;
+        }
+
+        public async Task<PaginatedModel<DishModel>> Items(int pageSize = 0, int pageIndex = 0)
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/dishes/items?pageSize={pageSize}&pageIndex={pageIndex}";
+
+            string responseString = await httpClient.GetStringAsync(uri);
+            //  var brands = JArray.Parse(responseString);
+
+
+            var dish = JsonConvert.DeserializeObject<PaginatedModel<DishModel>>
+                (responseString);
+            //   var products = 
+
+            return dish;
         }
 
         public async Task<List<DishModel>> GetDishesWithProduct(int productId)
