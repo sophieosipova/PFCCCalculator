@@ -1,0 +1,27 @@
+<div class="esh-pager">
+  <div class="container">
+    <article class="esh-pager-wrapper row">
+      <nav>
+        <span 
+              id="Previous"
+              [ngClass]="{'is-disabled': buttonStates?.previousDisabled, 'navigated' : !buttonStates?.previousDisabled}"
+              (click)="onPreviousCliked($event)"
+              aria-label="Previous">
+          Previous
+        </span>
+
+        <span class="navigated">
+          Showing {{model?.items}} of {{model?.totalItems}} products - Page {{model?.actualPage + 1}} - {{model?.totalPages}}
+        </span>
+
+        <span class="navigated"
+              id="Next"
+              [ngClass]="{'is-disabled' : buttonStates?.nextDisabled, 'navigated' : !buttonStates?.nextDisabled}"
+              (click)="onNextClicked($event)"
+              aria-label="Next">
+          Next
+        </span>
+      </nav>
+    </article>
+  </div>
+</div>

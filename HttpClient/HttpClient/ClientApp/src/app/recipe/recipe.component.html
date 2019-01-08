@@ -1,0 +1,82 @@
+<div *ngIf="!fullMode; else full">
+  <h1>Рецепты</h1>
+  <p *ngIf="!recipes"><em>Loading...</em></p>
+  <div *ngIf="recipes">
+    <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+    <table *ngIf="tableMode; else create" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Calories (C)</th>
+          <th>Protein(F)</th>
+          <th>Fat</th>
+          <th>Carbohydrates</th>
+          <th>   </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let recipeItem of recipes.data">
+          <td>
+            <span (click)="fullRecipe(recipeItem)"
+                  aria-label="recipeItem.dishName">
+              {{recipeItem.dishName}}
+            </span>
+          </td>
+          <td>{{recipeItem.calories}}</td>
+          <td>{{recipeItem.protein}}</td>
+          <td>{{recipeItem.fat}}</td>
+          <td>{{recipeItem.carbohydrates}}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="deleteProduct(productItem)">Удалить</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="products?.data.length == 0">
+  <span>THERE ARE NO RESULTS THAT MATCH YOUR SEARCH</span>
+</div>
+
+<ng-template #full>
+  <h1>{{recipe.dishName}}</h1>
+  <b>{{recipe.calories}} ккал, белки:{{recipe.protein}}, жиры: {{recipe.protein}}, углеводы: {{recipe.carbohydrates}}</b>
+  <div class="form-group">
+    <h2>Ингредиенты</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Продукт</th>
+          <th>Калории</th>
+          <th>Белки</th>
+          <th>Жиры</th>
+          <th>Углеводы</th>
+          <th>Вес (грамм)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingredientItem of recipe.pfccIngredients">
+          <td>
+            {{ingredientItem.productName}}
+          </td>
+          <td>{{ingredientItem.calories}}</td>
+          <td>{{ingredientItem.protein}}</td>
+          <td>{{ingredientItem.fat}}</td>
+          <td>{{ingredientItem.carbohydrates}}</td>
+          <td>{{ingredientItem.count}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>Рецепт</h2>
+    <p>{{recipe.recipe}}</p>
+    <div>
+      <input type="button" value="Назад" (click)="cancel()" class="btn btn-warning" />
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+

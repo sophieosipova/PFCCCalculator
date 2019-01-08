@@ -1,0 +1,90 @@
+<body>
+  <h1>Продукты</h1>
+
+  <p>This component demonstrates fetching data from the server.</p>
+  <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+
+  <p *ngIf="!products"><em>Loading...</em></p>
+
+
+  <div *ngIf="products">
+    <table *ngIf="tableMode; else create" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Calories (C)</th>
+          <th>Protein(F)</th>
+          <th>Fat</th>
+          <th>Carbohydrates</th>
+          <th>   </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let productItem of products.data">
+          <ng-template [ngIf]="product?.productId != productItem.productId" [ngIfElse]="edit">
+            <td>{{productItem.productName}}</td>
+            <td>{{productItem.calories}}</td>
+            <td>{{productItem.protein}}</td>
+            <td>{{productItem.fat}}</td>
+            <td>{{productItem.carbohydrates}}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" (click)="editProduct(productItem)">Изменить</button>
+              <button class="btn btn-sm btn-primary" (click)="deleteProduct(productItem)">Удалить</button>
+            </td>
+          </ng-template>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+ 
+  <div *ngIf="products?.data.length == 0">
+    <span>THERE ARE NO RESULTS THAT MATCH YOUR SEARCH</span>
+  </div>
+</body>
+
+<ng-template #edit>
+  <td>
+    <input type="text" [(ngModel)]="product.productName" class="form-control" />
+  </td>
+  <td>
+    <input type="text" [(ngModel)]="product.calories" class="form-control" />
+  </td>
+  <td>
+    <input type="text" [(ngModel)]="product.protein" class="form-control" />
+  </td>
+  <td>
+    <input type="text" [(ngModel)]="product.fat" class="form-control" />
+  </td>
+  <td>
+    <input type="text" [(ngModel)]="product.carbohydrates" class="form-control" />
+  </td>
+  <td>
+    <input type="button" value="Сохранить" (click)="save()" class="btn btn-sm btn-success" />
+    <input type="button" value="Отмена" (click)="cancel()" class="btn btn-sm btn-warning" />
+  </td>
+</ng-template>
+
+<!--шаблон для добавления-->
+
+<ng-template #create>
+  <div class="form-group">
+    <fieldset>
+      <legend>Добавление продуктов</legend>
+      <label>Введите название продукта</label>
+      <input type="text" [(ngModel)]="product.productName" class="form-control" />
+      <label>Введите калорийность</label>
+      <input type="text" [(ngModel)]="product.calories" class="form-control" />
+      <label>Введите белки</label>
+      <input type="text" [(ngModel)]="product.protein" class="form-control" />
+      <label>Введите жиры </label>
+      <input type="text" [(ngModel)]="product.fat" class="form-control" />
+      <label>Введите углеводы </label>
+      <input type="text" [(ngModel)]="product.carbohydrates" class="form-control" />
+      <div>
+        <input type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+      </div>
+    </fieldset>
+  </div>   
+</ng-template>
