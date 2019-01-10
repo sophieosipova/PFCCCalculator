@@ -9,7 +9,7 @@ export class IDishItem {
  //   public protein?: number,
    // public carbohydrates?: number,
    // public calories?: number,
-    public data?: IIngredientItem[],
+    public ingredients?: IIngredientItem[],
     public totalWeight?: number
   ) { }
 }

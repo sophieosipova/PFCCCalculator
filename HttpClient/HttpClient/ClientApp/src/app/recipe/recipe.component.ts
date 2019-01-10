@@ -102,6 +102,7 @@ export class RecipeComponent {
     this.product = new IProductItem();
     this.ingredient = new IIngredientItem();
     this.dish = new IDishItem();
+    this.dish.ingredients = [];
 
     this.tableMode = true;
     this.editMode = false;
@@ -126,7 +127,8 @@ export class RecipeComponent {
 
 
   save() {
-    let url = this.baseUrl + '/user/0/'
+    let url = 'https://localhost:44350/api/dishes' + '/user/0/'
+   // this.dish.data = this.ingredients;
     if (this.dish.dishId == null) {
       this.http.post<IDishItem>(url, this.dish)
         .subscribe(result => {
@@ -147,13 +149,14 @@ export class RecipeComponent {
   }
 
   addIngredient() {
-   // this.ingredient.productName = this.product.productName;
+    this.ingredient.productName = this.productArr.find(IProductItem => IProductItem.productId == this.ingredient.productId).productName;
   //  this.ingredient.productId = this.product.productId;
     //this.ingredients = [...this.ingredients, this.ingredient];
-    this.ingredients.push(this.ingredient);
+    this.dish.ingredients.push(this.ingredient);
+  //  this.ingredients.push(this.ingredient);
     //this.product = new IProductItem();
     this.ingredient = new IIngredientItem();
-    this.dish = new IDishItem();
+    //this.dish = new IDishItem();
   }
 
   cutRecipe(r: IRecipeItem) {
@@ -161,10 +164,10 @@ export class RecipeComponent {
     this.recipe = null;
   }
 
-  deleteDish(r: IDishItem) {
 
 
-    let url = 'https://localhost:44350/api/dishes' + '/user/0' + '/product/';
+  deleteDish(r: IRecipeItem) {
+    let url = 'https://localhost:44350/api/pfcccalculator' + '/user/0' + '/recipe/' + r.dishId;
     this.http.delete(url)
       .subscribe(result => {
         this.getRecipes(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
