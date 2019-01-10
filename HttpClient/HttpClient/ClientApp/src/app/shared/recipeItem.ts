@@ -1,4 +1,4 @@
-import { IIngredientItem } from './ingredientItem';
+import { IPFCCIngredientItem } from './pFCCingredientItem';
 
 export interface IRecipeItem {
    dishId: number;
@@ -8,6 +8,6 @@ export interface IRecipeItem {
    protein: number;
    carbohydrates: number;
    calories: number;
-   pFCCIngredients: IIngredientItem[];
+   pFCCIngredients: IPFCCIngredientItem[];
    totalWeight: number;
 }

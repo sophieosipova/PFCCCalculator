@@ -45,22 +45,22 @@
 
 <ng-template #edit>
   <td>
-    <input type="text" [(ngModel)]="product.productName" class="form-control" />
+    <input type="text"  name="productName"  [(ngModel)]="product.productName" class="form-control" required/>
   </td>
   <td>
-    <input type="text" [(ngModel)]="product.calories" class="form-control" />
+    <input type="number"  name="calories" [(ngModel)]="product.calories" class="form-control" required pattern="^[ 0-9]+" />
   </td>
   <td>
-    <input type="text" [(ngModel)]="product.protein" class="form-control" />
+    <input type="number"   name="protein" [(ngModel)]="product.protein" class="form-control" required pattern="^[ 0-9]+"/>
   </td>
   <td>
-    <input type="text" [(ngModel)]="product.fat" class="form-control" />
+    <input type="number"  name="fat" [(ngModel)]="product.fat" class="form-control" required pattern="^[ 0-9]+"/>
   </td>
   <td>
-    <input type="text" [(ngModel)]="product.carbohydrates" class="form-control" />
+    <input type="number"  name="carbohydrates" [(ngModel)]="product.carbohydrates" class="form-control"required pattern="^[ 0-9]+" />
   </td>
   <td>
-    <input type="button" value="Сохранить" (click)="save()" class="btn btn-sm btn-success" />
+    <input type="button" [disabled]="carbohydrates.invalid || fat.invalid || protein.invalid || calories.invalid || productName.invalid" value="Сохранить" (click)="save()" class="btn btn-sm btn-success" />
     <input type="button" value="Отмена" (click)="cancel()" class="btn btn-sm btn-warning" />
   </td>
 </ng-template>
@@ -72,17 +72,20 @@
     <fieldset>
       <legend>Добавление продуктов</legend>
       <label>Введите название продукта</label>
-      <input type="text" [(ngModel)]="product.productName" class="form-control" />
+      <input type="text" name="productName" [(ngModel)]="product.productName" class="form-control" #productName="ngModel" required />
       <label>Введите калорийность</label>
-      <input type="text" [(ngModel)]="product.calories" class="form-control" />
+      <input type="number"  name="calories" min="0" [(ngModel)]="product.calories" class="form-control" #calories="ngModel" required pattern="^[ 0-9]+"/>
       <label>Введите белки</label>
-      <input type="text" [(ngModel)]="product.protein" class="form-control" />
+      <input type="number"  name="protein" [(ngModel)]="product.protein" class="form-control" #protein="ngModel"
+             required pattern="^[ 0-9]+"/>
       <label>Введите жиры </label>
-      <input type="text" [(ngModel)]="product.fat" class="form-control" />
+      <input type="number"  name="fat" [(ngModel)]="product.fat" class="form-control" #fat="ngModel"
+             required pattern="^[ 0-9]+"/>
       <label>Введите углеводы </label>
-      <input type="text" [(ngModel)]="product.carbohydrates" class="form-control" />
+      <input type="number"  name="carbohydrates" [(ngModel)]="product.carbohydrates" class="form-control" #carbohydrates="ngModel"
+             required pattern="^[ 0-9]+"/>
       <div>
-        <input type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
+        <input type="button" [disabled]="carbohydrates.invalid || fat.invalid || protein.invalid || calories.invalid || productName.invalid" value="Сохранить" (click)="save()" class="btn btn-success" />
         <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
       </div>
     </fieldset>

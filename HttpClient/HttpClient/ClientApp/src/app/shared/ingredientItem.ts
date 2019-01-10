@@ -1,8 +1,10 @@
-export interface IIngredientItem {
-  ingredientId: number;
-  productId: number;
-  dishId: number;
-  productName: string;
-  userId: number;
-  count: number;
+export class IIngredientItem {
+  constructor(
+    public ingredientId?: number,
+    public productId?: number,
+    public dishId?: number,
+    public productName?: string,
+    public userId?: number,
+    public count?: number
+  ) { }
 }

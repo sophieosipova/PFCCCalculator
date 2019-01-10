@@ -9,6 +9,10 @@ import { IPager } from '../shared/pager.model';
 @Component({
   selector: 'product-data',
   templateUrl: './product.component.html',
+  styles: [`
+        input.ng-touched.ng-invalid {border:solid red 2px;}
+        input.ng-touched.ng-valid {border:solid green 2px;}
+    `]
 })
 
 
@@ -16,8 +20,8 @@ import { IPager } from '../shared/pager.model';
 
 export class ProductsComponent {
 
-  products: IProduct;
-  product: IProductItem;
+  products: IProduct ;
+  product: IProductItem =  new IProductItem(); 
   nullProduct: IProductItem;
  // productArr : IProductItem [];
 
@@ -32,6 +36,7 @@ export class ProductsComponent {
 
     this.baseUrl = "https://localhost:44350/api/products";
     this.http = http;
+    
   }
 
 
@@ -63,7 +68,7 @@ export class ProductsComponent {
 
   cancel() {
   //  this.product.productId = null;
-    this.product = this.nullProduct;
+    this.product = new IProductItem();
 
     this.tableMode = true;
     this.editMode = false;

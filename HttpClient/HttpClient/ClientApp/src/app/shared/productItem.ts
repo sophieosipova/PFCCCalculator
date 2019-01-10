@@ -1,10 +1,11 @@
-export interface IProductItem {
-   productId: number;
-   productsCategoryId: number;
-   productName: string;
-   fat: number;
-   protein: number;
-   carbohydrates: number;
-   calories: number;
-   userId: number;
+export class IProductItem {
+  constructor(public productId?: number,
+    public productsCategoryId?: number,
+    public productName?: string,
+    public fat?: number,
+    public protein?: number,
+    public carbohydrates?: number,
+    public calories?: number,
+    public userId?: number
+  ) { }
 }

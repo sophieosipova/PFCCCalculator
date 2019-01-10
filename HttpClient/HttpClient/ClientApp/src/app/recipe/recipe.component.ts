@@ -1,3 +1,28 @@
+/*import { Component } from '@angular/core';
+
+export class Phone {
+  constructor(public title: string,
+    public price: number,
+    public company: string) { }
+}
+@Component({
+  selector: 'recipe-data',
+  templateUrl: './recipe.component.html',
+})
+
+
+export class RecipeComponent {
+
+  phone: Phone = new Phone("", 0, "Huawei");
+  phones: Phone[] = [];
+  companies: string[] = ["Apple", "Huawei", "Xiaomi", "Samsung", "LG", "Motorola", "Alcatel"];
+
+  addPhone() {
+    this.phones.push(new Phone(this.phone.title, this.phone.price, this.phone.company));
+  }
+}*/
+
+
 import { Component, Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IRecipeItem } from '../shared/recipeItem';
@@ -7,8 +32,9 @@ import { IDishItem } from '../shared/dishItem';
 import { IDish } from '../shared/dish';
 import { IPFCCIngredientItem } from '../shared/pFCCIngredientItem';
 import { IPager } from '../shared/pager.model';
-//import { IProduct } from '../shared/product';
-// import { IProductItem } from '../shared/productItem';
+import { IProduct } from '../shared/product';
+import { IProductItem } from '../shared/productItem';
+//import { MaterialModule } from '@angular/material';
 
 @Component({
   selector: 'recipe-data',
@@ -19,18 +45,16 @@ import { IPager } from '../shared/pager.model';
 
 
 export class RecipeComponent {
-
- 
-
-  dish: IDishItem;
+  dish: IDishItem =  new IDishItem();
   recipe: IRecipeItem;
-  ingredient: IIngredientItem;
+  ingredient: IIngredientItem = new IIngredientItem();
+  ingredients: IIngredientItem[] = [];
   pfccIngredient: IPFCCIngredientItem;
   dishes: IDish;
   recipes: IRecipe;
- // products: IProduct;
-  //product: IProductItem;
-  // productArr : IProductItem [];
+  // products: IProduct;
+  product: IProductItem = new IProductItem();
+  productArr: IProductItem[];
 
   paginationInfo: IPager;
   http: HttpClient;
@@ -48,7 +72,7 @@ export class RecipeComponent {
 
 
   ngOnInit() {
-    this.getRecipes(3, 0);    // загрузка данных при старте компонента  
+    this.getRecipes(3, 0);    // загрузка данных при старте компонента
   }
 
 
@@ -74,8 +98,10 @@ export class RecipeComponent {
 
 
   cancel() {
-    //  this.product.productId = null;
-    this.dish = null;
+
+    this.product = new IProductItem();
+    this.ingredient = new IIngredientItem();
+    this.dish = new IDishItem();
 
     this.tableMode = true;
     this.editMode = false;
@@ -93,7 +119,7 @@ export class RecipeComponent {
    }*/
 
   add() {
-
+    this.getProducts();
     this.cancel();
     this.tableMode = false;
   }
@@ -114,9 +140,20 @@ export class RecipeComponent {
     }
   }
 
+
   fullRecipe(r: IRecipeItem) {
     this.fullMode = true;
     this.recipe = r;
+  }
+
+  addIngredient() {
+   // this.ingredient.productName = this.product.productName;
+  //  this.ingredient.productId = this.product.productId;
+    //this.ingredients = [...this.ingredients, this.ingredient];
+    this.ingredients.push(this.ingredient);
+    //this.product = new IProductItem();
+    this.ingredient = new IIngredientItem();
+    this.dish = new IDishItem();
   }
 
   cutRecipe(r: IRecipeItem) {
@@ -155,11 +192,21 @@ export class RecipeComponent {
     }, error => console.error(error));
   }
 
+
+  getProducts()/*: IProduct*/ {
+
+    let url = 'https://localhost:44350/api/products/all';
+
+    this.http.get<IProductItem[]>(url).subscribe(result => {
+      this.productArr = result;
+    }, error => console.error(error));
+  }
+
   onPageChanged(value: any) {
     //console.log('catalog pager event fired' + value);
     event.preventDefault();
     this.paginationInfo.actualPage = value;
     this.getRecipes(this.paginationInfo.itemsPage, value);
-  } 
+  }
 
 }

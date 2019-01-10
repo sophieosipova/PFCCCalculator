@@ -1,3 +1,5 @@
+
+
 <div *ngIf="!fullMode; else full">
   <h1>Рецепты</h1>
   <p *ngIf="!recipes"><em>Loading...</em></p>
@@ -77,6 +79,59 @@
 </ng-template>
 
 
+<ng-template #create>
+  <div *ngIf="ingredients">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Продукт</th>
+          <th>Вес (грамм)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingredientItem of ingredients">
+          <td>
+            {{product.productName}}
+          </td>
+          <td>{{ingredientItem.count}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-xs-10">
+    <h1>Добавление рецепта</h1>
+    <h3>Название рецепта</h3>
+    <div class="form-group">
+      <input type="number" class="form-control" [(ngModel)]="dish.dishName" />
+    </div>
+    <h3>Добавление ингредиентов</h3>
+    <div class="form-group">
+      <label>Продукты</label>
+      <select class="form-control" name="product" [(ngModel)]="product">
+        <option *ngFor="let productItem of productArr" [value]="productItem">
+          {{productItem.productName}}
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>грамм</label>
+      <input type="number" class="form-control" name="count" [(ngModel)]="ingredient.count" />
+    </div>
+    <div class="form-group">
+      <textarea [(ngModel)]="dish.recipe"></textarea>
+    </div>
+    <div class="form-group">
+      <input type="button" value="Добавить" (click)="addIngredient()" class="btn btn-success" />
+      <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+    </div>
+  </div>
+  <div>
+    <h3>Добавленные ингредиетны</h3>
+    <ul *ngFor="let p of ingredients">
+      <li>{{p.productName}} ({{p.count}})</li>
+    </ul>
+  </div>`
+</ng-template>
 
 
 
