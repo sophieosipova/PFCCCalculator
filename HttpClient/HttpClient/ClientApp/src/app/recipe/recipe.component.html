@@ -1,39 +1,40 @@
 
-
 <div *ngIf="!fullMode; else full">
   <h1>Рецепты</h1>
   <p *ngIf="!recipes"><em>Loading...</em></p>
   <div *ngIf="recipes">
-    <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
-    <table *ngIf="tableMode; else create" class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Calories (C)</th>
-          <th>Protein(F)</th>
-          <th>Fat</th>
-          <th>Carbohydrates</th>
-          <th>   </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let recipeItem of recipes.data">
-          <td>
-            <span (click)="fullRecipe(recipeItem)"
-                  aria-label="recipeItem.dishName">
-              {{recipeItem.dishName}}
-            </span>
-          </td>
-          <td>{{recipeItem.calories}}</td>
-          <td>{{recipeItem.protein}}</td>
-          <td>{{recipeItem.fat}}</td>
-          <td>{{recipeItem.carbohydrates}}</td>
-          <td>
-            <button class="btn btn-sm btn-primary" (click)="deleteDish(recipeItem)">Удалить</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="tableMode; else create">
+      <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Calories (C)</th>
+            <th>Protein(F)</th>
+            <th>Fat</th>
+            <th>Carbohydrates</th>
+            <th>   </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let recipeItem of recipes.data">
+            <td>
+              <span (click)="fullRecipe(recipeItem)"
+                    aria-label="recipeItem.dishName">
+                {{recipeItem.dishName}}
+              </span>
+            </td>
+            <td>{{recipeItem.calories}}</td>
+            <td>{{recipeItem.protein}}</td>
+            <td>{{recipeItem.fat}}</td>
+            <td>{{recipeItem.carbohydrates}}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" (click)="deleteDish(recipeItem)">Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -80,7 +81,7 @@
 
 
 <ng-template #create>
-  <div *ngIf="ingredients">
+  <div *ngIf="dish.ingredients.length > 0">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -98,40 +99,44 @@
       </tbody>
     </table>
   </div>
-  <div class="col-xs-10">
-    <h1>Добавление рецепта</h1>
-    <h3>Название рецепта</h3>
-    <div class="form-group">
-      <input type="text" class="form-control" [(ngModel)]="dish.dishName" />
-    </div>
-    <h3>Добавление ингредиентов</h3>
-    <div class="form-group">
-      <label>Продукты</label>
-      <select class="form-control" name="product" [(ngModel)]="ingredient.productId">
-        <option *ngFor="let productItem of productArr" [value]="productItem.productId">
-          {{productItem.productName}}
-        </option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>грамм</label>
-      <input type="number" class="form-control" name="count" [(ngModel)]="ingredient.count" />
-    </div>
-    <div class="form-group">
-      <input type="button" value="Добавить ингредиент" (click)="addIngredient()" class="btn btn-success" />
-      <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
-    </div>
-    <div class="form-group">
-      <textarea [(ngModel)]="dish.recipe"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Вес на выходе</label>
-      <input type="number" class="form-control" name="count" [(ngModel)]="dish.totalWeight" />
-    </div>
-    <div class="form-group">
-      <input type="button" value="Добавить рецепт" (click)="save()" class="btn btn-success" />
-      <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
-    </div>
+  <h1>Добавление рецепта</h1>
+  <h3>Название рецепта</h3>
+  <div class="form-group">
+    <input type="text" name="dishName" [(ngModel)]="dish.dishName" class="form-control" #dishName="ngModel" required />
+  </div>
+  <h3>Добавление ингредиентов</h3>
+  <div class="form-group">
+    <label>Продукты</label>
+    <select name="product" [(ngModel)]="ingredient.productId" class="form-control" #product="ngModel" required>
+      <option value="0">-- Выберите продукт --</option>
+      <option *ngFor="let productItem of productArr" [value]="productItem.productId">
+        {{productItem.productName}}
+      </option>
+    </select>
+  </div>
+  <div [hidden]="product.valid || product.untouched" class="alert alert-danger">
+    Продукт не выбран
+  </div>
+  <div class="form-group">
+    <label>грамм</label>
+    <input type="number" name="count" [(ngModel)]="ingredient.count" class="form-control" #count="ngModel" required pattern="^[ 0-9]+" />
+  </div>
+  <div class="form-group">
+    <input type="button" [disabled]="product.invalid || count.invalid" value="Добавить ингредиент" (click)="addIngredient()" class="btn btn-success" />
+  </div>
+  <div class="form-group">
+    <textarea name="recipeText" [(ngModel)]="dish.recipe" #recipeText="ngModel" required></textarea>
+  </div>
+  <div [hidden]="recipeText.valid || recipeText.untouched" class="alert alert-danger">
+    Введите рецепт
+  </div>
+  <div class="form-group">
+    <label>Вес на выходе</label>
+    <input type="number" name="totalWeight" [(ngModel)]="dish.totalWeight" class="form-control" #totalWeight="ngModel" required pattern="^[ 0-9]+" />
+  </div>
+  <div class="form-group">
+    <input type="button" [disabled]="dishName.invalid || recipeText.invalid || totalWeight.invalid" value="Добавить рецепт" (click)="save()" class="btn btn-success" />
+    <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
   </div>
 </ng-template>
 

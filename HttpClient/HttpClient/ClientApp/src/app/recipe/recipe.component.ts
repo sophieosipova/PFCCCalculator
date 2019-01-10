@@ -39,6 +39,10 @@ import { IProductItem } from '../shared/productItem';
 @Component({
   selector: 'recipe-data',
   templateUrl: './recipe.component.html',
+  styles: [`
+        input.ng-touched.ng-invalid {border:solid red 2px;}
+        input.ng-touched.ng-valid {border:solid green 2px;}
+    `]
 })
 
 
