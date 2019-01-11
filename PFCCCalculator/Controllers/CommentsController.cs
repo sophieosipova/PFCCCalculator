@@ -74,6 +74,13 @@ namespace PFCCCalculatorService.Controllers
         {
             try
             {
+                if (comment == null)
+                {
+                    ModelState.AddModelError("", "Комментарий не задан");
+                    return BadRequest(ModelState);
+                }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
                 var created = await commentsService.CreateComment(userId, comment);
                 if (created == null)
                 {

@@ -109,6 +109,14 @@ namespace PFCCCalculatorService.Controllers
         {
             try
             {
+                if (product == null)
+                {
+                    ModelState.AddModelError("", "Продукт не задан");
+                    return BadRequest(ModelState);
+                }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var created = await productsService.CreateProduct(userId, product);
                 if (created != null)
                     return Created("", created);

@@ -67,6 +67,13 @@ namespace PFCCCalculatorService.Controllers
         {
             try
             {
+                if (dish == null)
+                {
+                    ModelState.AddModelError("", "Рецепт не задан");
+                    return BadRequest(ModelState);
+                }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
                 var created = await dishesService.CreateDish(UserId, dish);
                 if (created != null)
                     return Created("", created);

@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace PFCCCalculatorService.Models
 {
@@ -9,10 +9,17 @@ namespace PFCCCalculatorService.Models
     {
         public int DishId { get; set; }
         public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Укажите название рецепта")]
         public string DishName { get; set; }
+
+        [Required(ErrorMessage = "Укажите рецепт")]
         public string Recipe { get; set; }
+
+        [Required(ErrorMessage = "Укажите вес блюда")]
         public double TotalWeight { get; set; }
 
+        [Required(ErrorMessage = "Ингредиенты не указаны")]
         public ICollection<IngredientModel> Ingredients { get; set; }
         public bool Equals(DishModel other)
         {
