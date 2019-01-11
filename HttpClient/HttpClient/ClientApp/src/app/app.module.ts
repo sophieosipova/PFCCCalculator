@@ -12,6 +12,9 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ProductsComponent } from './product/product.component';
 import { RecipeComponent } from './recipe/recipe.component';
 
+import { Pager } from './shared/pager/pager';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +23,8 @@ import { RecipeComponent } from './recipe/recipe.component';
     CounterComponent,
     FetchDataComponent,
     ProductsComponent,
-    RecipeComponent
+    RecipeComponent,
+    Pager
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -34,6 +38,13 @@ import { RecipeComponent } from './recipe/recipe.component';
       { path: 'products', component: ProductsComponent },
     ])
   ],
+
+  exports: [
+
+    Pager,
+
+  ],
+
   providers: [],
   bootstrap: [AppComponent]
 })

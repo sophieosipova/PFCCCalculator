@@ -1,46 +1,46 @@
 <body>
   <h1>Продукты</h1>
-
-  <p>This component demonstrates fetching data from the server.</p>
-  <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
-
-  <p *ngIf="!products"><em>Loading...</em></p>
-
-
-  <div *ngIf="products">
-    <table *ngIf="tableMode; else create" class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Calories (C)</th>
-          <th>Protein(F)</th>
-          <th>Fat</th>
-          <th>Carbohydrates</th>
-          <th>   </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let productItem of products.data">
-          <ng-template [ngIf]="product?.productId != productItem.productId" [ngIfElse]="edit">
-            <td>{{productItem.productName}}</td>
-            <td>{{productItem.calories}}</td>
-            <td>{{productItem.protein}}</td>
-            <td>{{productItem.fat}}</td>
-            <td>{{productItem.carbohydrates}}</td>
-            <td>
-              <button class="btn btn-sm btn-primary" (click)="editProduct(productItem)">Изменить</button>
-              <button class="btn btn-sm btn-primary" (click)="deleteProduct(productItem)">Удалить</button>
-            </td>
-          </ng-template>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
- 
-  <div *ngIf="products?.data.length == 0">
-    <span>THERE ARE NO RESULTS THAT MATCH YOUR SEARCH</span>
-  </div>
+  <p *ngIf="serverError"><em>Не удалось подключиться к серверу</em></p>
+  <div *ngIf="!serverError">
+    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    <p *ngIf="!products"><em>Loading...</em></p>
+    <div *ngIf="products">
+      <div *ngIf="tableMode; else create">
+        <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Продукт</th>
+              <th>Калорийность</th>
+              <th>Белки</th>
+              <th>Жиры</th>
+              <th>Углеводы</th>
+              <th>   </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let productItem of products.data">
+              <ng-template [ngIf]="product?.productId != productItem.productId" [ngIfElse]="edit">
+                <td>{{productItem.productName}}</td>
+                <td>{{productItem.calories}}</td>
+                <td>{{productItem.protein}}</td>
+                <td>{{productItem.fat}}</td>
+                <td>{{productItem.carbohydrates}}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" (click)="editProduct(productItem)">Изменить</button>
+                  <button class="btn btn-sm btn-primary" (click)="deleteProduct(productItem)">Удалить</button>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+        <esh-pager [model]="paginationInfo" (changed)="onPageChanged($event)"></esh-pager>
+      </div>
+      </div>
+    </div>
+    <div *ngIf="products?.data.length == 0">
+      <span>THERE ARE NO RESULTS THAT MATCH YOUR SEARCH</span>
+    </div>
 </body>
 
 <ng-template #edit>

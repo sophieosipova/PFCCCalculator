@@ -7,11 +7,11 @@
               [ngClass]="{'is-disabled': buttonStates?.previousDisabled, 'navigated' : !buttonStates?.previousDisabled}"
               (click)="onPreviousCliked($event)"
               aria-label="Previous">
-          Previous
+          Предыдущая
         </span>
 
         <span class="navigated">
-          Showing {{model?.items}} of {{model?.totalItems}} products - Page {{model?.actualPage + 1}} - {{model?.totalPages}}
+          Показано {{model?.items}} из {{model?.totalItems}} элементов - Страница {{model?.actualPage + 1}} - {{model?.totalPages}}
         </span>
 
         <span class="navigated"
@@ -19,7 +19,7 @@
               [ngClass]="{'is-disabled' : buttonStates?.nextDisabled, 'navigated' : !buttonStates?.nextDisabled}"
               (click)="onNextClicked($event)"
               aria-label="Next">
-          Next
+          Следующая
         </span>
       </nav>
     </article>
