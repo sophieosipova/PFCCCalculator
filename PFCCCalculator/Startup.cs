@@ -28,6 +28,7 @@ namespace PFCCCalculator
             //     services.AddHttpClient<ICommentsService, PFCCCalculatorService.Services.CommentsService>();
             //     services.AddHttpClient<IDishesService, PFCCCalculatorService.Services.DishesService>();
 
+            services.AddSingleton<IAutorizationService>(new PFCCCalculatorService.Services.AutorizationService(""));
             services.AddSingleton<IProductsService>(new PFCCCalculatorService.Services.ProductsService());
              services.AddSingleton<ICommentsService>(new PFCCCalculatorService.Services.CommentsService (""));
               services.AddSingleton<IDishesService>(new PFCCCalculatorService.Services.DishesService(""));

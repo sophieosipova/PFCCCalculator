@@ -97,10 +97,10 @@ namespace AutorizationService.Controllers
             if (this.User.Identity.IsAuthenticated)
             {
                 
-                string token = Request.Headers["Authorization"].ToString().Remove(0,7);
-                var user = await userManager.FindByNameAsync(User.Identity.Name/*usersToken.UserName*/);
+             //   string token = Request.Headers["Authorization"].ToString().Remove(0,7);
+                var user = await userManager.FindByNameAsync(usersToken.UserName);
 
-                if (user != null && user.Token == token /*usersToken.RefreshToken*/)
+                if (user != null && user.Token == usersToken.RefreshToken)
                 {
                     if (tokenGenerator.ValidateToken(usersToken.RefreshToken))
                     {
@@ -118,7 +118,34 @@ namespace AutorizationService.Controllers
             }
             return BadRequest();
         }
-    }
 
-        
+        [HttpGet, Route("refreshtokens")]
+        public async Task<ActionResult<UsersToken>> RefreshTokens()
+        {
+            if (this.User.Identity.IsAuthenticated)
+            {
+
+                string token = Request.Headers["Authorization"].ToString().Remove(0, 7);
+                var user = await userManager.FindByNameAsync(User.Identity.Name/*usersToken.UserName*/);
+
+                if (user != null && user.Token == token /*usersToken.RefreshToken*/)
+                {
+                    if (tokenGenerator.ValidateToken(token))
+                    {
+                        var jwt = tokenGenerator.GenerateRefreshToken(user.Id, user.UserName);
+                        user.Token = jwt;
+                        await userManager.UpdateAsync(user);
+                        return new UsersToken()
+                        {
+                            AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
+                            RefreshToken = jwt,
+                            UserName = user.UserName
+                        };
+                    }
+                }
+            }
+            return BadRequest();
+        }
+    }
+    
 }
