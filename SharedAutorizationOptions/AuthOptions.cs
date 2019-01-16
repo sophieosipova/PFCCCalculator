@@ -14,7 +14,7 @@ namespace SharedAutorizationOptions
 
         const string KEY = "AutorizationServiceSecretKey";
         public double RefreshTokenLifetime { get; } = 30;
-        public double AccessTokenLifetime { get; } = 1;
+        public double AccessTokenLifetime { get; } = 15;
 
         public SymmetricSecurityKey GetSymmetricSecurityKey()
         {

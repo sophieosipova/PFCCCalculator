@@ -80,5 +80,38 @@ namespace PFCCCalculatorService.Services
             return null;
 
         }
+
+        public async Task<bool> ValidateToken(string accessToken)
+        {
+            var uri = $"{remoteServiceBaseUrl}/validate";
+
+            //   httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token.RefreshToken}");
+            //   HttpResponseMessage response = await httpClient.GetAsync(uri,);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", $"{accessToken.Remove(0,7)}");
+            HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException e)
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.Unauthorized)
+                    throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return false;
+
+        }
     }
+
+
+   
 }
+

@@ -62,5 +62,29 @@ namespace PFCCCalculatorService.Controllers
             return BadRequest();
         }
 
+
+        [HttpGet]
+        [Route("validate")]
+        public async Task<ActionResult<bool>> Validate()
+        {
+            //  if (!ModelState.IsValid)
+            //     return BadRequest(ModelState.ToString());
+
+            try
+            {
+                string header = Request.Headers["Authorization"];
+
+                bool flag = await autorizationService.ValidateToken(header);
+                if (flag)
+                    return Ok(flag);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            return Unauthorized();
+        }
+
     }
 }

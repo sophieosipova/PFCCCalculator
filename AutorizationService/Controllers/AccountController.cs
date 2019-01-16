@@ -146,6 +146,27 @@ namespace AutorizationService.Controllers
             }
             return BadRequest();
         }
+
+
+
+        [HttpGet, Route("validate")]
+        public async Task<ActionResult<bool>> Validate()
+        {
+            if (this.User.Identity.IsAuthenticated)
+            {
+
+                string token = Request.Headers["Authorization"].ToString().Remove(0, 7);
+                var user = await userManager.FindByNameAsync(User.Identity.Name/*usersToken.UserName*/);
+
+                    if (tokenGenerator.ValidateToken(token))
+                    {
+                        return Ok(true);
+                    }
+            }
+            return Unauthorized();
+        }
     }
+
+
     
 }

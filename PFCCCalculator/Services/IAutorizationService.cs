@@ -12,5 +12,7 @@ namespace PFCCCalculatorService.Services
         Task<UsersToken> Login(User user);
         Task<UsersToken> RefreshTokens(UsersToken token);
 
+        Task<bool> ValidateToken(string accessToken);
+
     }
 }
