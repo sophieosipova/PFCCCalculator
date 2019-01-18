@@ -49,7 +49,7 @@ namespace AutorizationService.Controllers
                 roleManager.CreateAsync(new IdentityRole("user"));
             }
 
-            appManager = new ApplicationRepository();
+           appManager = new ApplicationRepository();
 
 
 
@@ -202,7 +202,7 @@ namespace AutorizationService.Controllers
                 return Ok();
             }
             return BadRequest();
-        }
+        } 
 
     }
 

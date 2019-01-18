@@ -65,9 +65,9 @@ namespace AutorizationService
 
             services.AddSingleton<AuthOptions>(accountOptions);
 
-      //      configuration.GetSection("Security:Tokens").Bind(accountOptions);
+            //      configuration.GetSection("Security:Tokens").Bind(accountOptions);
 
-         //   services.Configure<AuthOptions>(options => configuration.GetSection("Security:Tokens").Bind(options));
+            //   services.Configure<AuthOptions>(options => configuration.GetSection("Security:Tokens").Bind(options));
 
 
 
@@ -77,19 +77,9 @@ namespace AutorizationService
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
                     cfg.TokenValidationParameters = accountOptions.GetParameters();
-                    cfg.Audience = "https://localhost:44358/api/oauth2/";
-                    cfg.Authority = "https://localhost:44358/api/oauth2/";
-                })
-                 .AddJwtBearer("oauth",cfg =>
-                  {
-                       cfg.RequireHttpsMetadata = false;
-                       cfg.SaveToken = true;
-                        cfg.TokenValidationParameters = accountOptions.GetParameters();
-                      cfg.Audience = "https://localhost:44358/api/account/";
-                      cfg.Authority = "https://localhost:44358/api/account/";
 
-                  });
-
+                });
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
