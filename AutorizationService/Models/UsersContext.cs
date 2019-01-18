@@ -21,6 +21,7 @@ namespace AutorizationService.Database
     public class BaseContext : IdentityDbContext
     {
         new public DbSet<UserAccount> Users { get; set; }
+       // public DbSet<AppAccount> Apps { get; set; }
         public BaseContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
@@ -31,7 +32,7 @@ namespace AutorizationService.Database
             base.OnModelCreating(modelBuilder);
         }
 
-
-
     }
+
+
 }

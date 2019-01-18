@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutorizationService.Database;
 using AutorizationService.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +16,7 @@ using SharedModels;
 namespace AutorizationService.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   // [Authorize(Roles = "user")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : Controller
@@ -23,32 +25,35 @@ namespace AutorizationService.Controllers
 
         private readonly UserManager<UserAccount> userManager;
         private readonly SignInManager<UserAccount> signInManager;
-     //   private readonly RoleManager<IdentityRole> _roleManager;
+           private readonly RoleManager<IdentityRole> roleManager;
 
+        private readonly ApplicationRepository appManager;
 
         public AccountController(
 
             ITokenGenerator tokenGenerator,
             UserManager<UserAccount> userManager,
-            SignInManager<UserAccount> signInManager//,
-        //    RoleManager<IdentityRole> roleManager
+            SignInManager<UserAccount> signInManager,
+            RoleManager<IdentityRole> roleManager
         )
         {
 
             this.tokenGenerator = tokenGenerator;
             this.userManager = userManager;
             this.signInManager = signInManager;
-            // this._roleManager = roleManager;
+            this.roleManager = roleManager;
 
-            if (!userManager.Users.Any())
+            if (!roleManager.Roles.Any())
             {
-                var user = new UserAccount { UserName = "Sophie" };
-                var result = userManager.CreateAsync(user, "qwe123456");
-
-                userManager.AddClaimAsync(user, new Claim("userName", user.UserName));
+                roleManager.CreateAsync(new IdentityRole("app"));
+                roleManager.CreateAsync(new IdentityRole("user"));
             }
 
-         }
+            appManager = new ApplicationRepository();
+
+
+
+        }
 
 
         [HttpGet, AllowAnonymous]
@@ -56,7 +61,23 @@ namespace AutorizationService.Controllers
         [ProducesResponseType(typeof(List<IdentityUser>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsers()
         {
-           return Ok (userManager.Users);
+            // var app = new UserAccount { UserName = "App" };
+            //  var result1 = await userManager.CreateAsync(app, "qaz1111");
+            //  await userManager.AddClaimAsync(app, new Claim("userName", app.UserName));
+            // var user = await userManager.FindByNameAsync("Sophie");
+            // await userManager.AddToRoleAsync(user, "user");
+
+            if (!userManager.Users.Any())
+            {
+                var user = new UserAccount { UserName = "Sophie" };
+                var result =await  userManager.CreateAsync(user, "qwe123456");
+                await userManager.AddClaimAsync(user, new Claim("userName", user.UserName));
+                var app = new UserAccount { UserName = "Polina" };
+                var result1 = await  userManager.CreateAsync(app, "qwe123456");
+                await  userManager.AddClaimAsync(app, new Claim("userName", app.UserName));
+                //  userManager.AddClaimAsync(user, new Claim("role", "user"));
+            }
+            return Ok (userManager.Users);
         }
 
         [HttpPost, AllowAnonymous]
@@ -165,8 +186,26 @@ namespace AutorizationService.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpGet, Route("authapp")]
+        public async Task<ActionResult> AutorizeApplication([FromQuery]string client_id = "app")
+        {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                var acccount = appManager.GetApp(client_id);
+
+                if (acccount != null)
+                {
+                 //   var jwt = AutorizationCodeGenerator.GetAutorizationCode();
+                    acccount.AutorizedUsers.Add(this.User.Identity.Name);
+                }
+                return Ok();
+            }
+            return BadRequest();
+        }
+
     }
 
 
-    
+
 }

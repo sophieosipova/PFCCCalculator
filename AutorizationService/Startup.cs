@@ -7,6 +7,7 @@ using AutorizationService.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,7 @@ namespace AutorizationService
                options.UseSqlServer(Configuration.GetConnectionString("UsersDatabase")));
 
 
+         
 
             services.AddIdentity<UserAccount, IdentityRole>(cfg =>
             {
@@ -45,18 +47,18 @@ namespace AutorizationService
                 cfg.Password.RequireLowercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
             })
-
                 .AddEntityFrameworkStores<BaseContext>();
+
+          //  services.AddIdentityCore<AppAccount>().AddEntityFrameworkStores<BaseContext>();
+
+
+
             var accountOptions = new AuthOptions()
 
             {
-
                 ISSUER = "authServer",
-
                 AUDIENCE = "GateWay"
-
             };
-
             var tokenGenerator = new TokenGenerator(accountOptions);
 
             services.AddSingleton<ITokenGenerator>(tokenGenerator);
@@ -70,18 +72,24 @@ namespace AutorizationService
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-
                 .AddJwtBearer(cfg =>
-
                 {
-
                     cfg.RequireHttpsMetadata = false;
-
                     cfg.SaveToken = true;
-
                     cfg.TokenValidationParameters = accountOptions.GetParameters();
+                    cfg.Audience = "https://localhost:44358/api/oauth2/";
+                    cfg.Authority = "https://localhost:44358/api/oauth2/";
+                })
+                 .AddJwtBearer("oauth",cfg =>
+                  {
+                       cfg.RequireHttpsMetadata = false;
+                       cfg.SaveToken = true;
+                        cfg.TokenValidationParameters = accountOptions.GetParameters();
+                      cfg.Audience = "https://localhost:44358/api/account/";
+                      cfg.Authority = "https://localhost:44358/api/account/";
 
-                });
+                  });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,8 +109,24 @@ namespace AutorizationService
             app.UseStaticFiles();
 
             app.UseAuthentication();
-          //  app.UseHttpsRedirection();
+
+        /*    app.MapWhen(context => {
+
+                return context.User.Identity.IsAuthenticated && context.Request.;
+            }, HandleId);*/
+
+            //  app.UseHttpsRedirection();
             app.UseMvc();
         }
+
+
+      /*  private static void HandleId(IApplicationBuilder app)
+        {
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync("id is equal to 5");
+            });
+        } */
+
     }
 }

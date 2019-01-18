@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h2> HELLO </h2>
+    <script>
+        // let d = new Date();
+        var аutorize = confirm("Предоставить доступ стороннему приложению ? ");
+
+        var query = window.location.href.split("?")[1]; // результат - строка запроса без адреса страницы "id=someName&userMail=some@mail.com&usText=MemoText"
+        var params = query.split("&");  // результат - массив строк из пар "id=someName", "userMail=some@mail.com", "usText=MemoText"
+        // теперь брать по очереди
+        
+       // document.getElementById("userMail").innerHTML = params[1].split("=")[1];
+    </script>
+
+    <a href="https://localhost:44358/api/oauth/">...</a>
+</body>
+</html>
