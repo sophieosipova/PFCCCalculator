@@ -35,7 +35,8 @@ namespace AutorizationService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<BaseContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("UsersDatabase")));
+               
+            options.UseSqlServer(Configuration.GetConnectionString("UsersDatabase")));
 
 
          

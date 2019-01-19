@@ -22,6 +22,7 @@ namespace AutorizationService.Controllers
         private readonly UserManager<UserAccount> userManager;
         private readonly SignInManager<UserAccount> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private object tokenGenerator;
 
         public OAUTHController(UserManager<UserAccount> userManager,
            SignInManager<UserAccount> signInManager,
@@ -46,7 +47,7 @@ namespace AutorizationService.Controllers
                 //     acccount.Token = jwt;
                 //await userManager.UpdateAsync(acccount);
 
-              if(!this.User.Identity.IsAuthenticated)          
+              if(!this.User.Identity.IsAuthenticated || !acccount.AutorizedUsers.Contains(this.User.Identity.Name))          
                    return RedirectPermanent("https://localhost:44358/Auth.html?client_id=app");
 
                 var jwt = AutorizationCodeGenerator.GetAutorizationCode();
@@ -59,22 +60,30 @@ namespace AutorizationService.Controllers
         }
 
 
-        [HttpGet]
-        [Route("callback")]
-        public async Task<ActionResult<string>> Authorize([FromQuery]string client_id = "app", [FromQuery]string redirect_uri = "https://localhost:44358/api/account", [FromQuery]string response_type = "code")
+     /*   [HttpGet]
+        [Route("token")]
+        public async Task<ActionResult<string>> Authorize([FromQuery]string code, [FromQuery]string client_secret = "secret", [FromQuery]string client_id = "app", [FromQuery]string redirect_uri = "https://localhost:44358/api/account")
         {
 
             var acccount = appManager.GetApp(client_id);
 
-            if (acccount != null)
+            if (acccount != null )
             {
-                var jwt = AutorizationCodeGenerator.GetAutorizationCode();
-                acccount.AuthCode = jwt;
-               // await userManager.UpdateAsync(acccount);
-                await RedirectPermanent($"{redirect_uri}?code={jwt}").ExecuteResultAsync(new ActionContext());
+                if (acccount.AppSecret == client_secret && acccount.AuthCode == code)
+                {
+                    var jwt = tokenGenerator.GenerateRefreshToken(client_id, client_secret);
+                    user.Token = jwt;
+                    await userManager.UpdateAsync(user);
+                    return new UsersToken()
+                    {
+                        AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
+                        RefreshToken = jwt,
+                        UserName = user.UserName
+                    };
+                }
             }
             return BadRequest();
-        }
+        }*/
     }
 }
  

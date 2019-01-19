@@ -196,8 +196,9 @@ namespace AutorizationService.Controllers
 
                 if (acccount != null)
                 {
-                 //   var jwt = AutorizationCodeGenerator.GetAutorizationCode();
-                    acccount.AutorizedUsers.Add(this.User.Identity.Name);
+                    //   var jwt = AutorizationCodeGenerator.GetAutorizationCode();
+                    //acccount.AutorizedUsers.Add(this.User.Identity.Name);
+                    appManager.SetUser(client_id, this.User.Identity.Name);
                 }
                 return Ok();
             }
