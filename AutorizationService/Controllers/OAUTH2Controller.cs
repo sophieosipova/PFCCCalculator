@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SharedAutorizationOptions;
 using SharedModels;
 
 namespace AutorizationService.Controllers
@@ -20,14 +21,16 @@ namespace AutorizationService.Controllers
         private readonly UserManager<AppAccount> userManager;
         private readonly SignInManager<AppAccount> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly ITokenGenerator tokenGenerator;
 
         public OAUTH2Controller(
-           UserManager<AppAccount> userManager,
+           ITokenGenerator tokenGenerator,
+        UserManager<AppAccount> userManager,
            SignInManager<AppAccount> signInManager,
            RoleManager<IdentityRole> roleManager
        )
         {
-
+            this.tokenGenerator = tokenGenerator;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;

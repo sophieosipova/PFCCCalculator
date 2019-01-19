@@ -7,6 +7,8 @@ using AutorizationService.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SharedAutorizationOptions;
+using SharedModels;
 
 namespace AutorizationService.Controllers
 {
@@ -22,15 +24,16 @@ namespace AutorizationService.Controllers
         private readonly UserManager<UserAccount> userManager;
         private readonly SignInManager<UserAccount> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private object tokenGenerator;
+        private readonly ITokenGenerator tokenGenerator;
 
-        public OAUTHController(UserManager<UserAccount> userManager,
+        public OAUTHController(     ITokenGenerator tokenGenerator, UserManager<UserAccount> userManager,
            SignInManager<UserAccount> signInManager,
            RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
+            this.tokenGenerator = tokenGenerator;
             appManager = new ApplicationRepository(); 
         }
 
@@ -60,9 +63,9 @@ namespace AutorizationService.Controllers
         }
 
 
-     /*   [HttpGet]
+        [HttpGet]
         [Route("token")]
-        public async Task<ActionResult<string>> Authorize([FromQuery]string code, [FromQuery]string client_secret = "secret", [FromQuery]string client_id = "app", [FromQuery]string redirect_uri = "https://localhost:44358/api/account")
+        public async Task<ActionResult<UsersToken>> GetToken([FromQuery]string code, [FromQuery]string client_secret = "secret", [FromQuery]string client_id = "app", [FromQuery]string redirect_uri = "https://localhost:44358/api/account")
         {
 
             var acccount = appManager.GetApp(client_id);
@@ -71,19 +74,23 @@ namespace AutorizationService.Controllers
             {
                 if (acccount.AppSecret == client_secret && acccount.AuthCode == code)
                 {
-                    var jwt = tokenGenerator.GenerateRefreshToken(client_id, client_secret);
-                    user.Token = jwt;
-                    await userManager.UpdateAsync(user);
-                    return new UsersToken()
+                    var user = await userManager.FindByNameAsync(User.Identity.Name);
+                    if (user != null)
                     {
-                        AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
-                        RefreshToken = jwt,
-                        UserName = user.UserName
-                    };
+                        var jwt = tokenGenerator.GenerateRefreshToken(user.Id, user.UserName);
+                        user.Token = jwt;
+                        await userManager.UpdateAsync(user);
+                        return new UsersToken()
+                        {
+                            AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
+                            RefreshToken = jwt,
+                            UserName = user.UserName
+                        };
+                    }
                 }
             }
             return BadRequest();
-        }*/
+        }
     }
 }
  
