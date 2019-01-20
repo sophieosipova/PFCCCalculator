@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -14,6 +14,13 @@ import { RecipeComponent } from './recipe/recipe.component';
 
 import { Pager } from './shared/pager/pager';
 
+import { LoginComponent } from './autorization/login.component';
+
+import { httpInterceptor } from './interceptor/interceptor';
+import { ErrorInterceptor } from './interceptor/errorInterceptor';
+
+import { AuthorizationCheck } from './autorization/autorizationCheck';
+//import { AutorizationService } from './autorization/autorization.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +31,8 @@ import { Pager } from './shared/pager/pager';
     FetchDataComponent,
     ProductsComponent,
     RecipeComponent,
-    Pager
+    Pager,
+    LoginComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,10 +40,11 @@ import { Pager } from './shared/pager/pager';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'counter', component: CounterComponent  },
+      { path: 'fetch-data', component: FetchDataComponent  },
       { path: 'recipes', component: RecipeComponent },
-      { path: 'products', component: ProductsComponent },
+      { path: 'products', component: ProductsComponent, canActivate: [AuthorizationCheck] },
+      { path: 'login', component: LoginComponent },
     ])
   ],
 
@@ -45,7 +54,11 @@ import { Pager } from './shared/pager/pager';
 
   ],
 
-  providers: [],
+  providers: [
+  { provide: HTTP_INTERCEPTORS, useClass: httpInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    AuthorizationCheck //, AutorizationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
