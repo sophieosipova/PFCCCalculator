@@ -28,7 +28,7 @@ namespace PFCCCalculatorService.Models
         [Range(0, 1000, ErrorMessage = "Неверно указана калорийность продукта")]
         [Required(ErrorMessage = "Укажите содержание калоийность продукта")]
         public int Calories { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public bool Equals(ProductModel other)
         {

@@ -7,7 +7,8 @@
     <input type="text" name="password" [(ngModel)]="user.password" class="form-control" #password="ngModel" />
     <div>
       <input type="button" value="Сохранить" (click)="add()" class="btn btn-success" />
-      <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+      <input type="button" value="Сохранить" (click)="oauth()" class="btn btn-success" />
+      <input type="button" value="Выйти" (click)="logout()" class="btn btn-warning" />
     </div>
   </fieldset>
 

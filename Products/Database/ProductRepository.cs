@@ -27,13 +27,13 @@ namespace ProductsService.Database
             }
             if (!db.Products.Any())
             {
-                db.Products.Add(new Product { ProductName = "Яблоко", ProductsCategoryId = 2, Protein = 0, Fat = 0, Carbohydrates = 12, Calories = 60 });
-                db.Products.Add(new Product { ProductName = "Сыр", ProductsCategoryId = 3, Protein = 15, Fat = 30, Carbohydrates = 1, Calories = 280 });
-                db.Products.Add(new Product { ProductName = "Батон", ProductsCategoryId = 4, Protein = 1, Fat = 2, Carbohydrates = 50, Calories = 290 });
+                db.Products.Add(new Product { ProductName = "Яблоко", ProductsCategoryId = 2, Protein = 0, Fat = 0, Carbohydrates = 12, Calories = 60,UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba" });
+                db.Products.Add(new Product { ProductName = "Сыр", ProductsCategoryId = 3, Protein = 15, Fat = 30, Carbohydrates = 1, Calories = 280, UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba" });
+                db.Products.Add(new Product { ProductName = "Батон", ProductsCategoryId = 4, Protein = 1, Fat = 2, Carbohydrates = 50, Calories = 290, UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba" });
 
-                db.Products.Add(new Product { ProductName = "Сахар", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 57, Calories = 350 });
-                db.Products.Add(new Product { ProductName = "Корица", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 37, Calories = 187 });
-                db.Products.Add(new Product { ProductName = "Соль", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 37, Calories = 187 });
+                db.Products.Add(new Product { ProductName = "Сахар", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 57, Calories = 350, UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba" });
+                db.Products.Add(new Product { ProductName = "Корица", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 37, Calories = 187, UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba" });
+                db.Products.Add(new Product { ProductName = "Соль", ProductsCategoryId = 5, Protein = 1, Fat = 2, Carbohydrates = 37, Calories = 187, UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba" });
                 db.SaveChanges();
             }
         }
@@ -42,7 +42,7 @@ namespace ProductsService.Database
         {
             try
             {
-                return await db.Products.Where(p => p.UserId == 0).ToListAsync();
+                return await db.Products.ToListAsync();
             }
             catch
             {
@@ -51,7 +51,7 @@ namespace ProductsService.Database
             
         }
 
-        public async Task<List<Product>> GetUsersProducts(int userId)
+        public async Task<List<Product>> GetUsersProducts(string userId)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace ProductsService.Database
             }
             
         }
-        public async Task<Product> CreateProduct(int userId, [FromBody]Product product)
+        public async Task<Product> CreateProduct(string userId, [FromBody]Product product)
         {
             var item = new Product
             {
@@ -129,7 +129,7 @@ namespace ProductsService.Database
             
         }
 
-        public async Task<bool> DeleteProduct(int userId, int productId)
+        public async Task<bool> DeleteProduct(string userId, int productId)
         {
             var product = db.Products.SingleOrDefault(x => x.ProductId == productId && x.UserId == userId);
 
@@ -150,7 +150,7 @@ namespace ProductsService.Database
         }
 
 
-        public async Task<Product> UpdateProduct(int userId, Product productToUpdate)
+        public async Task<Product> UpdateProduct(string userId, Product productToUpdate)
         {
             var product = await db.Products
                 .SingleOrDefaultAsync(i => i.ProductId == productToUpdate.ProductId);

@@ -35,12 +35,12 @@ namespace ProductsService.Controllers
         }
 
         [HttpGet]
-        [Route("users/{userId:int}")]
+        [Route("users/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(List<Product>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetUsersProducts(int userId)
+        public async Task<IActionResult> GetUsersProducts(string userId)
         {
-            if (userId < 0)
+            if (userId == "")
                 return BadRequest();
 
             var products = await productRepository.GetUsersProducts(userId);
@@ -74,7 +74,7 @@ namespace ProductsService.Controllers
             if (productCategoryId <= 0)
                 return BadRequest();
 
-            var productCategory = await productRepository.GetUsersProducts(productCategoryId);
+            var productCategory = await productRepository.GetProductsByCategoryId(productCategoryId);
 
             if (productCategory == null)
                 return NotFound();
@@ -101,10 +101,10 @@ namespace ProductsService.Controllers
         }
 
         
-        [Route("user/{userId:int}")]
+        [Route("user/{userId}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateProduct(int userId,Product product)
+        public async Task<IActionResult> CreateProduct(string userId,Product product)
         {
             Product p = await productRepository.CreateProduct(userId, product);
             if (p == null)
@@ -115,10 +115,10 @@ namespace ProductsService.Controllers
         }
 
         //DELETE api/v1/[controller]/id
-        [Route("user/{userId:int}/{productId:int}")]
+        [Route("user/{userId}/{productId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteProduct(int userId,int productId)
+        public async Task<IActionResult> DeleteProduct(string userId, int productId)
         {
             if (!await productRepository.DeleteProduct(userId, productId))
                 return NotFound();
@@ -127,10 +127,10 @@ namespace ProductsService.Controllers
         }
 
         [HttpPut]
-        [Route("user/{userId:int}")]
+        [Route("user/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> UpdateProduct(int userId, [FromBody]Product productToUpdate)
+        public async Task<IActionResult> UpdateProduct(string userId, [FromBody]Product productToUpdate)
         { 
             var product = await productRepository.UpdateProduct(userId,productToUpdate);
 

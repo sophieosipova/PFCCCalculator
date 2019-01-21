@@ -15,8 +15,8 @@ namespace CommentsService.Database
             this.db = context;
             if (!db.Comments.Any())
             {
-                db.Comments.Add(new Comment { UserId = 1, CommentText = "WOW!", DishId = 1 });
-                db.Comments.Add(new Comment { UserId = 2, CommentText = "Вкусно!", DishId = 1 });
+                db.Comments.Add(new Comment { UserId ="d968f867-cd4b-4f2c-915f-fd0bba4a06ba", CommentText = "WOW!", DishId = 1 });
+                db.Comments.Add(new Comment { UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba", CommentText = "Вкусно!", DishId = 1 });
 
                 db.SaveChanges();
             }
@@ -68,7 +68,7 @@ namespace CommentsService.Database
             }
         } */
 
-        public async Task<Comment> CreateComment(int userId, Comment comment)
+        public async Task<Comment> CreateComment(string userId, Comment comment)
         {
             var item = new Comment
             {
@@ -90,7 +90,7 @@ namespace CommentsService.Database
             }
         }
 
-        public async Task<bool> DeleteComment(int userId, int commentId)
+        public async Task<bool> DeleteComment(string userId, int commentId)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace CommentsService.Database
         }
 
 
-        public async Task<Comment> UpdateComment(int userId, Comment commentToUpdate)
+        public async Task<Comment> UpdateComment(string userId, Comment commentToUpdate)
         {
             try
             {

@@ -51,13 +51,13 @@ namespace AutorizationService.Controllers
                 //await userManager.UpdateAsync(acccount);
 
               if(!this.User.Identity.IsAuthenticated || !acccount.AutorizedUsers.Contains(this.User.Identity.Name))          
-                   return RedirectPermanent("https://localhost:44358/Auth.html?client_id=app");
+                   return Ok($"https://localhost:44358/Auth.html?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}");
 
                 var jwt = AutorizationCodeGenerator.GetAutorizationCode();
                 acccount.AuthCode = jwt;
                 // await userManager.UpdateAsync(acccount);
                 this.Response.Headers.Add("Content-Type", "application/json");
-                return  RedirectPermanent($"{redirect_uri}?code={jwt}");//$"{redirect_uri}?code={jwt}");
+                return Ok($"{redirect_uri}?code={jwt}");//$"{redirect_uri}?code={jwt}");
             }
             return BadRequest();
         }
@@ -84,7 +84,8 @@ namespace AutorizationService.Controllers
                         {
                             AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
                             RefreshToken = jwt,
-                            UserName = user.UserName
+                            UserName = user.UserName,
+                            UserId = user.Id
                         };
                     }
                 }

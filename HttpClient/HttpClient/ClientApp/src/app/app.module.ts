@@ -20,6 +20,8 @@ import { httpInterceptor } from './interceptor/interceptor';
 import { ErrorInterceptor } from './interceptor/errorInterceptor';
 
 import { AuthorizationCheck } from './autorization/autorizationCheck';
+
+import { ProductService } from './product/product.service';
 //import { AutorizationService } from './autorization/autorization.service';
 
 @NgModule({
@@ -39,11 +41,12 @@ import { AuthorizationCheck } from './autorization/autorizationCheck';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent  },
-      { path: 'fetch-data', component: FetchDataComponent  },
-      { path: 'recipes', component: RecipeComponent },
-      { path: 'products', component: ProductsComponent, canActivate: [AuthorizationCheck] },
+   //   { path: '', component: HomeComponent, pathMatch: 'full' },
+   //   { path: 'counter', component: CounterComponent  },
+     // { path: 'fetch-data', component: FetchDataComponent  },
+      { path: 'recipes', component: RecipeComponent, canActivate: [AuthorizationCheck] },
+   //   { path: 'products/:action', component: ProductsComponent, canActivate: [AuthorizationCheck] },
+      { path: 'products', component: ProductsComponent, canActivate: [AuthorizationCheck]},
       { path: 'login', component: LoginComponent },
     ])
   ],
@@ -57,7 +60,7 @@ import { AuthorizationCheck } from './autorization/autorizationCheck';
   providers: [
   { provide: HTTP_INTERCEPTORS, useClass: httpInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    AuthorizationCheck //, AutorizationService
+    AuthorizationCheck//, ProductService //, AutorizationService
   ],
   bootstrap: [AppComponent]
 })

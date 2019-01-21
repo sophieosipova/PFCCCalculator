@@ -117,7 +117,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task <DishModel> CreateDish(int userId, DishModel dish)
+        public async Task <DishModel> CreateDish(string userId, DishModel dish)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
 
@@ -135,7 +135,7 @@ namespace PFCCCalculatorService.Services
             }
         }
 
-        public async Task<DishModel> UpdateDish(int userId, DishModel dish)
+        public async Task<DishModel> UpdateDish(string userId, DishModel dish)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}";
 
@@ -153,7 +153,7 @@ namespace PFCCCalculatorService.Services
             }
         }
 
-        public async Task<bool> DeleteDish(int userId,int DishId)
+        public async Task<bool> DeleteDish(string userId,int DishId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/dishes/user/{userId}/{DishId}";
           

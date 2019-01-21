@@ -10,7 +10,7 @@ namespace PFCCCalculatorService.Models
            public int CommentId { get; set; }
            [Required(ErrorMessage = "Введите комментарий")]
            public string CommentText { get; set; }
-           public int UserId { get; set; }
+           public string UserId { get; set; }
            public int DishId { get; set; }
     
 

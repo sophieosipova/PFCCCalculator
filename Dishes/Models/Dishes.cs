@@ -13,7 +13,7 @@ namespace Dishes.Models
         }
       //  [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int DishId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string DishName { get; set; }
         public string Recipe { get; set; }
         public double TotalWeight { get; set; }

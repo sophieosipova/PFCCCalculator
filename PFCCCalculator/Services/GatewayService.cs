@@ -89,7 +89,7 @@ namespace PFCCCalculatorService.Services
             }
         }
 
-        public async Task<bool> DeleteDish(int userId, int dishId)
+        public async Task<bool> DeleteDish(string userId, int dishId)
         {
             
             try
@@ -129,7 +129,7 @@ namespace PFCCCalculatorService.Services
                 throw e;
             }
         }*/
-        public async Task<HttpStatusCode> DeleteProduct(int userId, int productId)
+        public async Task<HttpStatusCode> DeleteProduct(string userId, int productId)
         {
             try
             {

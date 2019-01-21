@@ -87,10 +87,10 @@ namespace DishesService.Controllers
 
 
 
-        [Route("user/{userId:int}")]
+        [Route("user/{userId}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateDish(int userId, [FromBody]Dish dish)
+        public async Task<IActionResult> CreateDish(string userId, [FromBody]Dish dish)
         {
             var createdDish = await dishesRepository.CreateDish(userId, dish);
 
@@ -102,10 +102,10 @@ namespace DishesService.Controllers
 
 
         //DELETE api/v1/[controller]/id
-        [Route("user/{userId:int}/{dishId:int}")]
+        [Route("user/{userId}/{dishId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteDish(int userId, int dishId)
+        public async Task<IActionResult> DeleteDish(string userId, int dishId)
         {
             if (dishId < 0)
                 return BadRequest();
@@ -116,11 +116,11 @@ namespace DishesService.Controllers
             return NoContent();
         }
 
-        [Route("user/{userId:int}")]
+        [Route("user/{userId}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> UpdateDish(int userId,[FromBody]Dish dishToUpdate)
+        public async Task<IActionResult> UpdateDish(string userId,[FromBody]Dish dishToUpdate)
         {
             var upd = await dishesRepository.UpdateDish(userId, dishToUpdate);
 

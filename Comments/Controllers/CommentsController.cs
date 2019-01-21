@@ -70,10 +70,10 @@ namespace CommentsService.Controllers
 
 
 
-        [Route("user/{userId:int}")]
+        [Route("user/{userId}")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateComment (int userId, Comment comment)
+        public async Task<IActionResult> CreateComment (string userId, Comment comment)
         {
             var c = await commentsRepository.CreateComment(userId, comment);
 
@@ -84,12 +84,12 @@ namespace CommentsService.Controllers
         }
 
         
-        [Route("user/{userId:int}/{commentId:int}")]
+        [Route("user/{userId}/{commentId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteComment(int userId,int commentId)
+        public async Task<IActionResult> DeleteComment(string userId,int commentId)
         {
-            if (userId < 0)
+            if (userId == "")
                 return BadRequest();
 
             if (await commentsRepository.DeleteComment(userId, commentId))
@@ -98,11 +98,11 @@ namespace CommentsService.Controllers
             return NotFound();
         }
 
-        [Route("user/{userId:int}")]
+        [Route("user/{userId}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> UpdateComment(int userId, [FromBody]Comment commentToUpdate)
+        public async Task<IActionResult> UpdateComment(string userId, [FromBody]Comment commentToUpdate)
         {
             var comment = await commentsRepository.UpdateComment(userId, commentToUpdate);
 

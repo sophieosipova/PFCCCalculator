@@ -100,7 +100,8 @@ namespace AutorizationService.Controllers
                         {
                             RefreshToken = jwt,
                             AccessToken = tokenGenerator.GenerateAccessToken(acccount.Id, acccount.UserName),
-                            UserName = user.Username
+                            UserName = user.Username,
+                            UserId =acccount.Id
                         };
 
                     }
@@ -132,7 +133,8 @@ namespace AutorizationService.Controllers
                         {
                             AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
                             RefreshToken = jwt,
-                            UserName = user.UserName
+                            UserName = user.UserName,
+                            UserId = user.Id
                         };
                     }
                 }
@@ -160,12 +162,13 @@ namespace AutorizationService.Controllers
                         {
                             AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
                             RefreshToken = jwt,
-                            UserName = user.UserName
+                            UserName = user.UserName,
+                            UserId = user.Id
                         };
                     }
                 }
             }
-            return BadRequest();
+            return Unauthorized();
         }
 
 

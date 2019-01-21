@@ -23,9 +23,9 @@ namespace PFCCCalculatorService.Services
          Task<ProductModel> GetProductById(int productId);
 
           
-           Task<ProductModel> CreateProduct(int userId, ProductModel product);
-           Task<bool> DeleteProduct(int userId, int productId);
-           Task<ProductModel> UpdateProduct(int userId, ProductModel productToUpdate);
+           Task<ProductModel> CreateProduct(string userId, ProductModel product);
+           Task<bool> DeleteProduct(string userId, int productId);
+           Task<ProductModel> UpdateProduct(string userId, ProductModel productToUpdate);
 
         /*      [ProducesResponseType((int)HttpStatusCode.NotFound)]
            [ProducesResponseType((int)HttpStatusCode.Created)]

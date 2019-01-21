@@ -30,8 +30,8 @@ namespace PFCCCalculator
 
             services.AddSingleton<IAutorizationService>(new PFCCCalculatorService.Services.AutorizationService(""));
             services.AddSingleton<IProductsService>(new PFCCCalculatorService.Services.ProductsService());
-             services.AddSingleton<ICommentsService>(new PFCCCalculatorService.Services.CommentsService (""));
-              services.AddSingleton<IDishesService>(new PFCCCalculatorService.Services.DishesService(""));
+            services.AddSingleton<ICommentsService>(new PFCCCalculatorService.Services.CommentsService(""));
+            services.AddSingleton<IDishesService>(new PFCCCalculatorService.Services.DishesService(""));
 
             services.AddSingleton<IGatewayService, GatewayService>();
             //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
@@ -46,7 +46,7 @@ namespace PFCCCalculator
             });
             //services.AddSingleton<IProductsService>(dbService);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,11 +63,25 @@ namespace PFCCCalculator
 
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
+
+        /*    app.MapWhen(context =>
+            {
+                return (context.Request.Method == "POST" || context.Request.Method == "PUT") & !context.Request.Headers.Values.Contains("Authorization");
+            }, HandleId); */
+
+
             app.UseMvc();
 
 
             loggerFactory.AddDebug();
             loggerFactory.AddConsole();
         }
+
+      /*  private static void HandleId(IApplicationBuilder app)
+        {
+            AutorizationService autorizationService = new AutorizationService("");
+            await  autorizationService.ValidateToken("");
+
+        } */
     }
 }

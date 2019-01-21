@@ -21,7 +21,7 @@ namespace PFCCCalculatorService.Services
             this.httpClient = new HttpClient();
         }
 
-        public async Task<List<CommentModel>> GetCommentsByUserId(int userId)
+        public async Task<List<CommentModel>> GetCommentsByUserId(string userId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}";
 
@@ -76,7 +76,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task <bool> DeleteComment(int userId, int commentId)
+        public async Task <bool> DeleteComment(string userId, int commentId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}/{commentId}";
 
@@ -96,7 +96,7 @@ namespace PFCCCalculatorService.Services
             return true;
         }
 
-        public async  Task<CommentModel> CreateComment(int userId, CommentModel comment)
+        public async  Task<CommentModel> CreateComment(string userId, CommentModel comment)
          {
             var uri = $"{remoteServiceBaseUrl}/api/comments/user/{userId}";
 

@@ -131,7 +131,7 @@ namespace PFCCCalculatorService.Services
             return null;
         }
 
-        public async Task<ProductModel> CreateProduct(int userId, ProductModel product)
+        public async Task<ProductModel> CreateProduct(string userId, ProductModel product)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
             
@@ -151,7 +151,7 @@ namespace PFCCCalculatorService.Services
             
         }
 
-        public async Task<bool> DeleteProduct(int userId, int productId)
+        public async Task<bool> DeleteProduct(string userId, int productId)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}/{productId}";
 
@@ -170,7 +170,7 @@ namespace PFCCCalculatorService.Services
             return true;
 
         }
-        public async Task<ProductModel> UpdateProduct(int userId, ProductModel productToUpdate)
+        public async Task<ProductModel> UpdateProduct(string userId, ProductModel productToUpdate)
         {
             var uri = $"{remoteServiceBaseUrl}/api/products/user/{userId}";
             try
@@ -213,6 +213,7 @@ namespace PFCCCalculatorService.Services
 
         public async Task<PaginatedModel<ProductModel>> Items(int pageSize = 0, int pageIndex = 0)
         {
+            
             var uri = $"{remoteServiceBaseUrl}/api/products/items?pageSize={pageSize}&pageIndex={pageIndex}";
 
             string responseString = await httpClient.GetStringAsync(uri);

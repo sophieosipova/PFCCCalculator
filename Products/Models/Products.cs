@@ -14,7 +14,7 @@ namespace ProductsService.Models
         public int Protein { get; set; }
         public int Carbohydrates { get; set; }
         public int Calories { get; set; }
-        public int UserId { get; set; }
+        public string  UserId { get; set; }
 
         public bool Equals(Product other)
         {

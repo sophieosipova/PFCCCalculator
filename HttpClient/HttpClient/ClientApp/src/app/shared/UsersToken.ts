@@ -3,6 +3,6 @@ export class UsersToken {
     public refreshToken?: string,
     public accessToken?: string,
     public username?: string,
-
+    public userId?: string
   ) { }
 }

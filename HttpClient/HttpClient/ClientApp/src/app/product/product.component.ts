@@ -21,8 +21,8 @@ import { Pager } from '../shared/pager/pager';
 export class ProductsComponent {
   error: any;
   serverError: boolean = false;
-  products: IProduct ;
-  product: IProductItem =  new IProductItem(); 
+  products: IProduct;
+  product: IProductItem = new IProductItem();
   nullProduct: IProductItem;
   paginationInfo: IPager;
   http: HttpClient;
@@ -34,12 +34,12 @@ export class ProductsComponent {
 
     this.baseUrl = "https://localhost:44350/api/products";
     this.http = http;
-    
+
   }
 
 
   ngOnInit() {
-    this.getProducts(3,0);    
+    this.getProducts(3, 0);
   }
 
 
@@ -64,24 +64,24 @@ export class ProductsComponent {
   save() {
 
     this.error = null;
- 
-    let url = this.baseUrl + '/user/0/'
+    let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
+
+    let url = this.baseUrl + `/user/${tokenInfo.userId}`;
     if (this.product.productId == null) {
       this.http.post<IProductItem>(url, this.product)
         .subscribe(result => {
           this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-        }, error => { this.error = "Не корректные данные", console.error(error);});
-       
-    } else
-    {
-      this.http.put<IProductItem>(url, this.product)
+        }, error => { this.error = "Не корректные данные", console.error(error); });
+
+    } else {
+      this.http.put<any>(url, this.product)
         .subscribe(result => {
-          this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);        
-        }, error => { this.error = "Не корректные данные", console.error(error);});
+          this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
+        }, error => { this.error = "Не корректные данные", console.error(error); });
 
     }
 
-      this.cancel();
+    this.cancel();
   }
 
   editProduct(p: IProductItem) {
@@ -92,17 +92,19 @@ export class ProductsComponent {
 
   deleteProduct(p: IProductItem) {
 
+    let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
     this.error = null;
-    let url = 'https://localhost:44350/api/pfcccalculator' + '/user/0' + '/product/' + p.productId;
+    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.userId}` + '/product/' + p.productId;
     this.http.delete(url)
       .subscribe(result => {
         this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-      }, error => { this.error = "Нельзя удалить", console.error(error); });
+      }, error => { this.error = "Некорректные данные ", console.error(error); });
 
   }
 
   getProducts(pageSize: number, pageIndex: number) {
 
+    localStorage.setItem('Get', "true") ;
     this.serverError = false;
     this.error = null;
     let url = this.baseUrl + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex;
@@ -116,7 +118,8 @@ export class ProductsComponent {
         totalPages: Math.ceil(result.count / result.pageSize),
         items: result.pageSize
       }
-    }, error => { this.serverError = true, console.error(error);});
+    }, error => { this.serverError = true, console.error(error); });
+
   }
 
   onPageChanged(value: any) {
@@ -126,6 +129,6 @@ export class ProductsComponent {
     this.paginationInfo.actualPage = value;
     this.getProducts(this.paginationInfo.itemsPage, value);
   }
- 
-  
+
+
 }

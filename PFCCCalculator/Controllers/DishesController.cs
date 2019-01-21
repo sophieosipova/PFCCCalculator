@@ -15,9 +15,10 @@ namespace PFCCCalculatorService.Controllers
     {
 
         private readonly IDishesService dishesService;
-
-        public DishesController(IDishesService dishesService)
+        private readonly IAutorizationService autorizationService;
+        public DishesController(IDishesService dishesService, IAutorizationService autorizationService)
         {
+            this.autorizationService = autorizationService;
             this.dishesService = dishesService;
         }
 
@@ -63,7 +64,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}/")]
-        public async Task<IActionResult> CreateDish(int UserId, DishModel dish)
+        public async Task<IActionResult> CreateDish(string UserId, DishModel dish)
         {
             try
             {
@@ -74,6 +75,10 @@ namespace PFCCCalculatorService.Controllers
                 }
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
+
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 var created = await dishesService.CreateDish(UserId, dish);
                 if (created != null)
                     return Created("", created);
@@ -90,10 +95,13 @@ namespace PFCCCalculatorService.Controllers
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}/")]
-        public async Task<IActionResult> UpdateDish(int UserId, DishModel dish)
+        public async Task<IActionResult> UpdateDish(string UserId, DishModel dish)
         {
             try
             {
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 var created = await dishesService.UpdateDish(UserId, dish);
                 if (created != null)
                     return Created("", created);

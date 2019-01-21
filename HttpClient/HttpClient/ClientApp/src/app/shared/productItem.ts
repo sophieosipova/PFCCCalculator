@@ -6,6 +6,6 @@ export class IProductItem {
     public protein?: number,
     public carbohydrates?: number,
     public calories?: number,
-    public userId?: number
+    public userId?: string
   ) { }
 }

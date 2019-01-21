@@ -16,9 +16,11 @@ namespace PFCCCalculatorService.Controllers
     {
         private readonly ICommentsService commentsService;
         private readonly ILogger<ICommentsService> logger;
-        public CommentsController(ICommentsService commentsService, ILogger<ICommentsService> logger)
+        private readonly IAutorizationService autorizationService;
+        public CommentsController(ICommentsService commentsService,   IAutorizationService autorizationService, ILogger<ICommentsService> logger)
         {
             this.commentsService = commentsService;
+            this.autorizationService = autorizationService;
             this.logger = logger;
         }
 
@@ -41,9 +43,9 @@ namespace PFCCCalculatorService.Controllers
         [Route("user/{userId:int}/{commentId:int}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteComment(int userId, int commentId)
+        public async Task<IActionResult> DeleteComment(string userId, int commentId)
         {
-            if (userId < 0)
+            if (userId == "")
             {
                 logger.LogInformation("DELETE --- fail");
                 return BadRequest();
@@ -51,6 +53,9 @@ namespace PFCCCalculatorService.Controllers
 
             try
             {
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 if (await commentsService.DeleteComment(userId, commentId))
                 {
                     logger.LogInformation("DELETE --- success");
@@ -70,7 +75,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}")]
-        public async Task<IActionResult> CreateComment(int userId, CommentModel comment)
+        public async Task<IActionResult> CreateComment(string userId, CommentModel comment)
         {
             try
             {
@@ -81,6 +86,10 @@ namespace PFCCCalculatorService.Controllers
                 }
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
+
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 var created = await commentsService.CreateComment(userId, comment);
                 if (created == null)
                 {

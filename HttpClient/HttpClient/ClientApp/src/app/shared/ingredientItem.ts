@@ -4,7 +4,7 @@ export class IIngredientItem {
     public productId?: number,
     public dishId?: number,
     public productName?: string,
-    public userId?: number,
+    public userId?: string,
     public count?: number
   ) { }
 }

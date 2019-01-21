@@ -16,10 +16,12 @@ namespace PFCCCalculatorService.Controllers
     {
         private readonly IGatewayService gatewayService;
         private readonly ILogger<PFCCCalculatorController> logger;
+        private readonly IAutorizationService autorizationService;
 
-        public PFCCCalculatorController (IGatewayService gatewayService, ILogger<PFCCCalculatorController> logger)
+        public PFCCCalculatorController (IGatewayService gatewayService,  IAutorizationService autorizationService, ILogger<PFCCCalculatorController> logger)
         {
             this.gatewayService = gatewayService;
+            this.autorizationService = autorizationService;
             this.logger = logger;
         }
 
@@ -72,13 +74,16 @@ namespace PFCCCalculatorService.Controllers
 
 
         [HttpDelete]
-        [Route("user/{userId:int}/recipe/{recipeId:int}")]
+        [Route("user/{userId}/recipe/{recipeId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteRecipe(int userId, int recipeId)
+        public async Task<IActionResult> DeleteRecipe(string userId, int recipeId)
         {
             try
             {
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 if (!await gatewayService.DeleteDish(userId, recipeId))
                 {
                     logger.LogInformation("DELETE --- fail");
@@ -98,10 +103,10 @@ namespace PFCCCalculatorService.Controllers
 
 
         [HttpDelete]
-        [Route("user/{userId:int}/product/{productId:int}")]
+        [Route("user/{userId}/product/{productId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(PFCCRecipe), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteProduct(int userId, int productId)
+        public async Task<IActionResult> DeleteProduct(string userId, int productId)
         {
             if (productId < 0)
             {
@@ -110,6 +115,9 @@ namespace PFCCCalculatorService.Controllers
             }
             try
             {
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 var result = await gatewayService.DeleteProduct(userId, productId);
                 if (result == HttpStatusCode.Conflict)
                 {

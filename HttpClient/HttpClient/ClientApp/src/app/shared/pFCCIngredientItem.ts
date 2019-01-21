@@ -7,7 +7,7 @@ export interface IPFCCIngredientItem {
    protein: number;
    carbohydrates: number;
    calories: number;
-   userId: number;
+  userId: string;
    count: number;
 }
 

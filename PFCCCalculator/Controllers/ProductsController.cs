@@ -17,10 +17,12 @@ namespace PFCCCalculatorService.Controllers
     {
         private readonly IProductsService productsService;
         private readonly ILogger <ProductsController>  logger;
+        private readonly IAutorizationService autorizationService;
 
-        public ProductsController(IProductsService p, ILogger<ProductsController> logger)
+        public ProductsController(IProductsService p,IAutorizationService a, ILogger<ProductsController> logger)
         {
             this.productsService = p;
+            this.autorizationService = a;
             this.logger = logger;
         }
 
@@ -61,6 +63,9 @@ namespace PFCCCalculatorService.Controllers
 
             try
             {
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 var product = await productsService.GetProductsByCategoryId(productCategoryId);
                
                 if (product != null)
@@ -105,10 +110,13 @@ namespace PFCCCalculatorService.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}")]
-        public async Task<IActionResult> CreateProduct(int userId, ProductModel product)
+        public async Task<IActionResult> CreateProduct(string userId, ProductModel product)
         {
             try
             {
+                if (!await autorizationService.ValidateToken(Request.Headers["Authorization"].ToString()))
+                    return Unauthorized();
+
                 if (product == null)
                 {
                     ModelState.AddModelError("", "Продукт не задан");
@@ -133,7 +141,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}")]
-        public async Task<IActionResult> UpdateDish(int UserId, ProductModel product)
+        public async Task<IActionResult> UpdateDish(string UserId, ProductModel product)
         {
             try
             {
@@ -157,6 +165,8 @@ namespace PFCCCalculatorService.Controllers
         [ProducesResponseType(typeof(List<ProductModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProducts([FromQuery]int pageSize = 0, [FromQuery]int pageIndex = 0)
         {
+
+            var t = this.Request.Headers;
             try
             {
                 if (pageSize == 0)

@@ -8,7 +8,7 @@ namespace PFCCCalculatorService.Models
     public class DishModel : IEquatable<DishModel>
     {
         public int DishId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Укажите название рецепта")]
         public string DishName { get; set; }

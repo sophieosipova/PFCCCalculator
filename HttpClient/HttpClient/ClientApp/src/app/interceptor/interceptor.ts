@@ -9,13 +9,13 @@ export class httpInterceptor implements HttpInterceptor {
  
  //Get Token data from local storage
  let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
- 
-   if (tokenInfo && tokenInfo.accessToken)
+
+   if (tokenInfo && tokenInfo.accessToken && request.method != "GET")
    {
       request = request.clone({
       setHeaders: {
-      Authorization: `Bearer ${tokenInfo.accessToken}`,
-      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      Authorization: `Bearer ${tokenInfo.accessToken}`//,
+   //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     }
  });
  }

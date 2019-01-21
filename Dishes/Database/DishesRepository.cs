@@ -23,7 +23,8 @@ namespace DishesService.Database
                     Recipe = "Обжарить каждый ломтики хлеба с одной стороны," +
                     " перевернуть, положить сыр, накрыть сверху обжаренной " +
                      "стороной ломтика хлеба. Обжарить бутерброд с двух сторон",
-                    TotalWeight = 120
+                    TotalWeight = 120,
+                    UserId = "d968f867-cd4b-4f2c-915f-fd0bba4a06ba"
                 });
 
                 db.Ingredients.Add(new Ingredient { DishId = 1, ProductName = "Батон", ProductId = 2, Count = 80 }
@@ -146,7 +147,7 @@ namespace DishesService.Database
 
 
 
-        public async Task<Dish> CreateDish(int userId, Dish dish)
+        public async Task<Dish> CreateDish(string userId, Dish dish)
         {
             var item = new Dish
             {
@@ -190,7 +191,7 @@ namespace DishesService.Database
         }
 
 
-        public async Task<bool> DeleteDish(int userId, int dishId)
+        public async Task<bool> DeleteDish(string userId, int dishId)
         {
             try
             {
@@ -217,7 +218,7 @@ namespace DishesService.Database
         }
 
 
-        public async Task<Dish> UpdateDish(int userId, Dish dishToUpdate)
+        public async Task<Dish> UpdateDish(string userId, Dish dishToUpdate)
         {
             try
             {
