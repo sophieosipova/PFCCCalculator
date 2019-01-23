@@ -22,20 +22,28 @@ export class ErrorInterceptor implements HttpInterceptor {
       }
     });
     return newRequest.handle(request).pipe(catchError(err => {
-      if (err.status === 401 && tokenInfo != null)
+
+  /*    if (err.status == 200)
+      {
+        let u = err.message.substring(err.message.indexOf("https"), err.message.length);
+       // this.router.navigate(u);
+        window.location.href = u;
+      } */
+      if (err.status == 401 && tokenInfo != null)
       {
          localStorage.removeItem('TokenInfo');
-   //     request.s < UsersToken > = localStorage.getItem('TokenInfo');
         let url = 'https://localhost:44350/api/refreshtoken';
-
+        
         this.http.post<UsersToken>(url, tokenInfo)
           .subscribe(result => {
             localStorage.setItem('TokenInfo', JSON.stringify(result));
           }, error => { console.error(error); });
 
-       // return  return newRequest.handle(request);
-        //if 401 response returned from api, logout from application & redirect to login page.
-       // this.authenticationService.logout();
+      }
+
+      if (err.status === 401) {
+        this.router.navigate(['/login']);
+        //localStorage.removeItem('TokenInfo');
       }
 
       const error = err.error.message || err.statusText;

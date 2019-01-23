@@ -17,6 +17,9 @@ namespace PFCCCalculatorService.Controllers
         private readonly ICommentsService commentsService;
         private readonly ILogger<ICommentsService> logger;
         private readonly IAutorizationService autorizationService;
+
+        private readonly App client = new App() { ClientId = "Gateway", ClientSecret = "Sercret" };
+        private AppsToken token;
         public CommentsController(ICommentsService commentsService,   IAutorizationService autorizationService, ILogger<ICommentsService> logger)
         {
             this.commentsService = commentsService;

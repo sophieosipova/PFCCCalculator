@@ -5,9 +5,12 @@ using System.Net;
 using System.Threading.Tasks;
 using SharedModels;
 using ProductsService.Database;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ProductsService.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -34,7 +37,7 @@ namespace ProductsService.Controllers
             return Ok(products);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("users/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(List<Product>), (int)HttpStatusCode.OK)]
@@ -51,7 +54,7 @@ namespace ProductsService.Controllers
             return Ok(products);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("categories")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<ProductsCategory>), (int)HttpStatusCode.OK)]
@@ -65,7 +68,7 @@ namespace ProductsService.Controllers
             return Ok(productCategories);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("categories/{productCategoryId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
@@ -83,7 +86,7 @@ namespace ProductsService.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("{productId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
@@ -140,7 +143,7 @@ namespace ProductsService.Controllers
             return Created("", product);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("items")]
         [ProducesResponseType(typeof(PaginatedModel<Product>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)

@@ -18,9 +18,10 @@ namespace PFCCCalculatorService.Services
 
         public AutorizationService(/*HttpClient httpClient*/ string url)
         {
-        //    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token.RefreshToken}");
-            
-            this.httpClient = new HttpClient();
+            //    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token.RefreshToken}");
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.AllowAutoRedirect = false;
+            this.httpClient = new HttpClient(handler);
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
         public async Task<UsersToken> Login(User user)
@@ -85,8 +86,6 @@ namespace PFCCCalculatorService.Services
         {
             var uri = $"{remoteServiceBaseUrl}account/validate";
 
-            //   httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token.RefreshToken}");
-            //   HttpResponseMessage response = await httpClient.GetAsync(uri,);
             if (accessToken == "")
                 return false;
             try
@@ -139,21 +138,33 @@ namespace PFCCCalculatorService.Services
 
             return null;
         }
-        [HttpGet]
+
+        
         public async Task<ActionResult<string>> AuthorizeRequest(string client_id = "app", string redirect_uri = "https://localhost:44358/api/account", string response_type = "code")
         {
 
             var uri = $"{remoteServiceBaseUrl}oauth?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}";
 
-            HttpResponseMessage response = await httpClient.GetAsync(uri);
+             HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+          /*  using (HttpClientHandler handler = new HttpClientHandler())
+            {
+                handler.AllowAutoRedirect = false;
+                using (HttpClient httpClient = new HttpClient(handler))
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Head, uri))
+                using (var response = await httpClient.SendAsync(request))
+                {
+                    var location = response.Headers.Location;
+                }
+            } */
 
             try
             {
-              //  if (response.StatusCode == System.Net.HttpStatusCode.Redirect)
-                 //   return await response.Content.ReadAsStringAsync();
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-              var authCode = JsonConvert.DeserializeObject<string>(responseBody);
+             //if (response.StatusCode == System.Net.HttpStatusCode.Redirect)
+              //   return await response.Content.ReadAsStringAsync();
+               // response.EnsureSuccessStatusCode();
+                //string responseBody = await response.Content.ReadAsStringAsync();
+              var authCode = response.Headers.Location.AbsoluteUri; // JsonConvert.DeserializeObject<string>(responseBody);
 
                 return authCode;
             }

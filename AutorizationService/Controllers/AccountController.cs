@@ -16,7 +16,6 @@ using SharedModels;
 namespace AutorizationService.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-   // [Authorize(Roles = "user")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : Controller
@@ -61,11 +60,6 @@ namespace AutorizationService.Controllers
         [ProducesResponseType(typeof(List<IdentityUser>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsers()
         {
-            // var app = new UserAccount { UserName = "App" };
-            //  var result1 = await userManager.CreateAsync(app, "qaz1111");
-            //  await userManager.AddClaimAsync(app, new Claim("userName", app.UserName));
-            // var user = await userManager.FindByNameAsync("Sophie");
-            // await userManager.AddToRoleAsync(user, "user");
 
             if (!userManager.Users.Any())
             {
@@ -75,7 +69,6 @@ namespace AutorizationService.Controllers
                 var app = new UserAccount { UserName = "Polina" };
                 var result1 = await  userManager.CreateAsync(app, "qwe123456");
                 await  userManager.AddClaimAsync(app, new Claim("userName", app.UserName));
-                //  userManager.AddClaimAsync(user, new Claim("role", "user"));
             }
             return Ok (userManager.Users);
         }
@@ -117,9 +110,7 @@ namespace AutorizationService.Controllers
         public async Task<ActionResult<UsersToken>> RefreshTokens(UsersToken usersToken)
         {
             if (this.User.Identity.IsAuthenticated)
-            {
-                
-             //   string token = Request.Headers["Authorization"].ToString().Remove(0,7);
+            {              
                 var user = await userManager.FindByNameAsync(usersToken.UserName);
 
                 if (user != null && user.Token == usersToken.RefreshToken)
@@ -191,7 +182,7 @@ namespace AutorizationService.Controllers
         }
 
         [HttpGet, Route("authapp")]
-        public async Task<ActionResult> AutorizeApplication([FromQuery]string client_id = "app")
+        public ActionResult AutorizeApplication([FromQuery]string client_id = "app")
         {
             if (this.User.Identity.IsAuthenticated)
             {
@@ -199,8 +190,6 @@ namespace AutorizationService.Controllers
 
                 if (acccount != null)
                 {
-                    //   var jwt = AutorizationCodeGenerator.GetAutorizationCode();
-                    //acccount.AutorizedUsers.Add(this.User.Identity.Name);
                     appManager.SetUser(client_id, this.User.Identity.Name);
                 }
                 return Ok();

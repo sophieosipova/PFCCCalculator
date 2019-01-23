@@ -6,21 +6,24 @@ using Newtonsoft.Json;
 
 using SharedModels;
 using PFCCCalculatorService.Models;
+using System.Net.Http.Headers;
 
 namespace PFCCCalculatorService.Services
 {
     public class ProductsService: IProductsService
     {
         private readonly HttpClient httpClient;
-        private readonly string remoteServiceBaseUrl = "http://localhost:52624";
+        private readonly string remoteServiceBaseUrl = "https://localhost:44357";
+        private readonly App client = new App() { ClientId = "Gateway", ClientSecret = "Sercret" };
+        private AppsToken token;
 
         public ProductsService (/*HttpClient httpClient*/)
         {
 
             this.httpClient = new HttpClient ();
             
-           // this.remoteServiceBaseUrl = remoteServiceBaseUrl;
-        }
+        // this.remoteServiceBaseUrl = remoteServiceBaseUrl;
+       }
 
 
         public async Task<List<ProductModel> > GetProducts()
@@ -139,6 +142,11 @@ namespace PFCCCalculatorService.Services
             {
                 var productContent = new StringContent(JsonConvert.SerializeObject(product), System.Text.Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(uri, productContent);
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    await setHeaders();
+                    response = await httpClient.PostAsync(uri, productContent);
+                }
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<ProductModel>(responseBody);
@@ -158,6 +166,13 @@ namespace PFCCCalculatorService.Services
             try
             {
                 var response = await httpClient.DeleteAsync(uri);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    await setHeaders();
+                    response = await httpClient.DeleteAsync(uri);
+                }
+
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                     return false;
 
@@ -177,7 +192,11 @@ namespace PFCCCalculatorService.Services
             {
                 var productContent = new StringContent(JsonConvert.SerializeObject(productToUpdate), System.Text.Encoding.UTF8, "application/json");
                 var response = await httpClient.PutAsync(uri, productContent);
-   
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    await setHeaders();
+                    response = await httpClient.PutAsync(uri, productContent);
+                }
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<ProductModel>(responseBody);
@@ -194,22 +213,6 @@ namespace PFCCCalculatorService.Services
              httpClient.Dispose();
         }
 
-        /*   Task<List<ProductsCategory>> GetProductsCategories();
-
-           Task<Product> GetProductsByCategoryId(int productCategoryId);
-
-           Task<Product> GetProductById(int productId);
-
-           [ProducesResponseType((int)HttpStatusCode.Created)]
-           Task<IActionResult> CreateProduct([FromBody]Product product);
-
-           [ProducesResponseType((int)HttpStatusCode.NoContent)]
-           Task<IActionResult> DeleteProduct(int productId);
-
-           [ProducesResponseType((int)HttpStatusCode.NotFound)]
-           [ProducesResponseType((int)HttpStatusCode.Created)]
-           Task<IActionResult> UpdateProduct([FromBody]Product productToUpdate);
-           */
 
         public async Task<PaginatedModel<ProductModel>> Items(int pageSize = 0, int pageIndex = 0)
         {
@@ -226,6 +229,32 @@ namespace PFCCCalculatorService.Services
 
             return product;
         }
-           
+
+        public  async Task<AppsToken> Login()
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/autorization";
+
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(client), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(uri, content);
+                response.EnsureSuccessStatusCode();
+                string responseBody =  await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<AppsToken>(responseBody);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private  async Task setHeaders ()
+        {
+            token = await this.Login();
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{token.Token}");
+       //     httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token.Token}");
+        }
+
     }
 }

@@ -29,11 +29,14 @@ export class ProductsComponent {
   baseUrl: string;
   tableMode: boolean = true;
   editMode: boolean = false;
+  userId: string;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
 
     this.baseUrl = "https://localhost:44350/api/products";
     this.http = http;
+    let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
+    this.userId = tokenInfo.value.userId;
 
   }
 
@@ -66,18 +69,18 @@ export class ProductsComponent {
     this.error = null;
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
 
-    let url = this.baseUrl + `/user/${tokenInfo.userId}`;
+    let url = this.baseUrl + `/user/${tokenInfo.value.userId}`;
     if (this.product.productId == null) {
       this.http.post<IProductItem>(url, this.product)
         .subscribe(result => {
           this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-        }, error => { this.error = "Не корректные данные", console.error(error); });
+        }, error => { this.error = "Не корректные данные"/*, console.error(error) */; });
 
     } else {
       this.http.put<any>(url, this.product)
         .subscribe(result => {
           this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-        }, error => { this.error = "Не корректные данные", console.error(error); });
+        }, error => { this.error = "Не корректные данные"/*, console.error(error)*/; });
 
     }
 
@@ -94,22 +97,22 @@ export class ProductsComponent {
 
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
     this.error = null;
-    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.userId}` + '/product/' + p.productId;
+    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.value.userId}` + '/product/' + p.productId;
     this.http.delete(url)
       .subscribe(result => {
         this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-      }, error => { this.error = "Некорректные данные ", console.error(error); });
+      }, error => { this.error = "Некорректные данные "/*, console.error(error) */; });
 
   }
 
   getProducts(pageSize: number, pageIndex: number) {
 
-    localStorage.setItem('Get', "true") ;
+  //  localStorage.setItem('Get', "true") ;
     this.serverError = false;
     this.error = null;
     let url = this.baseUrl + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex;
 
-    this.http.get<IProduct>(url).subscribe(result => {
+     this.http.get<IProduct>(url).subscribe(result => {
       this.products = result;
       this.paginationInfo = {
         actualPage: result.pageIndex,
@@ -118,7 +121,7 @@ export class ProductsComponent {
         totalPages: Math.ceil(result.count / result.pageSize),
         items: result.pageSize
       }
-    }, error => { this.serverError = true, console.error(error); });
+    }, error => { this.serverError = true /*, console.error(error) */; });
 
   }
 

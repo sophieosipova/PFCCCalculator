@@ -25,8 +25,8 @@ namespace PFCCCalculatorService.Controllers
         [HttpPost/*, AllowAnonymous*/]
         public async Task<ActionResult<UsersToken>> Login([FromBody] User user)
         {
-         //   if (!ModelState.IsValid)
-           //     return BadRequest(ModelState.ToString());
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.ToString());
             try
             {
                 var logged= await autorizationService.Login(user);
@@ -43,7 +43,7 @@ namespace PFCCCalculatorService.Controllers
 
         [HttpPost]
         [Route("refreshtokens")]
-        public async Task<ActionResult<UsersToken>> RefreshTokens(UsersToken usersToken)
+        public  ActionResult<UsersToken> RefreshTokens(UsersToken usersToken)
         {
           //  if (!ModelState.IsValid)
            //     return BadRequest(ModelState.ToString());
@@ -67,9 +67,8 @@ namespace PFCCCalculatorService.Controllers
         [Route("validate")]
         public async Task<ActionResult<bool>> Validate()
         {
-            //  if (!ModelState.IsValid)
-            //     return BadRequest(ModelState.ToString());
-
+             if (!ModelState.IsValid)
+                return BadRequest(ModelState.ToString());
             try
             {
                 string header = Request.Headers["Authorization"];

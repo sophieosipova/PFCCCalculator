@@ -12,11 +12,17 @@ namespace AutorizationService.Models
 
     }
 
+    public class AutorizedUsers 
+    {
+        public string UserName { get; set; }
+        public string AuthCode { get; set; }
+    }
+
     public class AppAccount 
     {
         public string AppId;
         public string AppSecret;
-        public string AuthCode;
-        public List<string> AutorizedUsers = new List<string>();
+        //  public string AuthCode;
+        public Dictionary<string, string> AutorizedUsers = new Dictionary<string, string> ();
     }
 }

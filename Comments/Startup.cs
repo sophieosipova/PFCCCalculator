@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using CommentsService.Models;
 using CommentsService.Database;
+using SharedAutorizationOptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Comments
 {
@@ -29,6 +31,26 @@ namespace Comments
 
             services.AddScoped<ICommentsRepository, CommentsRepository>(); 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            var accountOptions = new AuthOptions()
+
+            {
+                ISSUER = "commentServer",
+                AUDIENCE = "GateWay"
+            };
+            var tokenGenerator = new TokenGenerator(accountOptions);
+
+            services.AddSingleton<ITokenGenerator>(tokenGenerator);
+
+            services.AddSingleton<AuthOptions>(accountOptions);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(cfg =>
+              {
+                  cfg.RequireHttpsMetadata = false;
+                  cfg.SaveToken = true;
+                  cfg.TokenValidationParameters = accountOptions.GetParameters();
+
+              });
 
         }
 

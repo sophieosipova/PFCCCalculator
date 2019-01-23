@@ -3,6 +3,7 @@ import { IIngredientItem } from './ingredientItem';
 export class IDishItem {
   constructor(
     public dishId?: number,
+    public userId?: string,
     public dishName?: string,
     public recipe?: string,
    // public fat?: number,

@@ -36,10 +36,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\autorization\autorizationCheck.ts" />
+    <None Remove="ClientApp\src\app\OAUTH.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\autorization\autorizationCheck.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\OAUTH.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

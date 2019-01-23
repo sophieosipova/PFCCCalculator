@@ -32,7 +32,7 @@
               <td>{{recipeItem.fat | number}}</td>
               <td>{{recipeItem.carbohydrates | number}}</td>
               <td>
-                <button class="btn btn-sm btn-primary" (click)="deleteDish(recipeItem)">Удалить</button>
+                <button class="btn btn-sm btn-primary" [disabled]="recipeItem.userId != userId"(click)="deleteDish(recipeItem)">Удалить</button>
               </td>
             </tr>
           </tbody>

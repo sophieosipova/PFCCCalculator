@@ -19,11 +19,13 @@ namespace PFCCCalculatorService.Controllers
         private readonly ILogger <ProductsController>  logger;
         private readonly IAutorizationService autorizationService;
 
+        
         public ProductsController(IProductsService p,IAutorizationService a, ILogger<ProductsController> logger)
         {
             this.productsService = p;
             this.autorizationService = a;
             this.logger = logger;
+           // this.token = this.productsService.Login();
         }
 
         [HttpGet]
@@ -166,7 +168,7 @@ namespace PFCCCalculatorService.Controllers
         public async Task<IActionResult> GetProducts([FromQuery]int pageSize = 0, [FromQuery]int pageIndex = 0)
         {
 
-            var t = this.Request.Headers;
+           var t = this.Request.Headers;
             try
             {
                 if (pageSize == 0)

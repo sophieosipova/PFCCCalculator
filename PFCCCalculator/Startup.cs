@@ -64,12 +64,12 @@ namespace PFCCCalculator
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
 
-        /*    app.MapWhen(context =>
-            {
-                return (context.Request.Method == "POST" || context.Request.Method == "PUT") & !context.Request.Headers.Values.Contains("Authorization");
-            }, HandleId); */
+            /*    app.MapWhen(context =>
+                {
+                    return (context.Request.Method == "POST" || context.Request.Method == "PUT") & !context.Request.Headers.Values.Contains("Authorization");
+                }, HandleId); */
 
-
+            app.UseStaticFiles();
             app.UseMvc();
 
 

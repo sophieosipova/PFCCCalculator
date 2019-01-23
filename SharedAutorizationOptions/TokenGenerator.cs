@@ -52,6 +52,7 @@ namespace SharedAutorizationOptions
 
 
 
+
         public bool ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -68,6 +69,8 @@ namespace SharedAutorizationOptions
             }
 
         }
+
+
 
         public  string GetUsernameFromToken(string token)
         {

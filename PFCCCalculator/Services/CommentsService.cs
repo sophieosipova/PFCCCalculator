@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 
@@ -14,7 +15,10 @@ namespace PFCCCalculatorService.Services
     {
 
         private readonly HttpClient httpClient;
-        private readonly string remoteServiceBaseUrl = "http://localhost:49449";
+        private readonly string remoteServiceBaseUrl = "https://localhost:44390";
+
+        private readonly App client = new App() { ClientId = "Gateway", ClientSecret = "Sercret" };
+        private AppsToken token;
 
         public CommentsService(/*HttpClient httpClient*/ string url)
         {
@@ -83,6 +87,11 @@ namespace PFCCCalculatorService.Services
             try
             {
                 var response = await httpClient.DeleteAsync(uri);
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    await setHeaders();
+                    response = await httpClient.DeleteAsync(uri);
+                }
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                     return false;
 
@@ -113,6 +122,32 @@ namespace PFCCCalculatorService.Services
                 //return null;
                 throw e;
             }
+        }
+
+        private async Task<AppsToken> Login()
+        {
+            var uri = $"{remoteServiceBaseUrl}/api/autorization";
+
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(client), System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(uri, content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<AppsToken>(responseBody);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private async Task setHeaders()
+        {
+            token = await this.Login();
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{token.Token}");
+            //     httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token.Token}");
         }
     }
 }

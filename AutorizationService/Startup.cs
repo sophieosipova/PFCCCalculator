@@ -70,7 +70,14 @@ namespace AutorizationService
 
             //   services.Configure<AuthOptions>(options => configuration.GetSection("Security:Tokens").Bind(options));
 
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                builder => builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(cfg =>
@@ -101,12 +108,13 @@ namespace AutorizationService
 
             app.UseAuthentication();
 
-        /*    app.MapWhen(context => {
+            /*    app.MapWhen(context => {
 
-                return context.User.Identity.IsAuthenticated && context.Request.;
-            }, HandleId);*/
+                    return context.User.Identity.IsAuthenticated && context.Request.;
+                }, HandleId);*/
 
-            //  app.UseHttpsRedirection();
+            //  app.UseHttpsRedirection
+            app.UseCors("CorsPolicy");
             app.UseMvc();
         }
 

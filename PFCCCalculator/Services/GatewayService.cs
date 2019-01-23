@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 
 namespace PFCCCalculatorService.Services
 {
-    public class GatewayService: IGatewayService
+    public class GatewayService : IGatewayService
     {
         private readonly IProductsService productsService;
         private readonly IDishesService dishesService;
         private readonly ICommentsService commentsService;
+
+
         public GatewayService(IProductsService productsService, IDishesService dishesService, ICommentsService commentsService)
         {
 

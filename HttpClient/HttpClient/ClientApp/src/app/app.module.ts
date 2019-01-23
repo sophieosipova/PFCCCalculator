@@ -22,7 +22,7 @@ import { ErrorInterceptor } from './interceptor/errorInterceptor';
 import { AuthorizationCheck } from './autorization/autorizationCheck';
 
 import { ProductService } from './product/product.service';
-//import { AutorizationService } from './autorization/autorization.service';
+import { OAUTHComponent} from './OAUTH';
 
 @NgModule({
   declarations: [
@@ -34,18 +34,19 @@ import { ProductService } from './product/product.service';
     ProductsComponent,
     RecipeComponent,
     Pager,
-    LoginComponent
+    LoginComponent,
+    OAUTHComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-   //   { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: HomeComponent, pathMatch: 'full' },
    //   { path: 'counter', component: CounterComponent  },
      // { path: 'fetch-data', component: FetchDataComponent  },
       { path: 'recipes', component: RecipeComponent, canActivate: [AuthorizationCheck] },
-   //   { path: 'products/:action', component: ProductsComponent, canActivate: [AuthorizationCheck] },
+      { path: 'oauth', component: OAUTHComponent},
       { path: 'products', component: ProductsComponent, canActivate: [AuthorizationCheck]},
       { path: 'login', component: LoginComponent },
     ])

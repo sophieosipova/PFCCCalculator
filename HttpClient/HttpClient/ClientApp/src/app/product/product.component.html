@@ -27,8 +27,8 @@
                 <td>{{productItem.fat}}</td>
                 <td>{{productItem.carbohydrates}}</td>
                 <td>
-                  <button class="btn btn-sm btn-primary" (click)="editProduct(productItem)">Изменить</button>
-                  <button class="btn btn-sm btn-primary" (click)="deleteProduct(productItem)">Удалить</button>
+                  <button class="btn btn-sm btn-primary" [disabled]="productItem.userId != userId" (click)="editProduct(productItem)">Изменить</button>
+                  <button class="btn btn-sm btn-primary" [disabled]="productItem.userId != userId" (click)="deleteProduct(productItem)">Удалить</button>
                 </td>
               </ng-template>
             </tr>

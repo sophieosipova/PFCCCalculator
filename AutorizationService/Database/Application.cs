@@ -12,9 +12,8 @@ namespace AutorizationService.Database
 
         public ApplicationRepository()
         {
-         //   TestUsers = new List<AppAccount>();
-            TestUsers.Add(new AppAccount { AppId = "app", AppSecret = "secret" });
-            //  TestUsers.Add(new AppAccount> () { Username = "Test2", Password = "Pass2" });
+            if(!TestUsers.Any())
+                TestUsers.Add(new AppAccount { AppId = "app", AppSecret = "secret" });
         }
         public AppAccount GetApp(string appId)
         {
@@ -32,7 +31,8 @@ namespace AutorizationService.Database
         {
             try
             {
-                TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.Add(new string (userName));
+                if(!TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.Any())
+                    TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.Add(new string (userName), "default");
             }
             catch
             {

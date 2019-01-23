@@ -4,9 +4,12 @@ using CommentsService.Models;
 using System.Net;
 using SharedModels;
 using CommentsService.Database;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace CommentsService.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentsController : ControllerBase
@@ -34,7 +37,7 @@ namespace CommentsService.Controllers
         } */
 
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("{commentId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
@@ -134,7 +137,7 @@ namespace CommentsService.Controllers
         } */
 
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("dish/{dishId:int}")]
         [ProducesResponseType(typeof(PaginatedModel<Comment>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCommentsByDishId(int dishId, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)

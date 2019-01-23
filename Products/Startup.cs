@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ProductsService.Models;
 using ProductsService.Database;
+using SharedAutorizationOptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Products
 {
@@ -29,11 +31,30 @@ namespace Products
             // string con = "Server=(localdb)\\mssqllocaldb;Database=DBProducts;Trusted_Connection=True;MultipleActiveResultSets=true";
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+
             services.AddDbContext<ProductsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProductsDatabase")));
 
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            var accountOptions = new AuthOptions()
 
+            {
+                ISSUER = "productServer",
+                AUDIENCE = "GateWay"
+            };
+            var tokenGenerator = new TokenGenerator(accountOptions);
+
+            services.AddSingleton<ITokenGenerator>(tokenGenerator);
+
+            services.AddSingleton<AuthOptions>(accountOptions);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(cfg =>
+              {
+                  cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = accountOptions.GetParameters();
+
+             });
 
         }
 

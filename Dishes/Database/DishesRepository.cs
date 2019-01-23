@@ -154,7 +154,7 @@ namespace DishesService.Database
                 DishName = dish.DishName,
                 Recipe = dish.Recipe,
                 TotalWeight = dish.TotalWeight,
-                UserId = dish.UserId
+                UserId = userId
             };
 
             try

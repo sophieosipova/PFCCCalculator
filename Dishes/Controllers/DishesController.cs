@@ -7,9 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using DishesService.Database;
 using SharedModels;
+using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace DishesService.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class DishesController : ControllerBase
@@ -22,7 +26,7 @@ namespace DishesService.Controllers
         }
 
         // GET api/products
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<Dish>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDishes()
@@ -36,7 +40,7 @@ namespace DishesService.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [ProducesResponseType(typeof(PaginatedModel<Dish>), (int)HttpStatusCode.OK)]
         [Route("items")]
         public async Task<IActionResult> Items([FromQuery]int pageSize, [FromQuery]int pageIndex)
@@ -51,7 +55,7 @@ namespace DishesService.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("withproduct/{productId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(List<Dish>), (int)HttpStatusCode.OK)]
@@ -68,7 +72,7 @@ namespace DishesService.Controllers
             return Ok(dishes);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("{dishId:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Dish), (int)HttpStatusCode.OK)]

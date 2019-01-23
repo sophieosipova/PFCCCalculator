@@ -44,13 +44,15 @@ export class RecipeComponent {
   tableMode: boolean = true;
   editMode: boolean = false;
   fullMode: boolean = false;
-
+  userId: string;
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
 
     this.baseUrl = "https://localhost:44350/api/pfcccalculator/recipe";
     this.productUrl = 'https://localhost:44350/api/products/all';
     this.dishesUrl = 'https://localhost:44350/api/dishes';
     this.http = http;
+    let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
+    this.userId = tokenInfo.value.userId;
   }
 
 
@@ -86,13 +88,14 @@ export class RecipeComponent {
   save() {
     this.serverError = false;
     this.error = null;
-    let url = this.dishesUrl + '/user/0/';
- 
+    let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
+    let url = this.dishesUrl + `/user/${tokenInfo.value.userId}`;
+    this.dish.userId = tokenInfo.userId;
     if (this.dish.dishId == null) {
       this.http.post<IDishItem>(url, this.dish)
         .subscribe(result => {
           this.getRecipes(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-        }, error => { this.error = "Не корректные данные", console.error(error); });
+        }, error => { this.error = "Не корректные данные"/*, console.error(error)*/; });
 
 
       this.cancel();
@@ -127,11 +130,12 @@ export class RecipeComponent {
   deleteDish(r: IRecipeItem) {
     this.serverError = false;
     this.error = null;
-    let url = 'https://localhost:44350/api/pfcccalculator' + '/user/0' + '/recipe/' + r.dishId;
+    let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
+    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.value.userId}` + '/recipe/' + r.dishId;
     this.http.delete(url)
       .subscribe(result => {
         this.getRecipes(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
-      }, error => { this.error = "Нельзя удалить", console.error(error); });
+      }, error => { this.error = "Невозможно удалить", console.error(error); });
 
   }
 
@@ -149,7 +153,7 @@ export class RecipeComponent {
         totalPages: Math.ceil(result.count / result.pageSize),
         items: result.pageSize
       }
-    }, error => { this.serverError = true, console.error(error); });
+    }, error => { this.serverError = true /*, console.error(error)*/; });
   }
 
 

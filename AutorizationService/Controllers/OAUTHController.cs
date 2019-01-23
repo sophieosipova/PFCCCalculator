@@ -26,7 +26,7 @@ namespace AutorizationService.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ITokenGenerator tokenGenerator;
 
-        public OAUTHController(     ITokenGenerator tokenGenerator, UserManager<UserAccount> userManager,
+        public OAUTHController( ITokenGenerator tokenGenerator, UserManager<UserAccount> userManager,
            SignInManager<UserAccount> signInManager,
            RoleManager<IdentityRole> roleManager)
         {
@@ -39,25 +39,19 @@ namespace AutorizationService.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<string>> AuthorizeRequest([FromQuery]string client_id = "app", [FromQuery]string redirect_uri = "https://localhost:44358/api/account", [FromQuery]string response_type= "code")
+        public  ActionResult<string> AuthorizeRequest([FromQuery]string client_id = "app", [FromQuery]string redirect_uri = "https://localhost:44358/api/account", [FromQuery]string response_type= "code")
         {
 
-            var acccount = appManager.GetApp(client_id);//await userManager.FindByNameAsync(client_id);
-
+            var acccount = appManager.GetApp(client_id);
+            string s;
             if (acccount != null)
             {
-               // var jwt = AutorizationCodeGenerator.GetAutorizationCode();
-                //     acccount.Token = jwt;
-                //await userManager.UpdateAsync(acccount);
-
-              if(!this.User.Identity.IsAuthenticated || !acccount.AutorizedUsers.Contains(this.User.Identity.Name))          
-                   return Ok($"https://localhost:44358/Auth.html?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}");
+              if(!this.User.Identity.IsAuthenticated || !acccount.AutorizedUsers.TryGetValue(User.Identity.Name, out s))          
+                   return Redirect($"https://localhost:44358/Auth.html?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}");
 
                 var jwt = AutorizationCodeGenerator.GetAutorizationCode();
-                acccount.AuthCode = jwt;
-                // await userManager.UpdateAsync(acccount);
-                this.Response.Headers.Add("Content-Type", "application/json");
-                return Ok($"{redirect_uri}?code={jwt}");//$"{redirect_uri}?code={jwt}");
+                acccount.AutorizedUsers[User.Identity.Name] = jwt;
+                return Redirect($"{redirect_uri}?code={jwt}");
             }
             return BadRequest();
         }
@@ -72,9 +66,9 @@ namespace AutorizationService.Controllers
 
             if (acccount != null )
             {
-                if (acccount.AppSecret == client_secret && acccount.AuthCode == code)
+                if (acccount.AppSecret == client_secret && acccount.AutorizedUsers.Values.Contains(code))
                 {
-                    var user = await userManager.FindByNameAsync(User.Identity.Name);
+                    var user = await userManager.FindByNameAsync(acccount.AutorizedUsers.Where(x => x.Value == code).FirstOrDefault().Key);
                     if (user != null)
                     {
                         var jwt = tokenGenerator.GenerateRefreshToken(user.Id, user.UserName);
