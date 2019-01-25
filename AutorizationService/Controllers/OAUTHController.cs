@@ -74,13 +74,16 @@ namespace AutorizationService.Controllers
                         var jwt = tokenGenerator.GenerateRefreshToken(user.Id, user.UserName);
                         user.Token = jwt;
                         await userManager.UpdateAsync(user);
-                        return new UsersToken()
+                        
+                        UsersToken usersToken =  new UsersToken()
                         {
                             AccessToken = tokenGenerator.GenerateAccessToken(user.Id, user.UserName),
                             RefreshToken = jwt,
                             UserName = user.UserName,
                             UserId = user.Id
                         };
+                        acccount.AutorizedUsers.Remove(user.UserName);
+                        return usersToken;
                     }
                 }
             }

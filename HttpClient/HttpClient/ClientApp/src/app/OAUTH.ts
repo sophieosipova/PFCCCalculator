@@ -49,6 +49,7 @@ export class OAUTHComponent {
 
 
   ngOnInit() {
+    //localStorage.setItem('Login', "login");
     // this.user = new User(); 
     this.usersToken = new UsersToken();
     this.authCode = this.route.snapshot.queryParams['code'];
@@ -58,7 +59,7 @@ export class OAUTHComponent {
     this.http.get<UsersToken>(url)
       .subscribe(result => {
         this.usersToken = result;
-        localStorage.setItem('TokenInfo', JSON.stringify(result));
+        localStorage.setItem('TokenInfo', JSON.stringify(this.usersToken));
         this.router.navigate([this.returnUrl]);
       }, error => { console.error(error); });
     // this.getProducts(3, 0); 

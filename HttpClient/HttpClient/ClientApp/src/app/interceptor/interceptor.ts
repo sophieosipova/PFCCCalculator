@@ -8,19 +8,20 @@ export class httpInterceptor implements HttpInterceptor {
  // add authorization header to request
  
  //Get Token data from local storage
- let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
 
-   if (tokenInfo)
-   {
-      request = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${tokenInfo.value.accessToken}`//,
-    //    AllowAutoRedirect: `true`//,
-   //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-    }
- });
- }
- 
+ //  if (!localStorage.getItem('Login')) {
+     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
+
+     if (tokenInfo) {
+       request = request.clone({
+         setHeaders: {
+           Authorization: `Bearer ${tokenInfo.accessToken}`//,
+           //    AllowAutoRedirect: `true`//,
+           //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+         }
+       });
+     }
+ //  }
  return newRequest.handle(request);
  }
 }

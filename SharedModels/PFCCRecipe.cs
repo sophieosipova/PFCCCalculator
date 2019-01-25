@@ -9,6 +9,7 @@ namespace SharedModels
     public class PFCCRecipe : IEquatable<PFCCRecipe>
     {
         public int DishId { get; set; }
+        public string UserId { get; set; }
         public string DishName { get; set; }
         public string Recipe { get; set; }
         public double Fat { get; set; }
@@ -27,6 +28,7 @@ namespace SharedModels
 
             return other != null &&
                 DishId == other.DishId &&
+                UserId == other.UserId &&
                 DishName == other.DishName &&
                 Recipe == other.Recipe &&
                 Fat == other.Fat &&

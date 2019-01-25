@@ -15,7 +15,7 @@ namespace PFCCCalculatorService.Services
         Task<bool> ValidateToken(string accessToken);
 
         Task<ActionResult<string>> AuthorizeRequest(string client_id = "app",string redirect_uri = "https://localhost:44358/api/account", string response_type = "code");
-       Task<ActionResult<UsersToken>> GetToken(string code, string client_secret = "secret", string client_id = "app", string redirect_uri = "https://localhost:44358/api/account");
+       Task<UsersToken> GetToken(string code, string client_secret = "secret", string client_id = "app", string redirect_uri = "https://localhost:44358/api/account");
      //  Task<ActionResult<string>> AuthorizeRequest(string client_id = "app", string redirect_uri = "https://localhost:44358/api/account");
     }
 }

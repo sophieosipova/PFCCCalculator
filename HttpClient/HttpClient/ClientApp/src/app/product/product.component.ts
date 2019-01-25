@@ -5,6 +5,7 @@ import { IProductItem } from '../shared/productItem';
 import { IPager } from '../shared/pager.model';
 
 import { Pager } from '../shared/pager/pager';
+import { UsersToken } from '../shared/usersToken';
 
 @Component({
   selector: 'product-data',
@@ -30,18 +31,21 @@ export class ProductsComponent {
   tableMode: boolean = true;
   editMode: boolean = false;
   userId: string;
+  usersToken: UsersToken;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
 
     this.baseUrl = "https://localhost:44350/api/products";
     this.http = http;
+ 
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
-    this.userId = tokenInfo.value.userId;
+    this.userId = tokenInfo.userId;
 
   }
 
 
   ngOnInit() {
+
     this.getProducts(3, 0);
   }
 
@@ -69,7 +73,7 @@ export class ProductsComponent {
     this.error = null;
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
 
-    let url = this.baseUrl + `/user/${tokenInfo.value.userId}`;
+    let url = this.baseUrl + `/user/${tokenInfo.userId}`;
     if (this.product.productId == null) {
       this.http.post<IProductItem>(url, this.product)
         .subscribe(result => {
@@ -97,7 +101,7 @@ export class ProductsComponent {
 
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
     this.error = null;
-    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.value.userId}` + '/product/' + p.productId;
+    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.userId}` + '/product/' + p.productId;
     this.http.delete(url)
       .subscribe(result => {
         this.getProducts(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
@@ -107,7 +111,7 @@ export class ProductsComponent {
 
   getProducts(pageSize: number, pageIndex: number) {
 
-  //  localStorage.setItem('Get', "true") ;
+ 
     this.serverError = false;
     this.error = null;
     let url = this.baseUrl + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex;

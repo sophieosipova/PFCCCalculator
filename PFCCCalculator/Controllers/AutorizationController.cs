@@ -32,7 +32,7 @@ namespace PFCCCalculatorService.Controllers
                 var logged= await autorizationService.Login(user);
                 if (logged == null)
                     return BadRequest();
-                return Ok(logged);
+                return logged;
             }
             catch
             {

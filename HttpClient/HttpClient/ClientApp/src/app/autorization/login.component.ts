@@ -47,14 +47,15 @@ export class LoginComponent {
   //  this.baseUrl = "https://localhost:44350/api/products";
     this.http = http;
 
-
+   // localStorage.setItem('Login', "login");
    // if (localStorage.)
-    localStorage.removeItem('TokenInfo');
+   localStorage.removeItem('TokenInfo');
 
   }
 
 
   ngOnInit() {
+
     this.user = new User();
     this.usersToken = new UsersToken();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -67,11 +68,12 @@ export class LoginComponent {
   add() {
 
     let url = 'https://localhost:44350/api/autorization';
+    
 
     this.http.post<UsersToken>(url, this.user)
       .subscribe(result => {
         this.usersToken = result;
-        localStorage.setItem('TokenInfo', JSON.stringify(result));
+        localStorage.setItem('TokenInfo', JSON.stringify(this.usersToken));
         this.router.navigate([this.returnUrl]);
       }, error => { /*console.error(error);*/ });
 

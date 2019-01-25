@@ -31,8 +31,12 @@ namespace AutorizationService.Database
         {
             try
             {
-                if(!TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.Any())
-                    TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.Add(new string (userName), "default");
+          //      if (!TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.)
+        //        {
+                    string s;
+                    if (!TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.TryGetValue(userName, out s))
+                        TestUsers.First(user => user.AppId.Equals(appId)).AutorizedUsers.Add(new string(userName), "default");
+               // }
             }
             catch
             {

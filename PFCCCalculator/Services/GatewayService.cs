@@ -6,6 +6,7 @@ using PFCCCalculatorService.Models;
 using SharedModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -38,9 +39,16 @@ namespace PFCCCalculatorService.Services
 
                 ProductModel[] products = new ProductModel[dish.Ingredients.Count];
                 List<PFCCIngredient> ingredientsList = new List<PFCCIngredient>();
+
+                List <ProductModel> productsList = await productsService.GetProducts();
+
+                if (productsList == null)
+                {
+                    return PFCCCalculations.PFCCRecipeCalculator(dish);
+                }
                 foreach (IngredientModel ingredient in dish.Ingredients)
                 {
-                    ProductModel product = await productsService.GetProductById(ingredient.ProductId);
+                    ProductModel product = productsList.SingleOrDefault(ci => ci.ProductId == ingredient.ProductId);//await productsService.GetProductById(ingredient.ProductId);
 
                     if (product == null)
                         return null;
@@ -67,10 +75,23 @@ namespace PFCCCalculatorService.Services
 
                 // PaginatedModel<PFCCRecipe> pFCCdishes = new PaginatedModel<PFCCRecipe>(pageIndex,pageSize,dishes.Count)
                 List<PFCCRecipe> recipes = new List<PFCCRecipe>();
+
+                List<ProductModel> productsList = await productsService.GetProducts();
+
+                if (productsList == null)
+                {
+                    foreach (DishModel dish in dishes.Data)
+                    { 
+                    
+                        recipes.Add(PFCCCalculations.PFCCRecipeCalculator(dish));
+                    }
+                    return  new PaginatedModel<PFCCRecipe>(pageIndex, pageSize, dishes.Count, recipes);
+                }
                 foreach (DishModel dish in dishes.Data)
                 {
                     ProductModel[] products = new ProductModel[dish.Ingredients.Count];
                     List<PFCCIngredient> ingredientsList = new List<PFCCIngredient>();
+
                     foreach (IngredientModel ingredient in dish.Ingredients)
                     {
                         ProductModel product = await productsService.GetProductById(ingredient.ProductId);
@@ -80,7 +101,7 @@ namespace PFCCCalculatorService.Services
                         ingredientsList.Add(PFCCCalculations.CalculateIngredient(ingredient, product));
                     }
 
-                    recipes.Add(PFCCCalculations.PFCCRecipeCalculator(dish, ingredientsList));
+                    recipes.Add(PFCCCalculations.PFCCRecipeCalculator(dish));
                 }
 
                 return new PaginatedModel<PFCCRecipe>(pageIndex, pageSize, dishes.Count, recipes);

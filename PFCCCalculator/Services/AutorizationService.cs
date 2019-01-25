@@ -111,7 +111,7 @@ namespace PFCCCalculatorService.Services
 
         }
 
-        public async Task<ActionResult<UsersToken>> GetToken(string code, string client_secret = "secret", string client_id = "app", string redirect_uri = "https://localhost:44358/api/account")
+        public async Task<UsersToken> GetToken(string code, string client_secret = "secret", string client_id = "app", string redirect_uri = "https://localhost:44358/api/account")
         {
 
             var uri = $"{remoteServiceBaseUrl}oauth/token?code={code}&client_secret={client_secret}&client_id={client_id}&redirect_uri={redirect_uri}";

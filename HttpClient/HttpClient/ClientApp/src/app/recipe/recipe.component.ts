@@ -52,7 +52,7 @@ export class RecipeComponent {
     this.dishesUrl = 'https://localhost:44350/api/dishes';
     this.http = http;
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
-    this.userId = tokenInfo.value.userId;
+    this.userId = tokenInfo.userId;
   }
 
 
@@ -89,7 +89,7 @@ export class RecipeComponent {
     this.serverError = false;
     this.error = null;
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
-    let url = this.dishesUrl + `/user/${tokenInfo.value.userId}`;
+    let url = this.dishesUrl + `/user/${tokenInfo.userId}`;
     this.dish.userId = tokenInfo.userId;
     if (this.dish.dishId == null) {
       this.http.post<IDishItem>(url, this.dish)
@@ -131,7 +131,7 @@ export class RecipeComponent {
     this.serverError = false;
     this.error = null;
     let tokenInfo = JSON.parse(localStorage.getItem('TokenInfo'));
-    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.value.userId}` + '/recipe/' + r.dishId;
+    let url = 'https://localhost:44350/api/pfcccalculator' + `/user/${tokenInfo.userId}` + '/recipe/' + r.dishId;
     this.http.delete(url)
       .subscribe(result => {
         this.getRecipes(this.paginationInfo.itemsPage, this.paginationInfo.actualPage);
