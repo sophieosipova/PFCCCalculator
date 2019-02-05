@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PFCCCalculatorService.Models;
@@ -91,7 +92,8 @@ namespace PFCCCalculatorService.Controllers
             }
             catch(Exception e)
             {
-                return Conflict(e.Message);
+                //return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -114,7 +116,8 @@ namespace PFCCCalculatorService.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e.Message);
+                // return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         } 
 

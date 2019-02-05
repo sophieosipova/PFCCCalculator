@@ -137,13 +137,16 @@ namespace CommentsService.Database
 
         }
 
-        public async Task<PaginatedModel<Comment>> GetCommentsByDishId(int dishId, int pageSize = 10, int pageIndex = 0)
+        public async Task<PaginatedModel<Comment>> GetCommentsByDishId(int dishId, int pageSize = 0, int pageIndex = 0)
         {
             try
             {
                 var comments = await db.Comments.Where(c => c.DishId == dishId).ToListAsync();
 
                 var totalItems = comments.Count();
+
+                if (pageSize == 0)
+                    pageSize = totalItems;
 
                 if (totalItems != 0)
                 {

@@ -53,7 +53,7 @@ namespace PFCCCalculatorService.Services
         }
 
 
-        public async  Task<PaginatedModel<CommentModel>> GetCommentsByDishId(int dishId, int pageSize = 10, int pageIndex = 0)
+        public async  Task<PaginatedModel<CommentModel>> GetCommentsByDishId(int dishId, int pageSize = 0, int pageIndex = 0)
         {
             var uri = $"{remoteServiceBaseUrl}/api/comments/dish/{dishId}?pageSize={pageSize}&pageIndex={pageIndex}";
 
@@ -99,7 +99,7 @@ namespace PFCCCalculatorService.Services
             }
             catch (HttpRequestException e)
             {
-                throw e;
+                throw e; 
             }
 
             return true;

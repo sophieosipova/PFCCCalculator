@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PFCCCalculatorService.Models;
@@ -48,7 +49,8 @@ namespace PFCCCalculatorService.Controllers
             catch (Exception e)
             {
                 logger.LogInformation("GET ---", e.Message);
-                return Conflict(e.Message);
+                //return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
 
             return NotFound();
@@ -80,7 +82,8 @@ namespace PFCCCalculatorService.Controllers
             catch (Exception e)
             {
                 logger.LogInformation("GET ---", e.Message);
-                return Conflict(e.Message);
+                //return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
 
             return NotFound();
@@ -135,7 +138,8 @@ namespace PFCCCalculatorService.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                //return Conflict(e.Message);
             }
         }
 
@@ -155,7 +159,8 @@ namespace PFCCCalculatorService.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                //return Conflict(e.Message);
             }
         }
 
@@ -188,12 +193,12 @@ namespace PFCCCalculatorService.Controllers
             catch (Exception e)
             {
                 logger.LogInformation("GET ---", e.Message);
-                return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message); //Conflict(e.Message);
             }
             
         }
 
-        // GET api/products
+
         [HttpGet]
         [Route("all")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -210,7 +215,8 @@ namespace PFCCCalculatorService.Controllers
             }
             catch
             {
-                return NotFound();
+                //return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
             
         }

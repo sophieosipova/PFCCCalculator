@@ -125,15 +125,15 @@ namespace PFCCCalculatorService.Services
             
             try
             {
-                await dishesService.DeleteDish(userId, dishId);
-
                 PaginatedModel<CommentModel> model = await commentsService.GetCommentsByDishId(dishId);
 
                 if (model == null)
                     return true;
-                int n = Convert.ToInt32(model.Count / model.PageSize + 1);
+               //int n = Convert.ToInt32(model.Count / model.PageSize + 1);
 
-                for (int i = 0; i < n; i++)
+                //for (int i = 0; i < n; i++)
+                //  {
+                try
                 {
                     foreach (CommentModel comment in model.Data)
                     {
@@ -143,6 +143,13 @@ namespace PFCCCalculatorService.Services
                         }
                     }
                 }
+                catch
+                {
+
+                }
+                //}
+
+                await dishesService.DeleteDish(userId, dishId);
             }
             catch (HttpRequestException e)
             {

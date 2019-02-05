@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PFCCCalculatorService.Models;
@@ -68,7 +69,8 @@ namespace PFCCCalculatorService.Controllers
             catch (Exception e)
             {
                 logger.LogInformation("DELETE ---", e.Message);
-                return Conflict(e.Message);
+                //return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
 
             logger.LogInformation("DELETE --- fail");
@@ -106,7 +108,8 @@ namespace PFCCCalculatorService.Controllers
             catch (Exception e)
             {
                 logger.LogInformation("CREATE  --- ", e.Message);
-                return Conflict(e.Message);
+                //return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -134,7 +137,8 @@ namespace PFCCCalculatorService.Controllers
             catch (Exception e)
             {
                 logger.LogInformation("GET ---", e.Message);
-                return Conflict(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                //return Conflict(e.Message);
             }
 
             return NotFound();
