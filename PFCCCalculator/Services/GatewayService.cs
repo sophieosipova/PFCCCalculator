@@ -1,14 +1,17 @@
 ﻿
 
+using DalSoft.Hosting.BackgroundQueue;
 using PFCCCalculatorService.Calculator;
 using PFCCCalculatorService.Models;
 
 using SharedModels;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PFCCCalculatorService.Services
@@ -18,14 +21,19 @@ namespace PFCCCalculatorService.Services
         private readonly IProductsService productsService;
         private readonly IDishesService dishesService;
         private readonly ICommentsService commentsService;
+        private  BackgroundQueue backgroundQueue;
+    
+        private static Queue<Message> messages = new Queue<Message>();
 
+        ConcurrentQueue<Task> queue = new ConcurrentQueue<Task> ();
 
-        public GatewayService(IProductsService productsService, IDishesService dishesService, ICommentsService commentsService)
+        public GatewayService(IProductsService productsService, IDishesService dishesService, ICommentsService commentsService, BackgroundQueue backgroundQueue)
         {
 
             this.productsService = productsService;
             this.dishesService = dishesService;
             this.commentsService = commentsService;
+            this.backgroundQueue = backgroundQueue;
 
         }
         public async Task<PFCCRecipe> GetRecipeWithPFCC(int RecipeId)
@@ -130,7 +138,9 @@ namespace PFCCCalculatorService.Services
                     foreach (CommentModel comment in model.Data)
                     {
                         if (!await commentsService.DeleteComment(userId, comment.CommentId))
+                        {
                             return false;
+                        }
                     }
                 }
             }
@@ -162,7 +172,7 @@ namespace PFCCCalculatorService.Services
                         return HttpStatusCode.NoContent;
                     }
                     else
-                            return HttpStatusCode.NotFound;
+                         return HttpStatusCode.NotFound;
             }
             catch(HttpRequestException e)
             {
@@ -171,17 +181,106 @@ namespace PFCCCalculatorService.Services
 
             return HttpStatusCode.Conflict;
         }
-     /*   public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
+
+        public async Task<HttpStatusCode> UpdateProduct(string userId, ProductModel product)
         {
             try
             {
-               return await productsService.UpdateProduct(userId, productToUpdate);
+              //  await productsService.UpdateProduct(userId, product);
+                //  List <DishModel>  dishes = await dishesService.GetDishesWithProduct(product.ProductId);
+
+                backgroundQueue.Enqueue(async cancellationToken =>
+                {
+                    bool stop = false;
+                    while (!stop)
+                    {
+                        try
+                        {
+                            await productsService.UpdateProduct(userId, product);
+                            stop = true;
+                        }
+                        catch
+                        {
+                            Thread.Sleep(10000);
+                        }
+                    }
+
+                });
+
+
+                //Task<Object> task = new Task<Object>(( ) => { return dishesService.GetDishesWithProduct(product.ProductId); });
+
+                backgroundQueue.Enqueue(async cancellationToken =>
+                {
+                    bool stop = false;
+                    while (!stop)
+                    {
+                        try
+                        {
+                            var dishes = await dishesService.GetDishesWithProduct(product.ProductId);
+
+                            if (dishes != null)
+                            {
+                                foreach (DishModel dish in dishes)
+                                {
+                                    dish.Ingredients.Where(ing => ing.ProductId == product.ProductId).First().ProductName = product.ProductName;
+                                    bool flag = false;
+                                    while (!flag)
+                                    {
+                                        try
+                                        {
+                                            await dishesService.UpdateDish(userId, dish);
+                                            flag = true;
+                                        }
+                                        catch
+                                        {
+                                            Thread.Sleep(10000);
+                                        }
+                                    }
+                                }
+
+                            }
+                            stop = true;
+                        }
+                        catch
+                        {
+                            Thread.Sleep(10000);
+                        }
+                    }
+
+                });
+
+
+                /*      if (dishes != null)
+                      {
+                          foreach (DishModel dish in dishes )
+                          {
+                              dish.Ingredients.Where(ing => ing.ProductId == product.ProductId).First().ProductName = product.ProductName;
+                              await dishesService.UpdateDish(userId, dish);
+                          }
+
+                      }*/
+
+                return HttpStatusCode.OK; 
             }
             catch (HttpRequestException e)
             {
                 throw e;
             }
-        }*/
+
+            return HttpStatusCode.Conflict;
+        }
+        /*   public async Task<bool> UpdateProduct(int userId, ProductModel productToUpdate)
+           {
+               try
+               {
+                  return await productsService.UpdateProduct(userId, productToUpdate);
+               }
+               catch (HttpRequestException e)
+               {
+                   throw e;
+               }
+           }*/
 
     }
 }

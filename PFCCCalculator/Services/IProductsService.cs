@@ -32,6 +32,8 @@ namespace PFCCCalculatorService.Services
 
         Task<PaginatedModel<ProductModel>> Items(int pageSize = 10, int pageIndex = 0);
 
+        
+
     }
 
 }

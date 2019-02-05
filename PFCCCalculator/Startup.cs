@@ -1,4 +1,5 @@
 ﻿
+using DalSoft.Hosting.BackgroundQueue.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,13 @@ namespace PFCCCalculator
 
             services.AddSingleton<IGatewayService, GatewayService>();
             //  var dbService = new PFCCCalculatorService.Services.ProductsService (new System.Net.Http.HttpClient());
+
+            services.AddBackgroundQueue(maxConcurrentCount: 1, millisecondsToWaitBeforePickingUpTask: 1000,
+            onException: exception =>
+            {
+              // var t =  exception.TargetSite;
+            });
+
 
             services.AddCors(options =>
             {

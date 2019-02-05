@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-
+using DalSoft.Hosting.BackgroundQueue;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PFCCCalculatorService.Models;
 using PFCCCalculatorService.Services;
 
 using SharedModels;
@@ -17,12 +18,14 @@ namespace PFCCCalculatorService.Controllers
         private readonly IGatewayService gatewayService;
         private readonly ILogger<PFCCCalculatorController> logger;
         private readonly IAutorizationService autorizationService;
+        private  BackgroundQueue backgroundQueue;
 
-        public PFCCCalculatorController (IGatewayService gatewayService,  IAutorizationService autorizationService, ILogger<PFCCCalculatorController> logger)
+        public PFCCCalculatorController (IGatewayService gatewayService,  IAutorizationService autorizationService, BackgroundQueue backgroundQueue, ILogger<PFCCCalculatorController> logger)
         {
             this.gatewayService = gatewayService;
             this.autorizationService = autorizationService;
             this.logger = logger;
+            this.backgroundQueue = backgroundQueue;
         }
 
         [HttpGet]
@@ -101,6 +104,25 @@ namespace PFCCCalculatorService.Controllers
             return NoContent();
         }
 
+
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [Route("user/{userId}")]
+        public async Task<IActionResult> UpdateProduct(string UserId, ProductModel product)
+        {
+            try
+            {
+                var created = await gatewayService.UpdateProduct(UserId, product);
+               // if (created != null)
+                    return Created("", created);
+              //  return Conflict("Не удалось обновить");
+
+            }
+            catch (Exception e)
+            {
+                return Conflict(e.Message);
+            }
+        }
 
         [HttpDelete]
         [Route("user/{userId}/product/{productId:int}")]

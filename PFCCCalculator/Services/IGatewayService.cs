@@ -15,6 +15,8 @@ namespace PFCCCalculatorService.Services
         Task<bool> DeleteDish(string userId,int dishId);
       //  Task<Product> CreateProduct(int userId, Product product);
         Task<HttpStatusCode> DeleteProduct(string userId, int productId);
+
+        Task<HttpStatusCode> UpdateProduct(string userId, ProductModel product);
        // Task<bool> UpdateProduct(int userId,ProductModel productToUpdate);
 
     }

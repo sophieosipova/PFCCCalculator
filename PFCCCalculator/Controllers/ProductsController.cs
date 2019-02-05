@@ -143,7 +143,7 @@ namespace PFCCCalculatorService.Controllers
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [Route("user/{userId}")]
-        public async Task<IActionResult> UpdateDish(string UserId, ProductModel product)
+        public async Task<IActionResult> UpdateProduct(string UserId, ProductModel product)
         {
             try
             {
