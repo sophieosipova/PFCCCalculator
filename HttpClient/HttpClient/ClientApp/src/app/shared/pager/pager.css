@@ -1,0 +1,37 @@
+
+.esh-pager {
+  padding-top: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.esh-pager-wrapper  {
+  padding-top: 1rem;
+  text-align: center;
+}
+
+
+.esh-pager-item :hover {
+  cursor: pointer;
+  display: inline-block;
+  color: #83D01B;
+  margin: 5vw;
+  margin: 0 5vw;
+}
+
+.is-disabled {
+  opacity: 0;
+  pointer-events: none;
+
+}
+
+
+.navigated :hover {
+  margin: 5vw;
+  margin: 0 5vw;
+  cursor: pointer;
+  display: inline-block;
+  color: #83D01B;
+}
+
+

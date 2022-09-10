@@ -1,0 +1,93 @@
+<body>
+  <h1>Продукты</h1>
+  <p *ngIf="serverError"><em>Не удалось подключиться к серверу</em></p>
+  <div *ngIf="!serverError">
+    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    <p *ngIf="!products"><em>Loading...</em></p>
+    <div *ngIf="products">
+      <div *ngIf="tableMode; else create">
+        <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Продукт</th>
+              <th>Калорийность</th>
+              <th>Белки</th>
+              <th>Жиры</th>
+              <th>Углеводы</th>
+              <th>   </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let productItem of products.data">
+              <ng-template [ngIf]="product?.productId != productItem.productId" [ngIfElse]="edit">
+                <td>{{productItem.productName}}</td>
+                <td>{{productItem.calories}}</td>
+                <td>{{productItem.protein}}</td>
+                <td>{{productItem.fat}}</td>
+                <td>{{productItem.carbohydrates}}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" [disabled]="productItem.userId != userId" (click)="editProduct(productItem)">Изменить</button>
+                  <button class="btn btn-sm btn-primary" [disabled]="productItem.userId != userId" (click)="deleteProduct(productItem)">Удалить</button>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+        <esh-pager [model]="paginationInfo" (changed)="onPageChanged($event)"></esh-pager>
+      </div>
+      </div>
+    </div>
+    <div *ngIf="products?.data.length == 0">
+      <span>THERE ARE NO RESULTS THAT MATCH YOUR SEARCH</span>
+    </div>
+</body>
+
+<ng-template #edit>
+  <td>
+    <input type="text"  name="productName"  [(ngModel)]="product.productName" class="form-control" required/>
+  </td>
+  <td>
+    <input type="number"  name="calories" [(ngModel)]="product.calories" class="form-control" required pattern="^[ 0-9]+" />
+  </td>
+  <td>
+    <input type="number"   name="protein" [(ngModel)]="product.protein" class="form-control" required pattern="^[ 0-9]+"/>
+  </td>
+  <td>
+    <input type="number"  name="fat" [(ngModel)]="product.fat" class="form-control" required pattern="^[ 0-9]+"/>
+  </td>
+  <td>
+    <input type="number"  name="carbohydrates" [(ngModel)]="product.carbohydrates" class="form-control"required pattern="^[ 0-9]+" />
+  </td>
+  <td>
+    <input type="button" [disabled]="carbohydrates.invalid || fat.invalid || protein.invalid || calories.invalid || productName.invalid" value="Сохранить" (click)="save()" class="btn btn-sm btn-success" />
+    <input type="button" value="Отмена" (click)="cancel()" class="btn btn-sm btn-warning" />
+  </td>
+</ng-template>
+
+<!--шаблон для добавления-->
+
+<ng-template #create>
+  <div class="form-group">
+    <fieldset>
+      <legend>Добавление продуктов</legend>
+      <label>Введите название продукта</label>
+      <input type="text" name="productName" [(ngModel)]="product.productName" class="form-control" #productName="ngModel" required />
+      <label>Введите калорийность</label>
+      <input type="number"  name="calories" min="0" [(ngModel)]="product.calories" class="form-control" #calories="ngModel" required pattern="^[ 0-9]+"/>
+      <label>Введите белки</label>
+      <input type="number"  name="protein" [(ngModel)]="product.protein" class="form-control" #protein="ngModel"
+             required pattern="^[ 0-9]+"/>
+      <label>Введите жиры </label>
+      <input type="number"  name="fat" [(ngModel)]="product.fat" class="form-control" #fat="ngModel"
+             required pattern="^[ 0-9]+"/>
+      <label>Введите углеводы </label>
+      <input type="number"  name="carbohydrates" [(ngModel)]="product.carbohydrates" class="form-control" #carbohydrates="ngModel"
+             required pattern="^[ 0-9]+"/>
+      <div>
+        <input type="button" [disabled]="carbohydrates.invalid || fat.invalid || protein.invalid || calories.invalid || productName.invalid" value="Сохранить" (click)="save()" class="btn btn-success" />
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+      </div>
+    </fieldset>
+  </div>   
+</ng-template>

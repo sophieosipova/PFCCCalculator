@@ -1,0 +1,147 @@
+
+<div *ngIf="!fullMode; else full">
+  <h1>Рецепты</h1>
+  <p *ngIf="serverError"><em>Не удалось подключиться к серверу</em></p>
+  <div *ngIf="!serverError">
+    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    <p *ngIf="!recipes"><em>Loading...</em></p>
+    <div *ngIf="recipes">
+      <div *ngIf="tableMode; else create">
+        <input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Рецепт</th>
+              <th>Калорийность</th>
+              <th>Белки</th>
+              <th>Жиры</th>
+              <th>Углеводы</th>
+              <th>   </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let recipeItem of recipes.data">
+              <td>
+                <span (click)="fullRecipe(recipeItem)"
+                      aria-label="recipeItem.dishName">
+                  {{recipeItem.dishName}}
+                </span>
+              </td>
+              <td>{{recipeItem.calories | number}}</td>
+              <td>{{recipeItem.protein | number}}</td>
+              <td>{{recipeItem.fat | number}}</td>
+              <td>{{recipeItem.carbohydrates | number}}</td>
+              <td>
+                <button class="btn btn-sm btn-primary" [disabled]="recipeItem.userId != userId"(click)="deleteDish(recipeItem)">Удалить</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <esh-pager [model]="paginationInfo" (changed)="onPageChanged($event)"></esh-pager>
+      </div>
+    </div>
+  </div>
+</div>
+  <div *ngIf="products?.data.length == 0">
+    <span>THERE ARE NO RESULTS THAT MATCH YOUR SEARCH</span>
+  </div>
+
+  <ng-template #full>
+    <h1>{{recipe.dishName}}</h1>
+    <b>{{recipe.calories  | number}} ккал, белки:{{recipe.protein | number}}, жиры: {{recipe.protein | number}}, углеводы: {{recipe.carbohydrates | number}}</b>
+    <div class="form-group">
+      <h2>Ингредиенты</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Продукт</th>
+            <th>Калории</th>
+            <th>Белки</th>
+            <th>Жиры</th>
+            <th>Углеводы</th>
+            <th>Вес (грамм)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ingredientItem of recipe.pfccIngredients">
+            <td>
+              {{ingredientItem.productName}}
+            </td>
+            <td>{{ingredientItem.calories | number}}</td>
+            <td>{{ingredientItem.protein | number}}</td>
+            <td>{{ingredientItem.fat | number}}</td>
+            <td>{{ingredientItem.carbohydrates | number}}</td>
+            <td>{{ingredientItem.count | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Рецепт</h2>
+      <p>{{recipe.recipe}}</p>
+      <div>
+        <input type="button" value="Назад" (click)="cancel()" class="btn btn-warning" />
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #create>
+    <h1>Добавление рецепта</h1>
+    <div *ngIf="dish.ingredients.length > 0">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Продукт</th>
+            <th>Вес (грамм)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ingredientItem of dish.ingredients">
+            <td>
+              {{ingredientItem.productName}}
+            </td>
+            <td>{{ingredientItem.count}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Добавление ингредиентов</h3>
+    <div class="form-group">
+      <label>Продукты</label>
+      <select name="product" [(ngModel)]="ingredient.productId" class="form-control" #product="ngModel" required>
+        <option *ngFor="let productItem of productArr" [value]="productItem.productId">
+          {{productItem.productName}}
+        </option>
+      </select>
+    </div>
+    <div [hidden]="product.valid || product.untouched" class="alert alert-danger">
+      Продукт не выбран
+    </div>
+    <div class="form-group">
+      <label>грамм</label>
+      <input type="number" name="count" [(ngModel)]="ingredient.count" class="form-control" #count="ngModel" required pattern="^[ 0-9]+" />
+    </div>
+    <div class="form-group">
+      <input type="button" [disabled]="product.invalid || count.invalid" value="Добавить ингредиент" (click)="addIngredient()" class="btn btn-success" />
+    </div>
+    <h3>Название рецепта</h3>
+    <div class="form-group">
+      <input type="text" name="dishName" [(ngModel)]="dish.dishName" class="form-control" #dishName="ngModel" required />
+    </div>
+    <div class="form-group">
+      <textarea name="recipeText" [(ngModel)]="dish.recipe" class="form-control" #recipeText="ngModel" required></textarea>
+    </div>
+    <div [hidden]="recipeText.valid || recipeText.untouched" class="alert alert-danger">
+      Введите рецепт
+    </div>
+    <div class="form-group">
+      <label>Вес на выходе</label>
+      <input type="number" name="totalWeight" [(ngModel)]="dish.totalWeight" class="form-control" #totalWeight="ngModel" required pattern="^[ 0-9]+" />
+    </div>
+    <div class="form-group">
+      <input type="button" [disabled]="dishName.invalid || recipeText.invalid || totalWeight.invalid" value="Добавить рецепт" (click)="save()" class="btn btn-success" />
+      <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+    </div>
+  </ng-template>
+
+
+

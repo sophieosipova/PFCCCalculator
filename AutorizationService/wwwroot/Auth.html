@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script language='javascript'>
+        function Go(Val1, Val2) {
+            var obj = document.myfrm
+          //  obj.Username.value = Val1
+           // obj.Password.value = Val2
+            obj.submit()
+        }
+    </script>
+
+</head>
+<body>
+    <h2> Вход и предоставление доступа на сервере </h2>
+
+
+
+    <script>
+        function Start() {
+
+            var obj = document.myfrm
+            var user = {
+                Username: obj.Username.value,//"Sophie",
+                Password: obj.Password.value //"qwe123456"
+            };
+            var json = JSON.stringify(user);
+            var request = new XMLHttpRequest();
+            request.open("POST", "https://localhost:44358/api/account");
+            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            request.onreadystatechange = function () {
+                if (request.readyState == 4 && request.status == 200) {
+                    // document.getElementById("output").innerHTML = request.responseText;
+                    // document.myfrm.Username.value = request.responseText;
+                    var r = JSON.parse(request.response);
+                    // alert(r.accessToken) 
+                    alert("Предоставление доступа стороннему приложению");
+
+                    var getrequest = new XMLHttpRequest();
+                    getrequest.open("GET", "https://localhost:44358/api/account/authapp");
+                    getrequest.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+                    getrequest.setRequestHeader('Authorization', 'Bearer ' + r.accessToken);
+
+                    getrequest.onreadystatechange = function () {
+                        if (getrequest.readyState == 4 && getrequest.status == 200)
+                        {
+                        // document.getElementById("output").innerHTML = request.responseText;
+                        // document.myfrm.Username.value = getrequest.responseText;
+                        //alert(getrequest.status)
+
+                        var query = window.location.href.split("?")[1]; // результат - строка запроса без адреса страницы "id=someName&userMail=some@mail.com&usText=MemoText"
+                        //  var params = query.split("&");  // результат - массив строк из пар "id=someName", "userMail=some@mail.com", "usText=MemoText"
+                        // теперь брать по очереди
+
+                        //   var request1 = new XMLHttpRequest();
+                        // request1.open("GET", "https://localhost:44358/api/oauth?" + query);
+                        location = "https://localhost:44358/api/oauth?" + query;
+                        // request1.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+                        // request1.onreadystatechange = function () {
+                        // if (request1.readyState == 4 && request1.status == 200)
+                        // document.getElementById("output").innerHTML = request.responseText;
+                        // document.myfrm.Username.value = request1.responseText;
+                        //}
+                        // request1.send();
+
+                     }
+                    }
+
+                    getrequest.send();
+                }
+                //   obj.Username.value = Val1
+            }
+            request.send(json);
+
+        }
+
+    </script>
+
+    <form name='myfrm'>
+        <label>Введите имя пользователя</label>
+        <input type="text" name="Username" class="form-control" required />
+        <br />
+        <label>Введите пароль</label>
+        <input type="password" name="Password" class="form-control" required />
+        <br />
+        <input type='button' value='Войти' onclick='Start()'>
+    </form>
+
+</body>
+</html>
